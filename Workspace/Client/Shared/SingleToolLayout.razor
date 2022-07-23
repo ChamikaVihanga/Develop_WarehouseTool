@@ -1,0 +1,61 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<style>
+    .Glass {
+        backdrop-filter: blur( 4px );
+        -webkit-backdrop-filter: blur( 4px );
+    }
+</style>
+
+
+<MudLayout>
+    <MudAppBar Color="Color.Transparent" Elevation="1" Dense="false" class="Glass">
+        <MudText Typo="Typo.h5" Class="ml-3">Workspace</MudText>
+        <MudSpacer />
+        @*<MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Inherit" Link="/" Class="ma-4 pa-1">Home</MudButton>*@
+        @*<MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Inherit" Link="/fetchdata" Class="ma-4 pa-1">Fetchdata</MudButton>*@
+        @*<MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Inherit" Link="/SampleApp" Class="ma-4 pa-1">SampleApp</MudButton>*@
+        @*<MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Inherit" Link="/Warehouse" Class="ma-4 pa-1">Warehouse</MudButton>*@
+        @*<MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Inherit" Link="/workspaceAppSettings" Class="ma-4 pa-1">WorkspaceSettings</MudButton>*@
+        <MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Inherit" Link="/ResourceAndFacility" Class="ma-4 pa-1">Request</MudButton>
+
+        <MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Inherit" Link="/swagger" Class="ma-4 pa-1">Swagger</MudButton>
+        <MudSpacer />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                             Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
+                             ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />
+        <Workspace.Client.Pages.Authentication.Components.UserToggle></Workspace.Client.Pages.Authentication.Components.UserToggle>
+    </MudAppBar>
+
+
+    <MudMainContent>
+        <FeatureNavBar/>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
+
+            @Body
+        </MudContainer>
+
+    </MudMainContent>
+</MudLayout>
+
+
+@code {
+    //Theme Toggle
+    private MudTheme _theme = new();
+    private bool _isDarkMode;
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        LoadToolNavBar();
+    }
+
+    private void LoadToolNavBar()
+    {
+        //await CategoryService.GetCategories();
+    }
+}

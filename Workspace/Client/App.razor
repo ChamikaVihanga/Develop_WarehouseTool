@@ -1,0 +1,30 @@
+﻿
+<CascadingAuthenticationState>
+@* Wrap the Router in the LoadingScreen component *@
+<LoadingScreen>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+
+            @*Workspace main layout*@
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+
+            @*Workspace Single page layout to pre release apps in workspace*@
+            @*<RouteView RouteData="@routeData" DefaultLayout="@typeof(SingleToolLayout)" />*@
+
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+
+            @*Workspace main layout*@
+            <LayoutView Layout="@typeof(MainLayout)">
+
+            @*Workspace Single page layout to pre release apps in workspace*@
+            @*<LayoutView Layout="@typeof(SingleToolLayout)">*@
+
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</LoadingScreen>
+</CascadingAuthenticationState>

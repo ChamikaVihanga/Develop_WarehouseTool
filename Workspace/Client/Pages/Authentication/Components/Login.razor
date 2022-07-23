@@ -1,0 +1,52 @@
+﻿@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@*
+<EditForm Model="user" OnSubmit="HandleLogin">
+    <label for="username">Name</label>
+    <InputText id="username" @bind-Value="user.UserName" />
+    <label for="password">Password</label>
+    <InputText id="password" @bind-Value="user.Password" type="password" />
+    <button type="submit" class="btn btn-primary">Do it!</button>
+</EditForm>*@
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudForm Class="m-4" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+        <MudTextField Class="m-4" @bind-Value="user.UserName" Label="Username" Required="true" RequiredError="User name is required!"/>
+        <MudTextField Class="m-4" @bind-Value="user.Password" Label="Password" @ref="pwField1"
+                                  InputType="InputType.Password" Required="true"
+                                  RequiredError="Password is required!"/>
+        <MudButton Class="m-4" Variant="Variant.Filled"  Color="Color.Primary" DisableElevation="true" @onclick="@(async ()=> HandleLogin())">Login</MudButton>
+    </MudForm>
+    </MudItem>
+    
+</MudGrid>
+@code {
+    bool success;
+    string[] errors = { };
+    MudTextField<string> pwField1;
+    MudForm form;
+
+
+    dto.UserLogin user = new dto.UserLogin();
+
+    async Task HandleLogin()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            var result = await Http.PostAsJsonAsync("https://localhost:44322/api/Authentication/Login-User", user);
+            var token = await result.Content.ReadAsStringAsync();
+            Console.WriteLine(token);
+            await LocalStorage.SetItemAsync("token", token);
+            await AuthStateProvider.GetAuthenticationStateAsync();
+            NavigationManager.NavigateTo("/");
+
+        }
+      
+
+    }
+
+}

@@ -1,0 +1,16 @@
+﻿<div class="alert alert-secondary mt-4">
+    <span class="oi oi-pencil me-2" aria-hidden="true"></span>
+    <strong>@Title</strong>
+    <br />
+    <span class="text-nowrap">
+        Please maintain solution in this Repo : 
+        <a target="_blank" class="font-weight-bold link-dark" href="http://10.31.19.214:3000/Dev_Team/Workspace.git"> http://10.31.19.214:3000/Dev_Team/Workspace.git </a>
+    </span>
+    
+</div>
+
+@code {
+    // Demonstrates how a parent component can supply parameters
+    [Parameter]
+    public string? Title { get; set; }
+}

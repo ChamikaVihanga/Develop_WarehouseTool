@@ -1,0 +1,27 @@
+﻿@page "/ResourceAndFacility/Request"
+@using Workspace.Client.Services.ResourceFacilityService
+@using Workspace.Shared.Entities.ResourceFacilities
+@inject IReFaRequestService ReFaRequestService
+<h3>CreateRequest</h3>
+
+
+<EditForm Model="@reFaRequest" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="name" @bind-Value="reFaRequest.Comment" />
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+
+     ReFaRequest reFaRequest = new ReFaRequest();
+
+    async void HandleValidSubmit()
+    {
+        
+    }
+}
+
+

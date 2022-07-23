@@ -1,0 +1,44 @@
+﻿@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject HttpClient http
+
+
+<AuthorizeView>
+    <Authorized>
+   
+        <MudTooltip Text="@context.User.Identity.Name">
+            <MudFab Color="Color.Inherit" DisableElevation="true" Size="Size.Medium" @onclick="Logout" StartIcon="@Icons.Filled.AccountCircle" />
+        </MudTooltip>
+        
+        @*<button @onclick="Refresh" class="btn btn-danger">Refresh</button>*@
+    </Authorized>
+    <NotAuthorized>
+        <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Medium" StartIcon="@Icons.Filled.Login" />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    void Login()
+    {
+        NavigationManager.NavigateTo("login");
+    }
+
+    async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("token");
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+    async Task Refresh()
+    {
+      
+        var Token = await http.PostAsync("https://localhost:44322/api/Authentication/refresh-Token",null);
+        var token = await Token.Content.ReadAsStringAsync();
+        Console.WriteLine(token);
+        await LocalStorage.RemoveItemAsync("token");
+        await LocalStorage.SetItemAsync("token", token);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+
+    }
+
+}

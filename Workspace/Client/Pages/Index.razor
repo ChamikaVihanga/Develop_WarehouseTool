@@ -1,0 +1,66 @@
+﻿@page "/"
+
+
+<PageTitle>Workspace</PageTitle>
+
+<MudText Typo="Typo.h3" Class="mt-3">Hello Workspace</MudText>
+
+<MudText Typo="Typo.subtitle2" Class="mt-3">Welcome to the new Experience.</MudText>
+
+<SurveyPrompt Title="Workspace solution v1.3.0" />
+
+    <AuthorizeView Policy="ITOnly">
+    <Authorized>
+        <Counter StartNo="2"/>
+    </Authorized>
+    <NotAuthorized></NotAuthorized>
+    
+</AuthorizeView>
+
+
+
+
+
+<MudGrid Class="mt-3">
+    @for (int i = 0; i < 4; i++)
+    {
+        <MudItem xs="6" >
+            <MudPaper Elevation="0">
+
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="40px" Width="40px" />
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudSkeleton Animation="Animation.Wave" Width="100%" />
+                            <MudSkeleton Animation="Animation.Wave" Width="100%" />
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="250px" />
+                    <MudCardContent>
+                        <MudSkeleton Animation="Animation.Wave" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="30px" Width="30px" Class="ml-2 mb-2" />
+                        <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="30px" Width="30px" Class="ml-3 mb-2" />
+                    </MudCardActions>
+                </MudCard>
+            </MudPaper>
+        </MudItem>
+    }
+
+</MudGrid>
+
+                    
+<MudGrid>
+    @for (int i = 0; i < 10; i++)
+    {
+        <MudItem xs="12" Justify="Justify.Center">
+            <MudPaper Class="d-flex flex-column align-center justify-center mud-width-full py-0">
+
+
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
