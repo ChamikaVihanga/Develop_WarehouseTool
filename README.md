@@ -9,3 +9,8 @@
 * Entity Framework 6
 * Blazor
 * MS SQL Server
+
+
+## Repo Branches
+
+### Master - Main Solution
