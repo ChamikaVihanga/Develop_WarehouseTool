@@ -8,7 +8,9 @@
 * ASP.NET Core 6
 * Entity Framework 6
 * Blazor
-* MS SQL Server
+* MS SQL Server 2016
+* Visual Studio 2022
+
 
 
 ## Repo Branches
