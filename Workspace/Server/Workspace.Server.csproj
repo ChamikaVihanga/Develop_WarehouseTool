@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AuthorizationJWT\AuthorizationJWT.csproj" />
     <ProjectReference Include="..\Client\Workspace.Client.csproj" />
     <ProjectReference Include="..\Shared\Workspace.Shared.csproj" />
   </ItemGroup>

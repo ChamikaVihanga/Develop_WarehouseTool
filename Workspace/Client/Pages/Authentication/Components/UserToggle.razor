@@ -8,13 +8,13 @@
     <Authorized>
    
         <MudTooltip Text="@context.User.Identity.Name">
-            <MudFab Color="Color.Inherit" DisableElevation="true" Size="Size.Medium" @onclick="Logout" StartIcon="@Icons.Filled.AccountCircle" />
+            <MudFab Color="Color.Inherit" DisableElevation="true" Size="Size.Small" @onclick="Logout" StartIcon="@Icons.Filled.AccountCircle" />
         </MudTooltip>
         
         @*<button @onclick="Refresh" class="btn btn-danger">Refresh</button>*@
     </Authorized>
     <NotAuthorized>
-        <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Medium" StartIcon="@Icons.Filled.Login" />
+        <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Small" StartIcon="@Icons.Filled.Login" />
     </NotAuthorized>
 </AuthorizeView>
 
