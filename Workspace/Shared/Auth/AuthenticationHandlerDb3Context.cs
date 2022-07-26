@@ -1,10 +1,17 @@
-﻿using Workspace.Shared.Auth;
-namespace Workspace.Server.Data
-{
-    public partial class AuthDbContext : DbContext
-    {
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
-        public AuthDbContext(DbContextOptions<AuthDbContext> options)
+namespace Workspace.Shared.Auth
+{
+    public partial class AuthenticationHandlerDb3Context : DbContext
+    {
+        public AuthenticationHandlerDb3Context()
+        {
+        }
+
+        public AuthenticationHandlerDb3Context(DbContextOptions<AuthenticationHandlerDb3Context> options)
             : base(options)
         {
         }
@@ -14,7 +21,7 @@ namespace Workspace.Server.Data
         public virtual DbSet<AuthenticationClaimRequirement> AuthenticationClaimRequirements { get; set; } = null!;
         public virtual DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
         public virtual DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
-
+  
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,8 +34,7 @@ namespace Workspace.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-
+     
             modelBuilder.Entity<AuthenticationClaim>(entity =>
             {
                 entity.HasKey(e => e.ClaimId);
@@ -137,9 +143,8 @@ namespace Workspace.Server.Data
                         });
             });
 
-           
 
-            OnModelCreatingPartial(modelBuilder);
+           
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
