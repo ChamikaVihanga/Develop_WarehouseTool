@@ -9,11 +9,19 @@ namespace Workspace.Server.Data
         {
         }
 
+        //public virtual DbSet<AuthClaim> AuthClaims { get; set; } = null!;
+        //public virtual DbSet<AuthClaimGroup> AuthClaimGroups { get; set; } = null!;
+        //public virtual DbSet<AuthClaimRequirement> AuthClaimRequirements { get; set; } = null!;
+        //public virtual DbSet<AuthSpecialClaimHolder> AuthSpecialClaimHolders { get; set; } = null!;
+        //public virtual DbSet<AuthUserGroup> AuthUserGroups { get; set; } = null!;
         public virtual DbSet<AuthenticationClaim> AuthenticationClaims { get; set; } = null!;
         public virtual DbSet<AuthenticationClaimGroup> AuthenticationClaimGroups { get; set; } = null!;
         public virtual DbSet<AuthenticationClaimRequirement> AuthenticationClaimRequirements { get; set; } = null!;
         public virtual DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
         public virtual DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
+        //public virtual DbSet<ClaimRequirement> ClaimRequirements { get; set; } = null!;
+        //public virtual DbSet<Employee> Employees { get; set; } = null!;
+        //public virtual DbSet<TestController> TestControllers { get; set; } = null!;
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -138,6 +146,8 @@ namespace Workspace.Server.Data
             });
 
            
+
+            
 
             OnModelCreatingPartial(modelBuilder);
         }
