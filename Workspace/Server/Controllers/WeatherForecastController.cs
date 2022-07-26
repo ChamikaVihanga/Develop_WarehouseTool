@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Workspace.Server.Data;
 using Workspace.Shared;
@@ -23,7 +24,7 @@ namespace Workspace.Server.Controllers
             _authContext = authDbContext;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Policy ="VSPolicy")]
         public IEnumerable<WeatherForecast> Get()
         {
             Thread.Sleep(3000);
@@ -40,7 +41,7 @@ namespace Workspace.Server.Controllers
         [HttpGet, Route("testAuth")]
         public async Task<List<AuthenticationClaimRequirement>> getAuth()
         {
-            return await _authContext.AuthenticationClaimRequirements.ToListAsync();
+            return await _authContext.AuthenticationClaimRequirements.Include(a => a.AuthenticationClaimValuesClaimValues).ThenInclude(b => b.AuthenticationClaim).ToListAsync();
         }
     }
 }
