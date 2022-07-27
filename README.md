@@ -1,8 +1,8 @@
 # Workspace Solution...
 
-## Version 1.3.0
+> Version 1.3.0
 
-## Technologies using
+### Technologies
 
 * Net Core 6
 * ASP.NET Core 6
@@ -11,24 +11,25 @@
 * MS SQL Server 2016
 * Visual Studio 2022
 
-[] Blazor Wasm-Hosted
-[] Repository Patterns
-[] AD Login
-[] Policy Base Athorization
-[] Localization
-[] Globalization
-[] Git Repository
+### Implimentations
+- [x] Blazor Wasm-Hosted
+- [x] Repository Patterns
+- [x] AD Login
+- [ ] Policy Base Athorization
+- [ ] Localization
+- [ ] Globalization
+- [x] Git Repository
 
+
+-----
 ## Repo Branches
 
-### Master - Main Solution
+**Master** - Main Solution
 
-### Develop - 
+**Develop** - 
 
-### Sprint_X - Working Sprint ( All developers commites are mearch to this)
+**Sprint_X** - Working Sprint ( All developers commites are mearch to this)
 
-### Sample_Fearture_Name - THen Cerate brange base Sprint_X by Deveoper
+**Sample_Fearture_Name** - THen Cerate brange base Sprint_X by Deveoper
 
-#### Then all Feature branches merge to Sprint Branch when sprint is over...
-
->>>>>>
+Then all Feature branches merge to Sprint Branch when sprint is over...
