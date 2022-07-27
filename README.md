@@ -11,7 +11,7 @@
 * MS SQL Server 2016
 * Visual Studio 2022
 
-### Implimentations
+### Main Implimentations
 - [x] Blazor Wasm-Hosted
 - [x] Repository Patterns
 - [x] AD Login
