@@ -1,13 +1,15 @@
-﻿<MudAppBar Color="Color.Transparent" Fixed="false" Elevation="0">
-    <MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="" Class="ma-4 pa-1">Home</MudButton>
-    <MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse/Approve" Class="ma-4 pa-1">Approval</MudButton>
-    <MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse/Report" Class="ma-4">Reports</MudButton>
-    <MudButton Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse/Admin" Class="ma-4">Admin</MudButton>
+﻿
+<MudAppBar Color="Color.Transparent" Fixed="false" Elevation="0">
+
+    <MudButton Style="text-transform:none" Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse" Class="ma-4 pa-1">Home</MudButton>
+    <MudButton Style="text-transform:none" Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse/Efficiency" Class="ma-4 pa-1">Warehouse Efficiency</MudButton>
+    <MudButton Style="text-transform:none" Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse/Listsummary" Class="ma-4">Operation</MudButton>
+    @*<MudButton Style="text-transform:none" Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse/Operation" Class="ma-4" Disabled="true">Operation Summary</MudButton>*@
+    <MudButton Style="text-transform:none" Variant="Variant.Text" DisableElevation="true" Color="Color.Primary" Link="/Warehouse/Adminview" Class="ma-4">Daily Process Admin View</MudButton>
 
     <MudSpacer />
 
     <MudButton Link="/ToolTemplate/About" Variant="Variant.Text"  Color="Color.Primary" StartIcon="@Icons.Filled.HelpOutline" Class="ma-4">About </MudButton>
-
 
 </MudAppBar>
 

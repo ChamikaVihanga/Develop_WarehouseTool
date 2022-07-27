@@ -1,0 +1,41 @@
+﻿@inject HttpClient Http
+
+<MudTable Items="Recordss" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@bordered">
+    <HeaderContent>
+        <MudTh><b>Organization Unit</b></MudTh>
+        <MudTh><b>Operation Name</b></MudTh>
+        <MudTh><b>Target</b></MudTh>
+        <MudTh><b>Allocated Time</b></MudTh>
+        <MudTh><b>Effective Date</b></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd></MudTd>
+        <MudTd>@context.OperationList.Name</MudTd>
+        <MudTd>@context.Target</MudTd>
+        <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
+        <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
+        <MudTh>
+            <MudTooltip Text="More Info" Placement="Placement.Right">
+                <a href="/Warehouse/UpdateTargetForOperation/@context.Id">        @* <------------navigate to UpdateTargetForOperation page with context Id *@
+                    <MudFab Color="Color.Primary" Icon="@Icons.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                </a>
+            </MudTooltip>
+        </MudTh>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private bool bordered = true;
+
+    [Parameter] public OperationDetail[]? Recordss { get; set; }
+    public int id;
+    protected override async Task OnInitializedAsync()
+    {
+        Recordss = await Http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");
+    }
+}
+
+
+

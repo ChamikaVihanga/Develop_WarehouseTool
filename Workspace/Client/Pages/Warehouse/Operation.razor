@@ -1,0 +1,81 @@
+﻿@page "/warehouse/operation"
+
+@inject HttpClient http
+@inject ISnackbar Snackbar
+<_WarehouseNavBar />
+
+<PageTitle>Operation</PageTitle>
+
+<MudGrid>
+    <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
+        <MudItem xs="9">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h5" Align="Align.Center">Operations</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <br />
+            <EditForm Model="summeryDTO">
+                <DataAnnotationsValidator />
+                <MudSelect T="string" Label="Select a Organizational Unit">
+                    <MudSelectItem Value="@("Catogery A")" />
+                    <MudSelectItem Value="@("Catogery B")" />
+                    <MudSelectItem Value="@("Catogery C")" />
+                </MudSelect>
+                <MudTextField @bind-Value="summeryDTO.OperationName" Label="Operation Name" For="@(() => summeryDTO.OperationName)"></MudTextField>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="summeryDTO.Target" Label="Target"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudSelect @bind-Value="summeryDTO.TimePeriod" Label="Select a Time Period">
+                            <MudSelectItem Value="@("Minutes")" />
+                            <MudSelectItem Value="@("Hours")" />
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+            <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Text="date" @ref="_picker" Label="Effective Date">
+                <PickerActions>
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                </PickerActions>
+            </MudDatePicker>
+
+            <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
+                <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
+                <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData">Add Task</MudButton>
+            </MudItem>
+        </MudItem>
+    </MudItem>
+</MudGrid>
+
+@*<MudCheckBox @bind-Checked="@ReadOnly" Label="@(ReadOnly ? "Activate" : "Deactivate")" />*@
+
+@code {
+    //public bool ReadOnly { get; set; } = true;
+
+    public string date { get; set; }
+    MudDatePicker _picker;
+    [Parameter]
+    public string id { get; set; }
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+    OperationSummeryDTO summeryDTO = new OperationSummeryDTO();
+
+    private async Task PostData()
+    {
+        summeryDTO.EffectiveDate = Convert.ToDateTime(date);
+        var response = await http.PostAsJsonAsync<OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
+        string strResponse = response.Content.ReadAsStringAsync().Result;
+        showBar(strResponse);
+    }
+    void showBar(string getstringvalue)
+    {
+         Snackbar.Add($"{getstringvalue}", Severity.Success, config => { config.ShowCloseIcon = false; });
+    }
+}

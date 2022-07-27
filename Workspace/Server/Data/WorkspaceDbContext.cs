@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Workspace.Shared.Entities.ResourceFacilities;
+using Workspace.Shared.Entities.Warehouse;
 
 namespace Workspace.Server.Data
 {
@@ -10,5 +11,19 @@ namespace Workspace.Server.Data
         }
 
         public DbSet<ReFaRequest> ReFaRequests { get; set; }
+
+        // warehouse data entry - efficiency 
+        public DbSet<OperationRecord> OperationRecords { get; set; }
+        public DbSet<OperationList> OperationLists { get; set; }
+        public DbSet<OperationDetail> OperationDetails { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // If DB have defferent names
+            //modelBuilder.Entity<TodoItem>().ToTable("TodoItems");
+            //modelBuilder.Entity<TodoList>().ToTable("TodoLists");
+
+        }
     }
 }

@@ -1,0 +1,101 @@
+﻿@inject HttpClient http
+@using Workspace.Shared.Entities.Warehouse
+
+
+@if (operation.OperationList?.Name is not null)
+{
+    <MudDialog>
+        <DialogContent>
+            <MudSelect T="string" Label="Select a Organizational Unit">
+                <MudSelectItem Value="@("Catogery A")" />
+                <MudSelectItem Value="@("Catogery B")" />
+                <MudSelectItem Value="@("Catogery C")" />
+            </MudSelect>
+            <MudTextField T="string" @bind-Value="operation.OperationList.Name " Label="Operation Name" ReadOnly="true"></MudTextField>
+            <MudGrid>
+                <MudItem xs="3">
+                    <MudTextField @bind-Value="operation.Target" Label="Target"></MudTextField>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudTextField @bind-Value="operation.TimeSpan" Label="Time"></MudTextField>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudSelect @bind-Value="fixValue" Label="Select a Time Period">
+                        <MudSelectItem Value="@("Minutes")" />
+                        <MudSelectItem Value="@("Hours")" />
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+            <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Date="selectedDate" @ref="_picker" Label="Effective Date">
+                <PickerActions>
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                </PickerActions>
+            </MudDatePicker>
+            <br/>
+            <MudText> Line No: @id</MudText>
+            <MudGrid>
+                <MudItem xs="6"></MudItem>
+                <MudItem xs="3" Class="d-flex justify-end">
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="Cancel">Cancel</MudButton>
+                </MudItem>
+                <MudItem xs="3" Class="d-flex justify-end">
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit">Ok</MudButton>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+    </MudDialog>
+}
+else
+{
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+}
+
+@code {
+
+    MudDatePicker _picker;
+    DateTime? selectedDate { get; set; }
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public int id { get; set; } = 5;
+
+    void Cancel() => MudDialog.Cancel();
+
+    OperationSummeryDTO summeryDTO = new OperationSummeryDTO();
+
+    //OperationList SelectedOperationLists = new OperationList();
+
+    //private OperationList? List { get; set; }
+
+    private OperationDetail? operation { get; set; } = new OperationDetail() { Target = 0, TimeSpan = 0 };
+    OperationDetail? operationEdit = new OperationDetail();
+
+    //Display primary value --> To line no: 23
+    private string? fixValue { get; set; }
+
+    private async Task Submit()
+    {
+        operation.OperationListId = id;
+        var editResponse = await http.PostAsJsonAsync<OperationDetail>("api/OperationDetailsAPI/DetailsOnly",operation);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        operation = await http.GetFromJsonAsync<OperationDetail>($"api/OperationDetailsAPI/{id}");
+        //Display selected EffectiveDate
+        selectedDate = operation.EffectiveDate;
+
+        // Display selected value for (Time period)
+        if (operation?.TimePeriod == "")
+        {
+            fixValue = "Not set";
+        }
+        else
+        {
+            fixValue = operation.TimePeriod;
+        }
+
+    }
+
+}
