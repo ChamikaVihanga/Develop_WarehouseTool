@@ -11,13 +11,13 @@
 * MS SQL Server 2016
 * Visual Studio 2022
 
-- [] Blazor Wasm-Hosted
-- [] Repository Patterns
-- [] AD Login
-- [] Policy Base Athorization
-- [] Localization
-- [] Globalization
-- [] Git Repository
+[] Blazor Wasm-Hosted
+[] Repository Patterns
+[] AD Login
+[] Policy Base Athorization
+[] Localization
+[] Globalization
+[] Git Repository
 
 ## Repo Branches
 
