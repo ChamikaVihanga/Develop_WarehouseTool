@@ -19,7 +19,7 @@ namespace Workspace.Server.AuthorizationService.PolicyHandler
             HttpContext httpContext = _contextAccessor.HttpContext;
             var RequestString = httpContext.Request.Path.Value.ToString();
             var Method = httpContext.Request.Method.ToString();
-
+            
             List<AuthenticationClaimRequirement> claimRequirements = _customPolicyDataProvider.getClaimRequirement($"{RequestString}::{Method}");
 
             if (claimRequirements == null)
