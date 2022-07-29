@@ -33,6 +33,7 @@ builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+
 // > > From Service Extension classb
 //builder.Services.ConfigureIISIntegration();
 
@@ -47,6 +48,7 @@ builder.Services.AddControllersWithViews()
 //LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 // NLog > > From Service Extension Class
 //builder.Services.ConfigureLoggerService();
+
 
 //add auth policy
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
