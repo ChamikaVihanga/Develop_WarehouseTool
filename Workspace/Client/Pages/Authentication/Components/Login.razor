@@ -37,7 +37,7 @@
         await form.Validate();
         if (form.IsValid)
         {
-            var result = await Http.PostAsJsonAsync("https://localhost:44322/api/Authentication/Login-User", user);
+            var result = await Http.PostAsJsonAsync("https://auth.workspace.vsag.ch/api/Authentication/Login-User", user);
             var token = await result.Content.ReadAsStringAsync();
             Console.WriteLine(token);
             await LocalStorage.SetItemAsync("token", token);
