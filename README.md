@@ -19,9 +19,17 @@
 - [ ] Localization
 - [ ] Globalization
 - [x] Git Repository
+- [ ] Background Services
+- [ ] Workspace admin portal
 
+### Project URLs
+- [x] Workspace Solution : http://workspace.vsag.ch
+- [x] Authenticating Service : https://auth.workspace.vsag.ch
+- [ ] Workspace Admin : https://admin.workspace.vsag.ch/
+- [ ] Background Services : https://Services.workspace.vsag.ch/
 
 -----
+
 ## Repo Branches
 
 **Master** - Main Solution
