@@ -6,19 +6,50 @@
 
 <AuthorizeView>
     <Authorized>
-   
-        <MudTooltip Text="@context.User.Identity.Name">
-            <MudFab Color="Color.Inherit" DisableElevation="true" Size="Size.Small" @onclick="Logout" StartIcon="@Icons.Filled.AccountCircle" />
-        </MudTooltip>
-        
+
+       @* <div class="d-flex">
+            <MudTooltip Text="@context.User.Identity.Name">
+
+                <MudFab Color="Color.Inherit" DisableElevation="true" Size="Size.Small" @onclick="ToggleOpen" StartIcon="@Icons.Filled.AccountCircle" />
+            </MudTooltip>
+            <MudPopover Open="@_isOpen" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                <div class="d-flex flex-column pa-1">
+                    <UserPopover />
+                </div>
+            </MudPopover>
+        </div>*@
+
+
         @*<button @onclick="Refresh" class="btn btn-danger">Refresh</button>*@
+
+        <MudMenu Icon="@Icons.Filled.AccountCircle" ActivationEvent="@MouseEvent.LeftClick" >
+            <ChildContent>
+                <MudMenuItem Disabled="true" Style="background-color:lightsteelblue">@context.User.Identity.Name.ToString().ToUpper()</MudMenuItem>
+                <MudMenuItem>Profile</MudMenuItem>
+                <MudMenuItem>Settings</MudMenuItem>
+                <MudMenuItem @onclick="Logout">Sign Out</MudMenuItem>
+            </ChildContent>
+        </MudMenu>
     </Authorized>
     <NotAuthorized>
-        <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Small" StartIcon="@Icons.Filled.Login" />
+        <MudTooltip Text="Login">
+            <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Small" StartIcon="@Icons.Filled.Login" />
+        </MudTooltip>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
+
+    public bool _isOpen;
+
+    public void ToggleOpen()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+
     void Login()
     {
         NavigationManager.NavigateTo("login");
@@ -28,11 +59,13 @@
     {
         await LocalStorage.RemoveItemAsync("token");
         await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/login");
+
     }
     async Task Refresh()
     {
-      
-        var Token = await http.PostAsync("https://localhost:44322/api/Authentication/refresh-Token",null);
+
+        var Token = await http.PostAsync("https://localhost:44322/api/Authentication/refresh-Token", null);
         var token = await Token.Content.ReadAsStringAsync();
         Console.WriteLine(token);
         await LocalStorage.RemoveItemAsync("token");

@@ -24,7 +24,16 @@ namespace Workspace.Client.Auth_Service
 
             if (!string.IsNullOrEmpty(token))
             {
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                try
+                {
+                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                }
+                catch (Exception ex)
+                {
+                    _localStorage.RemoveItemAsync("token");
+                    return null;
+                }
+                
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
             }

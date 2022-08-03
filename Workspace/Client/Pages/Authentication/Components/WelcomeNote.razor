@@ -1,0 +1,33 @@
+﻿
+
+
+    <AuthorizeView>
+        <Authorized>
+            <MudSpacer />Good @partOfDay @context.User.FindFirst("DisplayName").Value.Split(" ").First()<MudSpacer/>
+            
+        </Authorized>
+        <NotAuthorized>
+            <MudSpacer/>Good @partOfDay <MudSpacer/>
+        </NotAuthorized>
+    </AuthorizeView>
+
+@code {
+    string partOfDay;
+    protected override async Task OnInitializedAsync()
+    {
+        var hours = DateTime.Now.Hour;
+        if (hours > 16)
+        {
+            partOfDay = "evening";
+        }
+        else if (hours > 11)
+        {
+            partOfDay = "afternoon";
+        }
+        else
+        {
+            partOfDay = "morning";
+        }
+    }
+
+}
