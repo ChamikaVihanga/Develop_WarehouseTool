@@ -1,0 +1,20 @@
+﻿@*@using Workspace.Shared.Entities.Warehouse
+@inject HttpClient http
+
+<MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full py-8">
+    <MudCard>
+        <MudImage Src="https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/028d394ffb00cb7a4b2ef9915a384fd9.png?compress=1&resize=400x300&vertical=top" Width="200" Height="150" />
+        <MudCardContent>
+            <h4></h4>
+            <MudText> Department -  </MudText>
+            <MudText Typo="Typo.body2">Name -   </MudText>
+        </MudCardContent>
+    </MudCard>
+</MudPaper>
+
+
+
+@code {
+    public OperationRecord[]? manageRecord { get; set; }
+}
+*@

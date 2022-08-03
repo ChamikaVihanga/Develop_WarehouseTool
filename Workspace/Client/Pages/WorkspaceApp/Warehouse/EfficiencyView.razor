@@ -1,0 +1,35 @@
+﻿@*
+<MudTable Items="manageRecord" Bordered="@bordered" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Read-Only</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><b>Name</b></MudTh>
+        <MudTh><b>Date</b></MudTh>
+        <MudTh><b>Operation</b></MudTh>
+        <MudTh><b>Start Time</b></MudTh>
+        <MudTh><b>End Time</b></MudTh>
+        <MudTh><b>Achivement</b></MudTh>
+        <MudTh><b></b></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd></MudTd>
+        <MudTd></MudTd>
+        <MudTd></MudTd>
+        <MudTd></MudTd>
+        <MudTd></MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code {
+
+    int? nullableInt;
+    private bool bordered = false;
+
+    [Parameter]
+    public OperationRecord[]? manageRecord { get; set; }
+
+}
+*@
