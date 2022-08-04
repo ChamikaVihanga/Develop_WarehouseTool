@@ -3,9 +3,8 @@ global using Microsoft.EntityFrameworkCore;
 global using Workspace.Server.Services.ResourceFacilityService;
 
 using Microsoft.AspNetCore.ResponseCompression;
-using Workspace.Server.Data;
 using Workspace.Server.Extensions;
-
+using DataAccessLayer;
 
 var builder = WebApplication.CreateBuilder(args);
 

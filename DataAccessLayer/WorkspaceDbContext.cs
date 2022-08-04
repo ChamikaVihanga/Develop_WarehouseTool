@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Workspace.Shared.Entities.ResourceFacilities;
 
-namespace Workspace.Server.Data
+namespace DataAccessLayer
 {
     public class WorkspaceDbContext : DbContext
     {
