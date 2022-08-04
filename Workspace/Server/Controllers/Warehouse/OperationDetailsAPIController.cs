@@ -32,6 +32,9 @@ namespace Workspace.Server.Controllers.Warehouse
             return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();
         }
 
+        
+        
+
         // GET: api/OperationDetailsAPI/5
         [HttpGet("{id}")]
         public async Task<ActionResult<OperationDetail>> GetOperationDetail(int id)
@@ -53,6 +56,19 @@ namespace Workspace.Server.Controllers.Warehouse
             return operationDetail;
         }
         /// <summary>
+        /// This API for display data to (UpdateTargetForOperation.razor) 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("GetListofOpDetails/{id}")]
+        [HttpGet]
+        public async Task<List<OperationDetail>> getOpList(int id)
+        {
+            var detailsList = _context.OperationDetails.Where(a => a.OperationListId == id).ToList();
+            return detailsList;
+        }
+
+        /// <summary>
         /// Add new operation details to same List Id.
         /// </summary>
         /// <param name="operationDetail"></param>
@@ -68,13 +84,13 @@ namespace Workspace.Server.Controllers.Warehouse
             operationDetail1.TimeSpan = operationDetail.TimeSpan;
             operationDetail1.EffectiveDate = operationDetail.EffectiveDate;
             operationDetail1.Target = operationDetail.Target;
-            operationDetail1.CreatedBy = "Ashen(CEO)";
+            operationDetail1.CreatedBy = operationDetail.CreatedBy;
             operationDetail1.OperationListId = operationDetail.OperationListId;
 
             _context.OperationDetails.Add(operationDetail1);
             await _context.SaveChangesAsync();
 
-            return string.Empty;
+            return "Successfully Updated";
         }
 
 
@@ -123,6 +139,13 @@ namespace Workspace.Server.Controllers.Warehouse
        
         // POST: api/OperationDetailsAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+
+        /// <summary>
+        /// get inputs from (Operation.razor) and save data two seperate tables
+        /// </summary>
+        /// <param name="operationSummeryDTO"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<string>> PostOperationDetail(OperationSummeryDTO operationSummeryDTO)
         {
@@ -152,7 +175,7 @@ namespace Workspace.Server.Controllers.Warehouse
             _context.OperationDetails.Add(operationDetail);
             await _context.SaveChangesAsync();
 
-            return Ok("Successfull");
+            return Ok("Successfully Created");
             //return CreatedAtAction("GetOperationDetail", new { id = operationDetail.Id }, operationDetail);
         }
 

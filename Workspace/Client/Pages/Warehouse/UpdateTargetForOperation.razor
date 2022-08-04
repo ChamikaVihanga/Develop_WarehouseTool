@@ -15,9 +15,11 @@
     <MudItem xs="3" Class="d-flex justify-end">
         <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" OnClick="@((e) => OpenDialog())">Update Target</MudButton>
     </MudItem>
+    <MudItem xs="3">       
+        <MudTextField T="String" Label="Organization Unit"></MudTextField>       
+    </MudItem>
     <MudItem xs="3">
-        <MudTextField T="String" Label="Organization Unit"></MudTextField>
-        <MudTextField T="String" Label="Operation Name"></MudTextField>
+        <MudTextField T="String" Label="Operation Name" @bind-Value="name" ReadOnly="true"></MudTextField>
     </MudItem>
     <MudItem xs="12">
         <MudPaper Elevation="1">
@@ -31,10 +33,10 @@
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd>@context.CreateDate.ToString("d")</MudTd>
-                    <MudTd></MudTd>
-                    <MudTd></MudTd>
-                    <MudTd></MudTd>
-                    <MudTd></MudTd>
+                    <MudTd>@context.Target</MudTd>
+                    <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
+                    <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
+                    <MudTd>@context.CreatedBy</MudTd>
                 </RowTemplate>
             </MudTable>
         </MudPaper>
@@ -47,11 +49,16 @@
     [Parameter]                     // <------ get id as a parameter & pass to componant 
     public int? id { get; set; }
 
+    public string? name { get; set; }     //  <------- Display operation name
+
     private OperationDetail[]? updateRecords { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");
+        var list = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/{id}");
+        name = list.Name;
+        updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails/{id}");
+
     }
 
     DialogOptions maxWidthScreen = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };

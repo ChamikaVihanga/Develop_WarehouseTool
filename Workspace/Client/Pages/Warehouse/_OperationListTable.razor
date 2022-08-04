@@ -1,6 +1,11 @@
 ﻿@inject HttpClient Http
-
-<MudTable Items="Recordss" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@bordered">
+@if(detail is null)
+{
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+}
+else
+{
+    <MudTable Items="detail" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@bordered">
     <HeaderContent>
         <MudTh><b>Organization Unit</b></MudTh>
         <MudTh><b>Operation Name</b></MudTh>
@@ -8,32 +13,94 @@
         <MudTh><b>Allocated Time</b></MudTh>
         <MudTh><b>Effective Date</b></MudTh>
         <MudTh></MudTh>
+        <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd></MudTd>
-        <MudTd>@context.OperationList.Name</MudTd>
+        <MudTd>@context.OperationList?.Name</MudTd>
         <MudTd>@context.Target</MudTd>
         <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
         <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
         <MudTh>
             <MudTooltip Text="More Info" Placement="Placement.Right">
-                <a href="/Warehouse/UpdateTargetForOperation/@context.Id">        @* <------------navigate to UpdateTargetForOperation page with context Id *@
+                <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">        @* <------------navigate to UpdateTargetForOperation page with OperationListId *@
                     <MudFab Color="Color.Primary" Icon="@Icons.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 </a>
             </MudTooltip>
         </MudTh>
+        <MudTh>
+            <MudCheckBox @bind-Checked="@checkbox" Color="Color.Success"></MudCheckBox>
+        </MudTh>
     </RowTemplate>
 </MudTable>
+}
+
 
 @code {
 
     private bool bordered = true;
+    public bool checkbox { get; set; } = true;
 
-    [Parameter] public OperationDetail[]? Recordss { get; set; }
+    public OperationDetail[]? Recordss { get; set; }
+
+    public string _searchString;
+    [Parameter]public string? searchString
+    {
+        get
+        {
+            return _searchString;
+        }
+        set
+        {
+            if (value != _searchString)
+            {
+                _searchString = value;
+                HandleIntervalElapsed(value);
+            }
+        }
+    }
+
     public int id;
+    List<OperationDetail> detail = new List<OperationDetail>();
+    List<OperationDetail> detailsBackups = new List<OperationDetail>();
+
+    /// <summary>
+    ///                                             ----Show latest Effective date from Operations----
+    /// In OnInitializedAsync methord get OperationDetail array as a API and named as a Recordss. Get only integer values from that as a listIds and put it in to a list.
+    /// Create OperationDetail list with PassedEffectiveDate variable name.
+    /// From that compair with the (DateTime.Now) whether it less than currant date and create a list from that. After select unique ID's from OperationListId ( using Distinct() )
+    /// From that ID's select Max EffectiveDate using foreach loop. Finally if it is not null add detail.
+    /// </summary>
+    /// <returns></returns>
     protected override async Task OnInitializedAsync()
     {
+
         Recordss = await Http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");
+
+        List<int> listIds = new List<int>();
+        List<OperationDetail> PassedEffectiveDate = new List<OperationDetail>();
+        PassedEffectiveDate = Recordss.Where(a => a.EffectiveDate < DateTime.Now).ToList();
+
+        listIds = Recordss.Select(a => a.OperationListId).Distinct().ToList();
+        foreach (int a in listIds)
+        {
+            List<OperationDetail> relatedDetails = PassedEffectiveDate.Where(x => x.OperationListId == a).ToList();
+            OperationDetail? maxDate = relatedDetails.MaxBy(p => p.EffectiveDate);
+            if (maxDate is not null)
+            {
+                detail.Add(maxDate);
+            }
+        }
+        detailsBackups = detail;
+    }
+
+    public async Task HandleIntervalElapsed(string value)
+    {
+        //Console.WriteLine(searchString);
+        if (value.Length >= 0)
+        {
+            detail = detailsBackups.Where(a => a.OperationList.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
     }
 }
 

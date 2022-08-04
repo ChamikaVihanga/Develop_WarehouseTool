@@ -25,10 +25,10 @@
                 <MudTextField @bind-Value="summeryDTO.OperationName" Label="Operation Name" For="@(() => summeryDTO.OperationName)"></MudTextField>
                 <MudGrid>
                     <MudItem xs="6">
-                        <MudTextField @bind-Value="summeryDTO.Target" Label="Target"></MudTextField>
+                        <MudTextField @bind-Value="summeryDTO.Target" Label="Target" For="@(() => summeryDTO.Target)"></MudTextField>
                     </MudItem>
                     <MudItem xs="3">
-                        <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time"></MudTextField>
+                        <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time" For="@(() => summeryDTO.AllocatedTime)"></MudTextField>
                     </MudItem>
                     <MudItem xs="3">
                         <MudSelect @bind-Value="summeryDTO.TimePeriod" Label="Select a Time Period">
@@ -47,7 +47,16 @@
 
             <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
                 <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
-                <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData">Add Task</MudButton>
+
+                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target== null || summeryDTO.AllocatedTime == null || summeryDTO.TimePeriod == null)
+                {
+                    <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="true">Add Task</MudButton>
+                }
+                else
+                {
+                    <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="false">Add Task</MudButton>
+
+                }
             </MudItem>
         </MudItem>
     </MudItem>
@@ -67,6 +76,7 @@
 
     OperationSummeryDTO summeryDTO = new OperationSummeryDTO();
 
+
     private async Task PostData()
     {
         summeryDTO.EffectiveDate = Convert.ToDateTime(date);
@@ -76,6 +86,6 @@
     }
     void showBar(string getstringvalue)
     {
-         Snackbar.Add($"{getstringvalue}", Severity.Success, config => { config.ShowCloseIcon = false; });
+        Snackbar.Add($"{getstringvalue}", Severity.Success, config => { config.ShowCloseIcon = false; });
     }
 }

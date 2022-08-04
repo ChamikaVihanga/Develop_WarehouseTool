@@ -7,15 +7,18 @@
 <br />
 <MudGrid>
     <MudItem xs="3">
-        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText"  Label="Search By Operation Name" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" />
+        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText"  Label="Search By Operation Name" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary"/>
     </MudItem>
-    <MudItem xs="6"></MudItem>
+    <MudItem xs="3"></MudItem>
+    <MudItem xs="3" Class="d-flex justify-end">
+        <MudButton Color="Color.Warning"  Variant="Variant.Outlined" Style="width:230px">Upcoming Operations</MudButton>
+    </MudItem>
     <MudItem xs="3" Class="d-flex justify-end">       
         <MudButton Color="Color.Info"  Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
     </MudItem>
     <MudItem xs="12">
     <MudPaper Elevation="1">
-    <_OperationListTable Recordss="Recordsget"/>
+    <_OperationListTable searchString="@_debouncedTextMirror"/>
     </MudPaper>
     </MudItem>
 </MudGrid>
@@ -25,16 +28,12 @@
     //private bool coerceText;
     //private bool coerceValue;
     private bool AddOperation = true;
-    public OperationDetail[]? Recordsget { get; set; }
-    public OperationDetail[]? RecordsBackups { get; set; }
+
     public int id { get; set; }
     string _debouncedText;
-    
-    protected override async Task OnInitializedAsync()
-    {
-        Recordsget = await http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");
-        RecordsBackups = Recordsget;
-    }
+    string _debouncedTextMirror;
+
+  
     /// <summary>
     /// sort by operation name
     /// </summary>
@@ -42,16 +41,8 @@
     /// <returns></returns>
     private async Task HandleIntervalElapsed(string value)
     {
-        if (value.Length >= 0)
-        {
-            Recordsget = RecordsBackups?.Where(a => a.OperationList.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToArray();
-        }
-
-        
-        //if (string.IsNullOrEmpty(value))
-        //{
-        //    return operationList.Select(x => x.Name);
-        //}
-        //return operationList.Select(y => y.Name.ToString()).Where(a => a.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        _debouncedTextMirror = value;
+        //Console.WriteLine("handler");
+        //Console.WriteLine(_debouncedTextMirror);
     }
 }
