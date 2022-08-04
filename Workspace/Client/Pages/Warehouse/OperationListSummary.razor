@@ -7,19 +7,19 @@
 <br />
 <MudGrid>
     <MudItem xs="3">
-        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText"  Label="Search By Operation Name" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary"/>
+        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText" Label="Search By Operation Name" Variant="Variant.Text" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
+    </MudItem>
+    <MudItem xs="3">
+        <MudSwitch @bind-Checked="state" Color="Color.Info" UnCheckedColor="Color.Warning">Operations :  @state</MudSwitch>
     </MudItem>
     <MudItem xs="3"></MudItem>
     <MudItem xs="3" Class="d-flex justify-end">
-        <MudButton Color="Color.Warning"  Variant="Variant.Outlined" Style="width:230px">Upcoming Operations</MudButton>
-    </MudItem>
-    <MudItem xs="3" Class="d-flex justify-end">       
-        <MudButton Color="Color.Info"  Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
+        <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
     </MudItem>
     <MudItem xs="12">
-    <MudPaper Elevation="1">
-    <_OperationListTable searchString="@_debouncedTextMirror"/>
-    </MudPaper>
+        <MudPaper Elevation="1">
+            <_OperationListTable tableState="@state" searchString="@_debouncedTextMirror" />
+        </MudPaper>
     </MudItem>
 </MudGrid>
 
@@ -27,13 +27,15 @@
     //private bool resetValueOnEmptyText;
     //private bool coerceText;
     //private bool coerceValue;
+    public bool state { get; set; } = false;
+
     private bool AddOperation = true;
 
     public int id { get; set; }
     string _debouncedText;
     string _debouncedTextMirror;
 
-  
+
     /// <summary>
     /// sort by operation name
     /// </summary>
