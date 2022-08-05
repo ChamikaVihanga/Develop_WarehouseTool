@@ -1,7 +1,8 @@
 ﻿@inject HttpClient Http
 @if (detail is null)
 {
-    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+    @*<MudProgressCircular Color="Color.Secondary" Indeterminate="true" />*@
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
 }
 else
 {
@@ -23,14 +24,13 @@ else
             <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
             <MudTh>
                 <MudTooltip Text="More Info" Placement="Placement.Right">
-                    <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">
-                        @* <------------navigate to UpdateTargetForOperation page with OperationListId *@
-                        <MudFab Color="Color.Primary" Icon="@Icons.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                    <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">              @* <------------navigate to UpdateTargetForOperation page with OperationListId *@
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"></MudIconButton>
                     </a>
                 </MudTooltip>
             </MudTh>
             <MudTh>
-                <MudCheckBox @bind-Checked="context.OperationList.IsActive" Color="Color.Success"></MudCheckBox>
+                <MudCheckBox @bind-Checked="context.OperationList.IsActive" Color="Color.Success">@checkbox</MudCheckBox>
             </MudTh>
         </RowTemplate>
     </MudTable>
@@ -39,7 +39,39 @@ else
 
 @code {
     bool fixed_header = true;
-    //public bool checkbox { get; set; } = true;
+
+    public bool _check;
+
+    public bool check
+    {
+        get
+        {
+            return _check;
+        }
+        set
+        {
+            if (value != _check)
+            {
+                _check = value;
+                checkActivation();
+            }
+        }
+    }
+
+
+    public string checkbox { get; set; } = "Activated";
+
+    void checkActivation()
+    {
+        if (checkbox == "Activated")
+        {
+            checkbox = "Activated";
+        }
+        else
+        {
+            checkbox = "Deactivated";
+        }
+    }
 
     public bool _tableState;
     [Parameter]
@@ -51,7 +83,7 @@ else
         }
         set
         {
-            if(value != _tableState)
+            if (value != _tableState)
             {
                 _tableState = value;
                 changeState();
@@ -101,7 +133,7 @@ else
 
         Recordss = await Http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");   //  >
 
-        List<int> listIds = new List<int>();                                                    //  >  Commen functions
+        List<int> listIds = new List<int>();                                                    //  >  Common functions
         listIds = Recordss.Select(a => a.OperationListId).Distinct().ToList();                  //  >
 
         List<OperationDetail> PassedEffectiveDate = new List<OperationDetail>();

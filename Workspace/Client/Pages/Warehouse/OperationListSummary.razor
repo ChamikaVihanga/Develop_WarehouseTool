@@ -7,10 +7,10 @@
 <br />
 <MudGrid>
     <MudItem xs="3">
-        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText" Label="Search By Operation Name" Variant="Variant.Text" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
+        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText" Label="Search operation" Variant="Variant.Text" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
     </MudItem>
     <MudItem xs="3">
-        <MudSwitch @bind-Checked="state" Color="Color.Info" UnCheckedColor="Color.Warning">Operations :  @state</MudSwitch>
+        <MudSwitch @bind-Checked="@state" Color="Color.Error" UnCheckedColor="Color.Success" Style="width:400px">@lable</MudSwitch>
     </MudItem>
     <MudItem xs="3"></MudItem>
     <MudItem xs="3" Class="d-flex justify-end">
@@ -19,15 +19,43 @@
     <MudItem xs="12">
         <MudPaper Elevation="1">
             <_OperationListTable tableState="@state" searchString="@_debouncedTextMirror" />
-        </MudPaper>
+        </MudPaper>  
     </MudItem>
 </MudGrid>
 
 @code {
-    //private bool resetValueOnEmptyText;
-    //private bool coerceText;
-    //private bool coerceValue;
-    public bool state { get; set; } = false;
+    
+    public bool _state;
+
+    public bool state
+    {
+        get
+        {
+            return _state;
+        }
+        set
+        {
+            if (value != _state)
+            {
+                _state = value;
+                swapLable();
+            }
+        }
+    }
+
+    string lable { get; set; } = "Toggle to map upcoming operations";
+
+    void swapLable()
+    {
+        if (lable == "Toggle to map upcoming operations")
+        {
+            lable = "Toggle to map ongoing operations";
+        }
+        else
+        {
+            lable = "Toggle to map upcoming operations";
+        }
+    }
 
     private bool AddOperation = true;
 
@@ -35,6 +63,10 @@
     string _debouncedText;
     string _debouncedTextMirror;
 
+    protected override async Task OnInitializedAsync()
+    {
+        state = false;
+    }
 
     /// <summary>
     /// sort by operation name
@@ -47,4 +79,4 @@
         //Console.WriteLine("handler");
         //Console.WriteLine(_debouncedTextMirror);
     }
-}
+    }

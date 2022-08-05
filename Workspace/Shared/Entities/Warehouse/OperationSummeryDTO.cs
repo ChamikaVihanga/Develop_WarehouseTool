@@ -15,6 +15,8 @@ namespace Workspace.Shared.Entities.Warehouse
         [Range(1, Int32.MaxValue)]
         [Required]
         public int? Target { get; set; }
+
+        [Range(1, Int32.MaxValue)]
         [Required]
         public int? AllocatedTime { get; set; }
         [Required]
