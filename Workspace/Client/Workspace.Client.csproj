@@ -17,7 +17,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\ComponentLibrary\ComponentLibrary.csproj" />
 		<ProjectReference Include="..\Shared\Workspace.Shared.csproj" />
 	</ItemGroup>
 

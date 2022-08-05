@@ -1,4 +1,4 @@
-using admin.workspace.Shared;
+using Workspace.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace admin.workspace.Server.Controllers

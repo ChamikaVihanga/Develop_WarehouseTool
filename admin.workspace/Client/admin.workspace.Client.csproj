@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\ComponentLibrary\ComponentLibrary.csproj" />
-		<ProjectReference Include="..\Shared\admin.workspace.Shared.csproj" />
+		<ProjectReference Include="..\..\WorkspaceComponent\WorkspaceComponent.csproj" />
+		<ProjectReference Include="..\..\Workspace\Shared\Workspace.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
