@@ -1,4 +1,4 @@
-﻿namespace Workspace.Server.Services.SmsService
+﻿namespace WorkspaceServices.SmsService
 {
     public class SendSmsService : ISendSmsService
     {

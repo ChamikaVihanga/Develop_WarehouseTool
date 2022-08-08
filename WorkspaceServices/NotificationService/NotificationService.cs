@@ -1,6 +1,7 @@
-﻿using Workspace.Shared.Entities.Notification;
+﻿using Workspace.Shared;
+using Workspace.Shared.Entities.Notification;
 
-namespace Workspace.Server.Services.NotificationService
+namespace WorkspaceServices.NotificationService
 {
     public class NotificationService : INotificationService
     {

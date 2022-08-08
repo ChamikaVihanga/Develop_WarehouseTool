@@ -1,4 +1,4 @@
-﻿namespace Workspace.Server.Services.SmtpMailService
+﻿namespace WorkspaceServices.SmtpMailService
 {
     public class SendMailService : ISendMailService
     {

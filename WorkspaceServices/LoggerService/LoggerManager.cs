@@ -1,4 +1,4 @@
-﻿namespace Workspace.Server.Services.LoggerService
+﻿namespace WorkspaceServices.LoggerService
 {
     public class LoggerManager : ILoggerManager
     {
