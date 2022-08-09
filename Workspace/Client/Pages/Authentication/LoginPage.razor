@@ -1,12 +1,27 @@
 ﻿@page "/login"
-<MudPaper Class="d-flex align-center justify-center py-8" Elevation="5">
-<MudItem xs="12" sm="12" >
-        
-            <Workspace.Client.Pages.Authentication.Components.Login></Workspace.Client.Pages.Authentication.Components.Login>
-            
+@using Workspace.Client.Interceptor
+@*@inject GlobalErrorHandler handler*@
+
+
+
+
+<MudGrid Spacing="5" Justify="Justify.Center">
+    <MudItem xs="12" sm="4">
     </MudItem>
-</MudPaper>
+    <MudItem xs="12" sm="4">
+        <MudPaper MinHeight="55vh" MinWidth="20vw" Outlined="true" Class="d-flex align-center justify-center py-8 rounded-xl" Elevation="0">
+            <MudItem xs="12" sm="12">
+
+                <Workspace.Client.Pages.Authentication.Components.Login></Workspace.Client.Pages.Authentication.Components.Login>
+
+            </MudItem>
+        </MudPaper>
+    </MudItem >
+    <MudItem xs="12" sm="4">
+    </MudItem>
+</MudGrid>
 
 @code {
-
+  
+    
 }

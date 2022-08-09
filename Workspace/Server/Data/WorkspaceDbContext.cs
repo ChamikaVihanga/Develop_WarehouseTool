@@ -13,4 +13,6 @@ namespace Workspace.Server.Data
         public DbSet<ReFaRequest> ReFaRequests { get; set; }
         public DbSet<AuthenticationClaimRequirement> authenticationClaimRequirements { get; set; }
     }
+
+  
 }

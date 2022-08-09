@@ -1,6 +1,7 @@
 ﻿@page "/fetchdata"
 @using Workspace.Shared
-@inject HttpClient Http
+
+
 
 <PageTitle>Weather forecast</PageTitle>
 
@@ -64,13 +65,3 @@ else
     </MudTable>
 }
 *@
-
-
-@code {
-    private WeatherForecast[]? forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
-    }
-}

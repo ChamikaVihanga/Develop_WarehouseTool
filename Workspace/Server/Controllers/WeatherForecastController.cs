@@ -28,7 +28,7 @@ namespace Workspace.Server.Controllers
         public IEnumerable<WeatherForecast> Get()
         {
             Thread.Sleep(3000);
-
+            
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),

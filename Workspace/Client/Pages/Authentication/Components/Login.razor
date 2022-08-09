@@ -2,51 +2,112 @@
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILocalStorageService LocalStorage
-@*
-<EditForm Model="user" OnSubmit="HandleLogin">
-    <label for="username">Name</label>
-    <InputText id="username" @bind-Value="user.UserName" />
-    <label for="password">Password</label>
-    <InputText id="password" @bind-Value="user.Password" type="password" />
-    <button type="submit" class="btn btn-primary">Do it!</button>
-</EditForm>*@
+@inject ISnackbar Snackbar
 
-<MudGrid>
-    <MudItem xs="12">
-        <MudForm Class="m-4" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
-        <MudTextField Class="m-4" @bind-Value="user.UserName" Label="Username" Required="true" RequiredError="User name is required!"/>
-        <MudTextField Class="m-4" @bind-Value="user.Password" Label="Password" @ref="pwField1"
-                                  InputType="InputType.Password" Required="true"
-                                  RequiredError="Password is required!"/>
-        <MudButton Class="m-4" Variant="Variant.Filled"  Color="Color.Primary" DisableElevation="true" @onclick="@(async ()=> HandleLogin())">Login</MudButton>
-    </MudForm>
-    </MudItem>
-    
-</MudGrid>
+@if (isLoading is true)
+{
+    <MudGrid>
+        <MudItem xs="3" sm="3" md="3">
+            <MudProgressCircular Class="mt-3 m-2" Color="Color.Default" Indeterminate="true" />
+
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" Class="m-4">
+            <MudText>Authentication in progess....</MudText>
+        </MudItem>
+         <MudItem xs="3" sm="3" md="3"></MudItem>
+    </MudGrid>
+
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" sm="3"></MudItem>
+        <MudItem xs="12" sm="6" >
+            <MudText Align="Align.Center">Enter your username and password to LOGIN </MudText>
+        </MudItem>
+        <MudItem xs="12" sm="3"></MudItem>
+
+       
+
+        <MudItem xs="12" sm="12">
+            <MudForm Class="m-4" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                <MudTextField Variant="Variant.Outlined" Margin="Margin.Dense" Class="m-4" @bind-Value="user.UserName" Label="Username" Required="true" RequiredError="User name is required!" />
+                <MudTextField Variant="Variant.Outlined" Margin="Margin.Dense" Class="m-4" @bind-Value="user.Password" Label="Password" @ref="pwField1"
+                          InputType="InputType.Password" Required="true"
+                          RequiredError="Password is required!" />
+                <MudButton Class="m-4" Variant="Variant.Filled" Color="Color.Info" DisableElevation="true" @onclick="@(async ()=> HandleLogin())">Login</MudButton>
+            </MudForm>
+        </MudItem>
+
+    </MudGrid>
+}
+
+
 @code {
     bool success;
     string[] errors = { };
     MudTextField<string> pwField1;
     MudForm form;
 
+    public bool isLoading;
+
 
     dto.UserLogin user = new dto.UserLogin();
 
-    async Task HandleLogin()
+    public async Task HandleLogin()
     {
         await form.Validate();
         if (form.IsValid)
         {
+            isLoading = true;
             var result = await Http.PostAsJsonAsync("https://auth.workspace.vsag.ch/api/Authentication/Login-User", user);
             var token = await result.Content.ReadAsStringAsync();
             Console.WriteLine(token);
             await LocalStorage.SetItemAsync("token", token);
-            await AuthStateProvider.GetAuthenticationStateAsync();
-            NavigationManager.NavigateTo("/");
+            var stateResult = await AuthStateProvider.GetAuthenticationStateAsync();
+
+            if (stateResult == null)
+            {
+
+                ChangePosition($"{token}, or your account has been locked.", Defaults.Classes.Position.TopEnd, false);
+
+            }
+            else
+            {
+
+                NavigationManager.NavigateTo("/");
+                ChangePosition($"Login Successful, Welcome to the workspace!", Defaults.Classes.Position.TopEnd, true);
+
+            }
 
         }
-      
+        changeInterface(false);
+        await InvokeAsync(StateHasChanged);
 
+
+    }
+
+   
+    public void ChangePosition(string message, string position, bool isSucess)
+    {
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = position;
+        if (isSucess)
+        {
+           
+            Snackbar.Add(message, Severity.Success, config => { config.Icon = @Icons.Filled.Done; });
+
+        }
+        else
+        {
+            Snackbar.Add(message, Severity.Error, config => { config.Icon = @Icons.Filled.Error; });
+
+        }
+    }
+    void changeInterface(bool loading)
+    {
+        isLoading = loading;
+        Console.WriteLine(isLoading);
     }
 
 }
