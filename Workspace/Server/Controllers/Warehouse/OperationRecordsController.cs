@@ -60,7 +60,6 @@ namespace Workspace.Server.Controllers.Warehouse
         {
 
             var recordDate = await _context.OperationRecords
-                .Where(c => c.StartTime.Date == SelectedDate.Date)
                 .Include(a => a.OperationList)
                 .Include(d => d.VS_Employees)
                 .Where(b => b.VS_EmployeesId == id)
@@ -110,6 +109,7 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return Problem("Entity set 'WorkspaceDbContext.OperationRecords'  is null.");
             }*/
+            //operationRecord.EndTime = null;
             _context.OperationRecords.Add(operationRecord);
             await _context.SaveChangesAsync();
 

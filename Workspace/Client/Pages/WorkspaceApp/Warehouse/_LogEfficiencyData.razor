@@ -55,7 +55,7 @@
                 <MudTd>@context.CreateDate.ToString("d")</MudTd>
                 <MudTd>@context.OperationList.Name</MudTd>
                 <MudTd>@context.StartTime.ToString("T")</MudTd>
-                <MudTd>@context.EndTime.ToString("T")</MudTd>
+                <MudTd>@context.EndTime.Value.ToLongTimeString()</MudTd>
 
                 @if (context.Achivement is null)
                 {

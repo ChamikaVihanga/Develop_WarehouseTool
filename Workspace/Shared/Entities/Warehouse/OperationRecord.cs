@@ -22,12 +22,13 @@ namespace Workspace.Shared.Entities.Warehouse
         //.....
 
         public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         //[Required(ErrorMessage = "")]
         public int? Achivement { get; set; }
         public int? Efficiency { get; set; }
         public DateTime CreateDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
 
     }

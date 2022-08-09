@@ -22,96 +22,134 @@
                 </MudPaper>
             </MudItem>
             <MudItem xs="9">
-
-                @*load operation create / update form*@
-                <OperationRecordForm />
-
-                <MudPaper Elevation="0">
-
+                @if (isLoading)
+                {
                     <MudItem xs="12">
                         <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
-                            <MudContainer>
-                                <MudGrid>
-                                    <MudItem xs="6">
-                                        <MudDatePicker PickerVariant="PickerVariant.Dialog" Variant="Variant.Outlined" @ref="_picker" @bind-Date="SelectedDate" Label="Select Date" Placeholder="Select Date">
+                            <div style="position:absolute; top:30vh; width:100%; text-align:center">
+                                <h3>Plase for waite</h3>
+                                <div style="display:flex; gap:10px; justify-content:center; align-items:center">
+                                    <div class="spinner-border" role="status"></div>
+                                    The application is loading...
+                                </div>
+                            </div>
+                        </MudPaper>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudPaper Elevation="0">
+
+                        <MudItem xs="12">
+                            <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
+                                <MudContainer>
+                                    <MudGrid>
+                                        <MudItem xs="6">
+                                            <MudDatePicker PickerVariant="PickerVariant.Dialog" Variant="Variant.Outlined" @ref="_picker" @bind-Date="SelectedDate" Label="Select Date" Placeholder="Select Date">
+                                                <PickerActions>
+                                                    <MudButton Variant="Variant.Filled" OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                                                </PickerActions>
+                                            </MudDatePicker>
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                            <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudContainer>
+                            </MudPaper>
+                        </MudItem>
+
+                        <br />
+                        <br />
+
+                        @*Start time and end time picker*@
+                        <MudItem xs="12">
+                            <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
+                                <MudContainer>
+                                    <MudGrid>
+                                        <MudItem xs="6">
+                                            <MudTimePicker @ref="_pickerS" PickerVariant="PickerVariant.Dialog" Label="Start Time" AmPm="true" @bind-Time="@StartTime" Variant="Variant.Outlined">
+                                                <PickerActions>
+                                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerS.Clear())">Clear</MudButton>
+                                                    <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
+                                                    <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
+                                                </PickerActions>
+                                            </MudTimePicker>
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                            <MudTimePicker @ref="_pickerE" PickerClosed="PickEndDate" PickerVariant="PickerVariant.Dialog" Label="End Time" AmPm="true" @bind-Time="@EndTime" Variant="Variant.Outlined">
+                                                <PickerActions>
+                                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerE.Clear())">Clear</MudButton>
+                                                    <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
+                                                    <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
+                                                </PickerActions>
+                                            </MudTimePicker>
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudContainer>
+                            </MudPaper>
+                        </MudItem>
+
+                        <MudItem xs="12">
+                            <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
+                                <MudItem xs="6">
+
+                                    @if (isEndDateRequired)
+                                    {
+                                        <br />
+                                        <br />
+                                        <MudDatePicker PickerVariant="PickerVariant.Dialog" Variant="Variant.Outlined" @ref="_picker" @bind-Date="EndDate" Label="End Date" Placeholder="Select Date">
                                             <PickerActions>
                                                 <MudButton Variant="Variant.Filled" OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
                                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
                                             </PickerActions>
                                         </MudDatePicker>
-                                    </MudItem>
-                                    <MudItem xs="6">
-                                        <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" />
-                                    </MudItem>
-                                </MudGrid>
-                            </MudContainer>
-                        </MudPaper>
-                    </MudItem>
+                                        <br />
+                                        <br />
+                                    }
 
-                    <br />
-                    <br />
+                                </MudItem>
+                            </MudPaper>
+                        </MudItem>
+                        <br />
+                        <br />
+                        @*Operation List add location*@
 
-                    @*Start time and end time picker*@
-                    <MudItem xs="12">
-                        <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
-                            <MudContainer>
-                                <MudGrid>
-                                    <MudItem xs="6">
-                                        <MudTimePicker @ref="_pickerS" PickerVariant="PickerVariant.Dialog" Label="Start Time" AmPm="true" @bind-Text="StartTime" Variant="Variant.Outlined">
-                                            <PickerActions>
-                                                <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerS.Clear())">Clear</MudButton>
-                                                <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
-                                                <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
-                                            </PickerActions>
-                                        </MudTimePicker>
-                                    </MudItem>
-                                    <MudItem xs="6">
-                                        <MudTimePicker @ref="_pickerE" PickerVariant="PickerVariant.Dialog" Label="End Time" AmPm="true" @bind-Text="EndTime" Variant="Variant.Outlined">
-                                            <PickerActions>
-                                                <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerE.Clear())">Clear</MudButton>
-                                                <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
-                                                <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
-                                            </PickerActions>
-                                        </MudTimePicker>
-                                    </MudItem>
-                                </MudGrid>
-                            </MudContainer>
-                        </MudPaper>
-                    </MudItem>
-                    <br />
-                    <br />
+                        <MudItem xs="12">
+                            <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
+                                <MudContainer>
+                                    <MudGrid>
+                                        <MudItem xs="6">
+                                            <MudAutocomplete Label="Operation Name" @bind-Value="value1" SearchFunc="@Search1" ResetValueOnEmptyText="@resetValueOnEmptyText" CoerceText="@coerceText" CoerceValue="@coerceValue" Dense Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="6">
+                                            <MudTextField Label="Acivement" @bind-Value="operationRecord.Achivement" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                    </MudGrid>
+                                </MudContainer>
+                            </MudPaper>
+                        </MudItem>
 
-                    @*Operation List add location*@
-                    <MudItem xs="12">
-                        <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
-                            <MudContainer>
-                                <MudGrid>
-                                    <MudItem xs="6">
-                                        <MudAutocomplete Label="Operation Name" @bind-Value="value1" SearchFunc="@Search1" ResetValueOnEmptyText="@resetValueOnEmptyText" CoerceText="@coerceText" CoerceValue="@coerceValue" Dense Variant="Variant.Outlined" />
-                                    </MudItem>
-                                    <MudItem xs="6">
-                                        <MudTextField Label="Acivement" @bind-Value="operationRecord.Achivement" Variant="Variant.Outlined" />
-                                    </MudItem>
-                                </MudGrid>
-                            </MudContainer>
-                        </MudPaper>
-                    </MudItem>
+                        @*Buttuion hide and show*@
+                        <br />
+                        <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full">
+                            @if (EnteredSapNo == null || StartTime == null || value1 == null)
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true">Submit</MudButton>
+                                <MudAlert Severity="Severity.Error" Class="ml-auto">You must enter sap number, Start Time & Operation Name</MudAlert>
 
-                    @*Buttuion hide and show*@
-                    <br />
-                    <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full">
-                        @if (EnteredSapNo == null || StartTime == null || value1 == null)
-                        {
-                            <MudAlert Severity="Severity.Error">You must enter sap number, Start Time & Operation Name</MudAlert>
-                            <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true" Class="ml-auto">Submit</MudButton>
-                        }
-                        else
-                        {
-                            <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData">Submit</MudButton>
-                        }
-                    </MudItem>
+                            }
+                            else
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData">Submit</MudButton>
+                            }
+                        </MudItem>
 
-                </MudPaper>
+                    </MudPaper>
+                }
+
+
             </MudItem>
 
             @*Employe View site*@
@@ -138,22 +176,24 @@
             </MudItem>
         </MudGrid>
 
+
         @*Data view table*@
         <_LogEfficiencyData manageRecord="@manageRecord" />
     </MudPaper>
 </MudItem>
 
 
+
 @code {
-
-
+    bool isLoading = false;
 
     /// <summary>
     /// Form Time Picker
     /// </summary>
-    private string StartTime { get; set; }
-    private string? EndTime { get; set; }
-
+    TimeSpan? StartTime = null;
+    TimeSpan? EndTime = null;
+    DateTime? StartDateTime = null;
+    bool isEndDateRequired = false;
 
     /// <summary>
     /// Form Date Picker
@@ -165,6 +205,7 @@
     MudTimePicker _pickerS;
     MudTimePicker? _pickerE;
     DateTime? SelectedDate = DateTime.Now;
+    DateTime? EndDate = DateTime.Now;
 
     /// <summary>
     /// Data validation & Employe property
@@ -192,6 +233,26 @@
     private VS_Employees[]? vsEmployees;
 
 
+    void PickEndDate()
+    {
+        if (StartDateTime != null)
+        {
+            Console.WriteLine(StartDateTime.Value.Date);
+            Console.WriteLine(DateTime.Now.Date);
+
+            if (StartDateTime.Value.Date != DateTime.Now.Date)
+            {
+                isEndDateRequired = true;
+                InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                isEndDateRequired = false;
+                InvokeAsync(StateHasChanged);
+            }
+        }
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -209,29 +270,44 @@
 
 
     /// <summary>
-    /// Date and time convert to String add database 
+    /// Date and time convert to String add database
     /// befor clear text box
     /// </summary>
     /// <returns></returns>
     protected async Task PostData()
     {
-        Console.WriteLine(StartTime);
-        Console.WriteLine(EndTime);
-        Console.WriteLine(Convert.ToDateTime(SelectedDate));
-        Console.WriteLine(TimeOnly.FromDateTime(Convert.ToDateTime(StartTime)));
-
-        Console.WriteLine(Convert.ToDateTime(EndTime));
 
 
         operationRecord.CreateDate = Convert.ToDateTime(SelectedDate);
-        operationRecord.StartTime = Convert.ToDateTime(StartTime);
-        operationRecord.EndTime = Convert.ToDateTime(EndTime);
+        operationRecord.EndDate = Convert.ToDateTime(EndDate);
+
+        //operationRecord.StartTime = Convert.ToDateTime(StartTime);
+        if (StartTime is not null && SelectedDate is not null)
+        {
+            operationRecord.StartTime = SelectedDate.Value.Date + (TimeSpan)StartTime;
+
+        }
+        if (EndTime is not null)
+        {
+            if (EndDate is not null)
+            {
+                operationRecord.EndTime = EndDate.Value.Date + EndTime;
+
+            }
+            else
+            {
+                operationRecord.EndTime = DateTime.Today + EndTime;
+
+            }
+
+        }
 
 
 
         int id = operationList.Where(a => a.Name == value1).Select(b => b.Id).Last();
         operationRecord.OperationListId = id;
         operationRecord.VS_EmployeesId = Convert.ToInt32(EnteredSapNo);
+        Console.WriteLine(putId);
         if (putId != 0)
         {
             operationRecord.Id = putId;
@@ -243,6 +319,7 @@
         }
         else
         {
+            Console.WriteLine(operationRecord.EndTime);
             var response = await httpClient.PostAsJsonAsync<OperationRecord>("api/OperationRecords", operationRecord);
             _LogEfficiencyData get = new _LogEfficiencyData();
             string Val = await response.Content.ReadAsStringAsync();
@@ -250,10 +327,15 @@
         }
         SelectedDate = DateTime.Today;
         EnteredSapNo = null;
-        StartTime = null;
-        EndTime = null;
+        StartTime = DateTime.Now.TimeOfDay;
+
         value1 = null;
         operationRecord.Achivement = null;
+        manageRecord = null;
+        EndTime = null;
+        EndDate = null;
+        isEndDateRequired = false;
+        InvokeAsync(StateHasChanged);
     }
 
 
@@ -280,15 +362,30 @@
 
     async Task HandleIntervalElapsed(string debouncedText)
     {
+        // SelectedDate = DateTime.Today;
+        manageRecord = null;
+        putId = 0;
+        StartTime = DateTime.Now.TimeOfDay;
+        EndTime = null;
+        EndDate = null;
+        isEndDateRequired = false;
+        value1 = null;
+        operationRecord.Achivement = null;
+
         if (debouncedText.Length > 0)
         {
+            isLoading = true;
+
             manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/{debouncedText}/{SelectedDate.Value.ToString("yyyy-MM-dd")}");
+            isLoading = false;
+
             foreach (OperationRecord operationRecord in manageRecord)
             {
-                if (operationRecord.Achivement is null || operationRecord.EndTime == Convert.ToDateTime("0001-01-01 00:00:00.0000000"))
+                if (operationRecord.Achivement is null || operationRecord.EndTime == null)
                 {
                     SelectedDate = operationRecord.CreateDate;
-                    StartTime = operationRecord.StartTime.ToString("T");
+                    StartTime = operationRecord.StartTime.TimeOfDay;
+                    StartDateTime = operationRecord.StartTime;
                     value1 = operationRecord.OperationList.Name;
                     putId = operationRecord.Id;
 
