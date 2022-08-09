@@ -1,0 +1,82 @@
+﻿@page "/warehouse/listsummary"
+@inject HttpClient http
+<_WarehouseNavBar />
+
+<PageTitle>Operation Summary</PageTitle>
+<br />
+<br />
+<MudGrid>
+    <MudItem xs="3">
+        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText" Label="Search operation" Variant="Variant.Text" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
+    </MudItem>
+    <MudItem xs="3">
+        <MudSwitch @bind-Checked="@state" Color="Color.Error" UnCheckedColor="Color.Success" Style="width:400px">@lable</MudSwitch>
+    </MudItem>
+    <MudItem xs="3"></MudItem>
+    <MudItem xs="3" Class="d-flex justify-end">
+        <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
+    </MudItem>
+    <MudItem xs="12">
+        <MudPaper Elevation="1">
+            <_OperationListTable tableState="@state" searchString="@_debouncedTextMirror" />
+        </MudPaper>  
+    </MudItem>
+</MudGrid>
+
+@code {
+    
+    public bool _state;
+
+    public bool state
+    {
+        get
+        {
+            return _state;
+        }
+        set
+        {
+            if (value != _state)
+            {
+                _state = value;
+                swapLable();
+            }
+        }
+    }
+
+    string lable { get; set; } = "Toggle to map upcoming operations";
+
+    void swapLable()
+    {
+        if (lable == "Toggle to map upcoming operations")
+        {
+            lable = "Toggle to map ongoing operations";
+        }
+        else
+        {
+            lable = "Toggle to map upcoming operations";
+        }
+    }
+
+    private bool AddOperation = true;
+
+    public int id { get; set; }
+    string _debouncedText;
+    string _debouncedTextMirror;
+
+    protected override async Task OnInitializedAsync()
+    {
+        state = false;
+    }
+
+    /// <summary>
+    /// sort by operation name
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    private async Task HandleIntervalElapsed(string value)
+    {
+        _debouncedTextMirror = value;
+        //Console.WriteLine("handler");
+        //Console.WriteLine(_debouncedTextMirror);
+    }
+    }
