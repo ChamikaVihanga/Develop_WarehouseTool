@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\EmployeeProfile\" />
     <Folder Include="Pages\WorkspaceApp\Login\" />
   </ItemGroup>
 
