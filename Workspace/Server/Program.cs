@@ -1,9 +1,9 @@
 global using Workspace.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using Workspace.Server.Services.ResourceFacilityService;
+global using DataAccessLayer;
 
 using Microsoft.AspNetCore.ResponseCompression;
-using Workspace.Server.Data;
 using Workspace.Server.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Workspace.Server.AuthorizationService.PolicyHandler;
 using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +37,7 @@ builder.Services.AddControllersWithViews()
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
-// > > From Service Extension classb
+// > > From Service Extension class
 //builder.Services.ConfigureIISIntegration();
 
 //Add the database exception filter
@@ -92,6 +93,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
+
 
 var app = builder.Build();
 
@@ -108,7 +111,6 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 
 app.UseHttpsRedirection();
 

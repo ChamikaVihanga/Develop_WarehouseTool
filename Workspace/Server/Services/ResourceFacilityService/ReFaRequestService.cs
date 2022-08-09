@@ -1,5 +1,5 @@
 ﻿
-using Workspace.Server.Data;
+using DataAccessLayer;
 using Workspace.Shared.Entities.ResourceFacilities;
 
 namespace Workspace.Server.Services.ResourceFacilityService
