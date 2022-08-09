@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Workspace.Shared.Entities.Warehouse
 {
@@ -23,7 +18,7 @@ namespace Workspace.Shared.Entities.Warehouse
         public string? TimePeriod { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        public DateTime EffectiveDate { get; set; }    
+        public DateTime EffectiveDate { get; set; }
         public int? DTOid { get; set; }
     }
 }

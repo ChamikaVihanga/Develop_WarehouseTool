@@ -1,0 +1,120 @@
+﻿@page "/warehouse/OperationList"
+@inject HttpClient http
+@inject ISnackbar Snackbar
+<title>Admin Operation List</title>
+
+
+<MudItem xs="12">
+    <MudPaper Elevation="0">
+        
+        <MudItem xs="12" >
+            <MudPaper Elevation="0">
+                <_WarehouseNavBar/>        
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
+                <h2>Operation List</h2>
+            </MudPaper>
+        </MudItem>
+        <MudItem  xs="12">
+            <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full py-8">
+                <MudItem xs="8">
+                    <EditForm Model="List">
+                    <DataAnnotationsValidator />
+                    <MudTextField @bind-Text="List.Name" T="String" Label="Operation Name" Variant="Variant.Outlined" For="@(() => List.Name)"></MudTextField>
+                    </EditForm>
+                    @*<MudTextField T="String" Label="Organizational Unit" Variant="Variant.Outlined" />    *@
+                    <MudCheckBox @bind-Checked="@List.IsActive" Color="Color.Primary" UnCheckedColor="Color.Default"> IsActive</MudCheckBox>    
+                    <MudItem xs="8">
+                        <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
+                            <MudButton OnClick="PostData"  Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+                            <MudSpacer />
+                            <MudButton Href="/warehouse/OperationDetails" Variant="Variant.Filled" Color="Color.Info">Add Detail</MudButton>
+                        </MudPaper>
+                    </MudItem>
+                </MudItem>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Elevation="0"  Class="d-flex align-center justify-center mud-width-full py-8">
+                <MudItem xs="12">
+                    <MudPaper Elevation="2"> 
+            <MudSpacer />
+            @if (manageOperation == null)
+            {
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"  />
+            }
+            else
+            {  
+            <MudTable Elevation="25" Items="@manageOperation.Take(5)" Bordered="@bordered" Dense="true">
+                <ToolBarContent>
+                <MudText Typo="Typo.h6">Operation View</MudText>
+                <MudSpacer />
+                <MudTextField  @bind-Value="nullableInt" Placeholder="Search Unite" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                
+               <HeaderContent>              
+                   <MudTh><b>Id</b></MudTh>
+                   <MudTh><b>organization unit</b></MudTh> 
+                   <MudTh><b>Name</b></MudTh>
+                   <MudTh><b>Is Active</b></MudTh>  
+                   <MudTh><b></b></MudTh>  
+                    
+               </HeaderContent>
+               
+               <RowTemplate>
+                   <MudTd>@context.Id</MudTd>
+                   <MudTh></MudTh>
+                   <MudTd>@context.Name</MudTd>
+                   <MudTd>@context.IsActive</MudTd>
+                   <MudTh >
+                       <MudFab  Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small"/>
+                       <MudFab  Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small"/>
+                   </MudTh>
+               </RowTemplate>
+            </MudTable>
+            @*<div class="d-flex flex-wrap mt-4">
+                <MudSwitch @bind-Checked="@bordered" Color="Color.Warning">Bordered</MudSwitch>
+            </div>*@
+            }
+            </MudPaper>
+            </MudItem>
+           </MudPaper>
+        </MudItem>
+    </MudPaper>
+</MudItem>
+<br />
+
+
+
+@code {
+    int? nullableInt;
+    private bool bordered = true;
+    private string searchString = "";
+    public bool Basic_CheckBox2 { get; set; } = false;
+
+    OperationList List = new OperationList();
+
+    protected async Task PostData()
+    {
+        var response = await http.PostAsJsonAsync<OperationList>("api/OperationLists", List);
+        string val = await response.Content.ReadAsStringAsync();
+        AddCloseAfterNavSnackbar(val);
+
+    }
+    public void AddCloseAfterNavSnackbar(string val)
+    {
+        Snackbar.Add($"{val}", Severity.Success, (options) =>
+        {
+            options.CloseAfterNavigation = true;
+        });
+    }
+    private OperationList[] manageOperation;
+
+    protected override async Task OnInitializedAsync()
+    {
+     
+        manageOperation = await http.GetFromJsonAsync<OperationList[]>("api/OperationLists");
+    }
+}

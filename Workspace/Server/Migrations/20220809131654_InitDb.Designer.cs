@@ -12,8 +12,8 @@ using Workspace.Server.Data;
 namespace Workspace.Server.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    [Migration("20220803041918_initialDB")]
-    partial class initialDB
+    [Migration("20220809131654_InitDb")]
+    partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -90,13 +90,46 @@ namespace Workspace.Server.Migrations
                     b.ToTable("OperationDetails");
                 });
 
-            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationList", b =>
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationDetaile", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreateBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OperationListId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Target")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimeSpan")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationListId");
+
+                    b.ToTable("OperationDetailes");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -104,7 +137,7 @@ namespace Workspace.Server.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("OperationLists");
                 });
@@ -117,30 +150,70 @@ namespace Workspace.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Achivement")
+                    b.Property<int?>("Achivement")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Efficiency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Efficiency")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTime")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OperationListId")
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OperationListId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("VS_EmployeesId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OperationListId");
 
+                    b.HasIndex("VS_EmployeesId");
+
                     b.ToTable("OperationRecords");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrganizationalUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VS_Employees");
                 });
 
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationDetail", b =>
@@ -154,10 +227,10 @@ namespace Workspace.Server.Migrations
                     b.Navigation("OperationList");
                 });
 
-            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationRecord", b =>
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationDetaile", b =>
                 {
                     b.HasOne("Workspace.Shared.Entities.Warehouse.OperationList", "OperationList")
-                        .WithMany("OperationRecords")
+                        .WithMany("OperationDetailes")
                         .HasForeignKey("OperationListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -165,10 +238,34 @@ namespace Workspace.Server.Migrations
                     b.Navigation("OperationList");
                 });
 
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationRecord", b =>
+                {
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.OperationList", "OperationList")
+                        .WithMany("OperationRecords")
+                        .HasForeignKey("OperationListId");
+
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees", "VS_Employees")
+                        .WithMany("OperationRecords")
+                        .HasForeignKey("VS_EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OperationList");
+
+                    b.Navigation("VS_Employees");
+                });
+
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationList", b =>
                 {
+                    b.Navigation("OperationDetailes");
+
                     b.Navigation("OperationDetails");
 
+                    b.Navigation("OperationRecords");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
+                {
                     b.Navigation("OperationRecords");
                 });
 #pragma warning restore 612, 618

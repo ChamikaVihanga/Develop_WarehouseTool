@@ -1,7 +1,5 @@
 ﻿@inject HttpClient Http
 
-
-
 @if (Records == null)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
@@ -16,9 +14,11 @@ else
             <MudTh><b>Achivement</b></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd>@context.OperationList.Name </MudTd >
+            <MudTd>@context.OperationList.Name </MudTd >@*
             <MudTd>@context.StartTime.ToString("T") </MudTd>
-            <MudTd>@context.EndTime.ToString("T") </MudTd>
+            <MudTd>@context.EndTime.ToString("T") </MudTd>*@
+            <MudTd>@context.StartTime </MudTd>
+            <MudTd>@context.EndTime</MudTd>
             <MudTd >@context.Achivement</MudTd>
             @*<MudTd DataLabel="Temp. (F)">@context.Efficiency</MudTd>*@            
             @*DataLabel="Date"

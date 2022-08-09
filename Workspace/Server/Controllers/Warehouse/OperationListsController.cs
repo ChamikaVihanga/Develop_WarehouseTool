@@ -25,10 +25,10 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OperationList>>> GetOperationLists()
         {
-          if (_context.OperationLists == null)
-          {
-              return NotFound();
-          }
+            if (_context.OperationLists == null)
+            {
+                return NotFound();
+            }
             return await _context.OperationLists.ToListAsync();
         }
 
@@ -38,10 +38,10 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpGet("{id}")]
         public async Task<ActionResult<OperationList>> GetOperationList(int id)
         {
-          if (_context.OperationLists == null)
-          {
-              return NotFound();
-          }
+            if (_context.OperationLists == null)
+            {
+                return NotFound();
+            }
             //Get data to _EditOperationTable.razor -----------> not using
             var operationList = await _context.OperationLists.FindAsync(id);
                 //.Include(x => x.OperationDetails)
@@ -60,7 +60,7 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
         {
-            if (id != operationList.ID)
+            if (id != operationList.Id)
             {
                 return BadRequest();
             }
@@ -92,13 +92,13 @@ namespace Workspace.Server.Controllers.Warehouse
         public async Task<ActionResult<OperationList>> PostOperationList(OperationList operationList)
         {
           if (_context.OperationLists == null)
-          {
+        {
               return Problem("Entity set 'WorkspaceDbContext.OperationLists'  is null.");
           }
             _context.OperationLists.Add(operationList);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOperationList", new { id = operationList.ID }, operationList);
+            return CreatedAtAction("GetOperationList", new { id = operationList.Id }, operationList);
         }
 
         // DELETE: api/OperationLists/5
@@ -123,7 +123,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
         private bool OperationListExists(int id)
         {
-            return (_context.OperationLists?.Any(e => e.ID == id)).GetValueOrDefault();
+            return (_context.OperationLists?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

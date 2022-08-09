@@ -25,29 +25,47 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OperationRecord>>> GetOperationRecords()
         {
-          if (_context.OperationRecords == null)
-          {
-              return NotFound();
-          }
-            return _context.OperationRecords.Include(c => c.OperationList).ToList();
+            if (_context.OperationRecords == null)
+            {
+                return NotFound();
+            }
+            return await _context.OperationRecords.Include(x => x.OperationList).ToListAsync();
         }
+
+
 
         // GET: api/OperationRecords/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OperationRecord>> GetOperationRecord(int id)
+        public async Task<ActionResult<List<OperationRecord>>> GetOperationRecord(int id)
         {
-          if (_context.OperationRecords == null)
-          {
-              return NotFound();
-          }
-            var operationRecord = await _context.OperationRecords.FindAsync(id);
+            if (_context.OperationRecords == null)
+            {
+                return NotFound();
+            }
 
+            var operationRecord = await _context.OperationRecords.Include(a => a.OperationList).Where(b => b.VS_EmployeesId == id).ToListAsync();
             if (operationRecord == null)
             {
                 return NotFound();
             }
 
             return operationRecord;
+        }
+
+        // GET: api/OperationRecords/Sap/Date
+        // GET: api/OperationRecords/12045/2022-06-03
+
+        [HttpGet("{id}/{SelectedDate}")]
+        public async Task<ActionResult<List<OperationRecord>>> OperationRecordsSapDate(int id, DateTime SelectedDate)
+        {
+
+            var recordDate = await _context.OperationRecords
+                .Include(a => a.OperationList)
+                .Include(d => d.VS_Employees)
+                .Where(b => b.VS_EmployeesId == id)
+                .ToListAsync();
+
+            return recordDate;
         }
 
         // PUT: api/OperationRecords/5
@@ -84,16 +102,21 @@ namespace Workspace.Server.Controllers.Warehouse
         // POST: api/OperationRecords
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<OperationRecord>> PostOperationRecord(OperationRecord operationRecord)
+        public async Task<string> PostOperationRecord(OperationRecord operationRecord)
+        /*public async Task<String> PostOperationRecord(OperationRecord operationRecord)*/
         {
-          if (_context.OperationRecords == null)
-          {
-              return Problem("Entity set 'WorkspaceDbContext.OperationRecords'  is null.");
-          }
+            /*if (_context.OperationRecords == null)
+            {
+                return Problem("Entity set 'WorkspaceDbContext.OperationRecords'  is null.");
+            }*/
+            //operationRecord.EndTime = null;
             _context.OperationRecords.Add(operationRecord);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOperationRecord", new { id = operationRecord.Id }, operationRecord);
+            //return CreatedAtAction("GetOperationRecord", new { id = operationRecord.Id }, operationRecord);
+
+            return "Susscessful..";
+
         }
 
         // DELETE: api/OperationRecords/5

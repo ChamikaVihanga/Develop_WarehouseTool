@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Workspace.Shared.Entities.Warehouse
+﻿namespace Workspace.Shared.Entities.Warehouse
 {
-   public class OperationDetail
+    public class OperationDetail
     {
         public int Id { get; set; }
 
         //one to many relationship from OperationList 
         public int OperationListId { get; set; }
-        public OperationList? OperationList { get; set; } 
+        public OperationList? OperationList { get; set; }
         public DateTime EffectiveDate { get; set; }
 
         //[Required]

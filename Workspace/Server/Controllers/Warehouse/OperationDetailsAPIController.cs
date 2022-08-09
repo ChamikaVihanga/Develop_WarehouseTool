@@ -173,7 +173,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 _context.OperationLists.Add(opList);
                 await _context.SaveChangesAsync();
 
-                var lastRecordID = _context.OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.ID).Last();
+                var lastRecordID = _context.OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.Id).Last();
 
                 OperationDetail operationDetail = new OperationDetail();
                 operationDetail.EffectiveDate = operationSummeryDTO.EffectiveDate;
