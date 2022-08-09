@@ -5,6 +5,14 @@ global using Workspace.Server.Services.ResourceFacilityService;
 using Microsoft.AspNetCore.ResponseCompression;
 using Workspace.Server.Data;
 using Workspace.Server.Extensions;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Workspace.Server.AuthorizationService.Policies;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Workspace.Server.AuthorizationService.PolicyHandler;
+using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +25,16 @@ builder.Services.AddRazorPages();
 // DB Connection 
 builder.Services.AddDbContext<WorkspaceDbContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//DB connection for authorization requirements
+//builder.Services.AddDbContext<AuthDbContext>(options =>
+//   options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDb")));
+builder.Services.AddDbContext<AuthDbContext>();
+
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
 // > > From Service Extension classb
 //builder.Services.ConfigureIISIntegration();
@@ -33,12 +51,46 @@ builder.Services.AddDbContext<WorkspaceDbContext>(options =>
 // NLog > > From Service Extension Class
 //builder.Services.ConfigureLoggerService();
 
+
+//add auth policy
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+        };
+    });
+
+
+builder.Services.AddHttpContextAccessor();
+
+List<string> PoliciesList = new List<string>();
+PoliciesList.Add("VSPolicy");
+
+builder.Services.AddAuthorization(options =>
+{
+
+    foreach (string policy in PoliciesList)
+    {
+        string name = policy;
+        options.AddPolicy(name, policy => policy.Requirements.Add(new CustomPolicy(name)));
+    }
+
+});
+
+
+builder.Services.AddScoped<IAuthorizationHandler, CustomPolicyHandler>();
+
+builder.Services.AddScoped<ICustomPolicyDataProvider, CustomPolicyDataProvider>();
+
 // Register the Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
 
 
 var app = builder.Build();
@@ -57,13 +109,15 @@ else
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();

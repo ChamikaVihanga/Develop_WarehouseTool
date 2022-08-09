@@ -2,6 +2,7 @@ namespace Workspace.Shared
 {
     public class WeatherForecast
     {
+        public int id { get; set; }
         public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }

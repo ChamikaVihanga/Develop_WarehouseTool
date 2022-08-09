@@ -10,6 +10,7 @@ using Toolbelt.Blazor.Extensions.DependencyInjection;
 using Workspace.Client;
 using Microsoft.AspNetCore.Components.Authorization;
 using Workspace.Client.Auth_Service;
+using Workspace.Client.Interceptor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -38,6 +39,8 @@ builder.Services.AddMudServices();
 builder.Services.AddLoadingBar();
 builder.UseLoadingBar(); // declare construct loading bar UI.
 
+builder.Services.AddHttpClientInterceptor();
+builder.Services.AddScoped<GlobalErrorHandler>();
 
 builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
 builder.Services.AddBlazoredLocalStorage();
