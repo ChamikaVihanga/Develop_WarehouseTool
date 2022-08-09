@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Workspace.Server.Extensions
+﻿namespace Workspace.Server.Extensions
 {
     public static class ServiceExtensions
     {
@@ -25,6 +22,6 @@ namespace Workspace.Server.Extensions
 
         // Implement NLog
         //public static void ConfigureLoggerService(this IServiceCollection services)
-           // => services.AddSingleton<ILoggerManager, LoggerManager>();
+        // => services.AddSingleton<ILoggerManager, LoggerManager>();
     }
 }

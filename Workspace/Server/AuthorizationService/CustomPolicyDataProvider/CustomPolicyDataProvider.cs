@@ -1,5 +1,4 @@
-﻿using Workspace.Server.Data;
-using Workspace.Shared.Auth;
+﻿using Workspace.Shared.Auth;
 
 namespace Workspace.Server.AuthorizationService.CustomPolicyDataProvider
 {

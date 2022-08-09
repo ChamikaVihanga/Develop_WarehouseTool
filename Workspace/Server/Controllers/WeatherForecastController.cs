@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Workspace.Server.Data;
 using Workspace.Shared;
 using Workspace.Shared.Auth;
 
