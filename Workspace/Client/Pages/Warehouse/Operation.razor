@@ -48,14 +48,13 @@
             <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
                 <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
 
-                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target== null || summeryDTO.AllocatedTime == null || summeryDTO.TimePeriod == null)
+                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target== null || summeryDTO.AllocatedTime == null || summeryDTO.TimePeriod == null || summeryDTO.Target == 0 || summeryDTO.AllocatedTime == 0)
                 {
                     <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="true">Add Task</MudButton>
                 }
                 else
                 {
                     <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="false">Add Task</MudButton>
-
                 }
             </MudItem>
         </MudItem>
@@ -66,7 +65,7 @@
 
 @code {
     //public bool ReadOnly { get; set; } = true;
-
+   
     public string date { get; set; }
     MudDatePicker _picker;
     [Parameter]
@@ -75,7 +74,6 @@
     [Inject] private IDialogService DialogService { get; set; }
 
     OperationSummeryDTO summeryDTO = new OperationSummeryDTO();
-
 
     private async Task PostData()
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -77,20 +78,29 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpPost, Route("DetailsOnly")]
         public async Task<string> PostDetails(OperationDetail operationDetail)
         {
-            OperationDetail operationDetail1 = new OperationDetail();
+            try
+            {
+                OperationDetail operationDetail1 = new OperationDetail();
 
-            operationDetail1.TimePeriod = operationDetail.TimePeriod;
-            operationDetail1.CreateDate = DateTime.Now;
-            operationDetail1.TimeSpan = operationDetail.TimeSpan;
-            operationDetail1.EffectiveDate = operationDetail.EffectiveDate;
-            operationDetail1.Target = operationDetail.Target;
-            operationDetail1.CreatedBy = operationDetail.CreatedBy;
-            operationDetail1.OperationListId = operationDetail.OperationListId;
+                operationDetail1.TimePeriod = operationDetail.TimePeriod;
+                operationDetail1.CreateDate = DateTime.Now;
+                operationDetail1.TimeSpan = operationDetail.TimeSpan;
+                operationDetail1.EffectiveDate = operationDetail.EffectiveDate;
+                operationDetail1.Target = operationDetail.Target;
+                operationDetail1.CreatedBy = operationDetail.CreatedBy;
+                operationDetail1.OperationListId = operationDetail.OperationListId;
 
-            _context.OperationDetails.Add(operationDetail1);
-            await _context.SaveChangesAsync();
+                _context.OperationDetails.Add(operationDetail1);
+                await _context.SaveChangesAsync();
 
-            return "Successfully Updated";
+                return "Successfully Updated";
+            }
+            catch (Exception e)
+            {
+                return e.Message.ToString();
+            }
+            
+            
         }
 
 
@@ -149,34 +159,43 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpPost]
         public async Task<ActionResult<string>> PostOperationDetail(OperationSummeryDTO operationSummeryDTO)
         {
-            if (_context.OperationDetails == null)
+            try
             {
-                return Problem("Entity set 'WorkspaceDbContext.OperationDetails'  is null.");
+                if (_context.OperationDetails == null)
+                {
+                    return Problem("Entity set 'WorkspaceDbContext.OperationDetails'  is null.");
+                }
+
+                OperationList opList = new OperationList();
+                opList.Name = operationSummeryDTO.OperationName;
+                opList.IsActive = true;
+
+                _context.OperationLists.Add(opList);
+                await _context.SaveChangesAsync();
+
+                var lastRecordID = _context.OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.ID).Last();
+
+                OperationDetail operationDetail = new OperationDetail();
+                operationDetail.EffectiveDate = operationSummeryDTO.EffectiveDate;
+                operationDetail.CreateDate = DateTime.Now;
+                operationDetail.CreatedBy = "Ashen(CEO)";
+                operationDetail.Target = (int)operationSummeryDTO.Target;
+                operationDetail.TimeSpan = (int)operationSummeryDTO.AllocatedTime;
+                operationDetail.TimePeriod = operationSummeryDTO.TimePeriod;
+                operationDetail.OperationListId = lastRecordID;
+
+                _context.OperationDetails.Add(operationDetail);
+                await _context.SaveChangesAsync();
+
+                return Ok("Successfully Created");
+                //return CreatedAtAction("GetOperationDetail", new { id = operationDetail.Id }, operationDetail);
             }
-           
-            OperationList opList = new OperationList();
-            opList.Name = operationSummeryDTO.OperationName;
-            opList.IsActive = true;
+            catch(Exception e)
+            {
+                return $"Ooops Something went wrong- {e.Message}";
+            }
 
-            _context.OperationLists.Add(opList);
-            await _context.SaveChangesAsync();
 
-            var lastRecordID =  _context.OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.ID).Last();
-
-            OperationDetail operationDetail = new OperationDetail();
-            operationDetail.EffectiveDate = operationSummeryDTO.EffectiveDate;
-            operationDetail.CreateDate = DateTime.Now;
-            operationDetail.CreatedBy = "Ashen(CEO)";
-            operationDetail.Target = (int)operationSummeryDTO.Target;
-            operationDetail.TimeSpan = (int)operationSummeryDTO.AllocatedTime;
-            operationDetail.TimePeriod = operationSummeryDTO.TimePeriod;
-            operationDetail.OperationListId = lastRecordID;
-
-            _context.OperationDetails.Add(operationDetail);
-            await _context.SaveChangesAsync();
-
-            return Ok("Successfully Created");
-            //return CreatedAtAction("GetOperationDetail", new { id = operationDetail.Id }, operationDetail);
         }
 
 

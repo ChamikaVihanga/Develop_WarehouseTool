@@ -22,6 +22,7 @@ namespace Workspace.Shared.Entities.Warehouse
         [Required]
         public string? TimePeriod { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime EffectiveDate { get; set; }    
         public int? DTOid { get; set; }
     }
