@@ -6,23 +6,7 @@
 
 <AuthorizeView>
     <Authorized>
-
-       @* <div class="d-flex">
-            <MudTooltip Text="@context.User.Identity.Name">
-
-                <MudFab Color="Color.Inherit" DisableElevation="true" Size="Size.Small" @onclick="ToggleOpen" StartIcon="@Icons.Filled.AccountCircle" />
-            </MudTooltip>
-            <MudPopover Open="@_isOpen" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
-                <div class="d-flex flex-column pa-1">
-                    <UserPopover />
-                </div>
-            </MudPopover>
-        </div>*@
-
-
-        @*<button @onclick="Refresh" class="btn btn-danger">Refresh</button>*@
-
-        <MudMenu Icon="@Icons.Filled.AccountCircle" ActivationEvent="@MouseEvent.LeftClick" >
+        <MudMenu Icon="@Icons.Filled.AccountCircle" ActivationEvent="@MouseEvent.MouseOver" >
             <ChildContent>
                 <MudMenuItem Disabled="true" Style="background-color:lightsteelblue">@context.User.Identity.Name.ToString().ToUpper()</MudMenuItem>
                 <MudMenuItem>Profile</MudMenuItem>
@@ -65,7 +49,7 @@
     async Task Refresh()
     {
 
-        var Token = await http.PostAsync("https://localhost:44322/api/Authentication/refresh-Token", null);
+        var Token = await http.PostAsync("https://auth.workspace.vsag.ch/api/Authentication/refresh-Token", null);
         var token = await Token.Content.ReadAsStringAsync();
         Console.WriteLine(token);
         await LocalStorage.RemoveItemAsync("token");
