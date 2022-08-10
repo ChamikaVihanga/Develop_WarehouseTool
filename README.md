@@ -1,6 +1,12 @@
 # Workspace Solution...
 
-> Version 1.3.0
+> Current Version 1.3.0
+
+> Project track in [Jira](https://workspaceapp.atlassian.net/jira/software/projects/WS/boards/2) *[Cloud]*
+
+> Project repository in [GitV](http://git.workspace.vsag.ch/Dev_Team/Workspace) *[Local Hosted]*
+
+> Project Documentation in [Notion](https://hiruna.notion.site/VS-Workspace-ab113a9758d14836b37e2d16f4b7dbed) *[Temp]*
 
 ### Technologies
 
