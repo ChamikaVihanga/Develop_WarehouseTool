@@ -9,9 +9,13 @@
 
 	<ItemGroup>
 	  <Compile Remove="Pages\EmployeeProfile\**" />
+	  <Compile Remove="Pages\WorkspaceApp\Login\**" />
 	  <Content Remove="Pages\EmployeeProfile\**" />
+	  <Content Remove="Pages\WorkspaceApp\Login\**" />
 	  <EmbeddedResource Remove="Pages\EmployeeProfile\**" />
+	  <EmbeddedResource Remove="Pages\WorkspaceApp\Login\**" />
 	  <None Remove="Pages\EmployeeProfile\**" />
+	  <None Remove="Pages\WorkspaceApp\Login\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Pages\WorkspaceApp\Login\" />
+	  <Folder Include="Pages\WorkspaceApp\Warehouse\" />
 	</ItemGroup>
 
 
