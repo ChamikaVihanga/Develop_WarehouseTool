@@ -34,10 +34,34 @@
 
 **Master** - Main Solution
 
-**Develop** - 
+**Release** - Creating temporary when going to realse develop branch features
 
-**Sprint_X** - Working Sprint ( All developers commites are mearch to this)
+**Develop** - ??
 
-**Sample_Fearture_Name** - THen Cerate brange base Sprint_X by Deveoper
+**Current_Sprint** - Working Sprint ( All developers commites are mearch to this)
 
-Then all Feature branches merge to Sprint Branch when sprint is over...
+**Sample_Fearture_Name** - Developer should create new branch from base Current_Sprint for Implement new feature
+
+
+## Implementing a new feature in Workspace
+
+1. **Workspace.Shared Project**
+    - Add Entities
+
+2. **In Server Project**
+    - Services Folder
+        - Interface class
+        - Implimentation Class	
+	- Program.cs
+		- Add Services
+	- Controller Folder
+		- API Endponts
+
+2. **In Client Project**
+	- Services Folder
+		- Interface class
+		- Implimentation Class
+	- Program.cs
+		- Add Services
+	- Pages Folder
+		- Features
