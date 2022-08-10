@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Workspace.Shared;
+using Workspace.Shared.Auth;
 
 namespace Workspace.Server.Controllers
 {
@@ -13,17 +15,19 @@ namespace Workspace.Server.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly AuthDbContext _authContext;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, AuthDbContext authDbContext)
         {
             _logger = logger;
+            _authContext = authDbContext;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Policy ="VSPolicy")]
         public IEnumerable<WeatherForecast> Get()
         {
             Thread.Sleep(3000);
-
+            
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
@@ -31,6 +35,12 @@ namespace Workspace.Server.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet, Route("testAuth")]
+        public async Task<List<AuthenticationClaimRequirement>> getAuth()
+        {
+            return await _authContext.AuthenticationClaimRequirements.Include(a => a.AuthenticationClaimValuesClaimValues).ThenInclude(b => b.AuthenticationClaim).ToListAsync();
         }
     }
 }
