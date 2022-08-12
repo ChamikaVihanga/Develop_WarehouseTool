@@ -48,10 +48,10 @@
                 <MudTh><b>Start Time</b></MudTh>
                 <MudTh><b>End Time</b></MudTh>
                 <MudTh><b>Achivement</b></MudTh>
-                <MudTh><b></b></MudTh>
+                
             </HeaderContent>
             <RowTemplate>
-                <MudTd>@context.VS_Employees.FullName</MudTd>
+                <MudTd>@context.VS_Employees.LastName</MudTd>
                 <MudTd>@context.CreateDate.ToString("d")</MudTd>
                 <MudTd>@context.OperationList.Name</MudTd>
                 <MudTd>@context.StartTime.ToString("T")</MudTd>

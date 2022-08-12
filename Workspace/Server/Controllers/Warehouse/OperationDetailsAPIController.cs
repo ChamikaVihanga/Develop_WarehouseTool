@@ -74,7 +74,7 @@ namespace Workspace.Server.Controllers.Warehouse
         /// <param name="operationDetail"></param>
         /// <returns></returns>
         //POST: api/OperationDetailsAPI/DetailsOnly
-        [HttpPost, Route("DetailsOnly")]
+        [HttpPost, Route("DetailsOnly"), Authorize]
         public async Task<string> PostDetails(OperationDetail operationDetail)
         {
             try
@@ -86,7 +86,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 operationDetail1.TimeSpan = operationDetail.TimeSpan;
                 operationDetail1.EffectiveDate = operationDetail.EffectiveDate;
                 operationDetail1.Target = operationDetail.Target;
-                operationDetail1.CreatedBy = operationDetail.CreatedBy;
+                operationDetail1.CreatedBy = User.Identity.Name;
                 operationDetail1.OperationListId = operationDetail.OperationListId;
 
                 _context.OperationDetails.Add(operationDetail1);
@@ -155,7 +155,7 @@ namespace Workspace.Server.Controllers.Warehouse
         /// </summary>
         /// <param name="operationSummeryDTO"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<ActionResult<string>> PostOperationDetail(OperationSummeryDTO operationSummeryDTO)
         {
             try
@@ -177,7 +177,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 OperationDetail operationDetail = new OperationDetail();
                 operationDetail.EffectiveDate = operationSummeryDTO.EffectiveDate;
                 operationDetail.CreateDate = DateTime.Now;
-                operationDetail.CreatedBy = "Ashen(CEO)";
+                operationDetail.CreatedBy = User.Identity.Name;
                 operationDetail.Target = (int)operationSummeryDTO.Target;
                 operationDetail.TimeSpan = (int)operationSummeryDTO.AllocatedTime;
                 operationDetail.TimePeriod = operationSummeryDTO.TimePeriod;
