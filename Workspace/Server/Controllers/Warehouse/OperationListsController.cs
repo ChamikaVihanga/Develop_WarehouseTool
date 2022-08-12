@@ -88,16 +88,29 @@ namespace Workspace.Server.Controllers.Warehouse
         // POST: api/OperationLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<OperationList>> PostOperationList(OperationList operationList)
+        public async Task<ActionResult<OperationList>> PostOperationList(OperationList operationList, bool isActive)
         {
           if (_context.OperationLists == null)
         {
               return Problem("Entity set 'WorkspaceDbContext.OperationLists'  is null.");
           }
+            if (isActive == true)
+            {
+                operationList.IsActive = true;  
+            }
+            else
+            {
+                operationList.IsActive = false;
+            }
+          OperationList operationActivation = new OperationList();
+            operationActivation.IsActive = operationList.IsActive;
+
+
             _context.OperationLists.Add(operationList);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOperationList", new { id = operationList.Id }, operationList);
+            return Ok("Successfully Activated");
+            //return CreatedAtAction("GetOperationList", new { id = operationList.Id }, operationList);
         }
 
         // DELETE: api/OperationLists/5

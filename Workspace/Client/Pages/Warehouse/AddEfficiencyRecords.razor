@@ -12,7 +12,7 @@
     <MudPaper Elevation="0">
         <MudGrid>
             <MudItem xs="12">
-                <MudText><h2 class="font-style">Efficiency</h2></MudText>
+                <MudText><h3 >Efficiency</h3></MudText>
             </MudItem>
             <MudItem xs="9">
                 @if (isLoading)
@@ -131,7 +131,6 @@
                             {
                                 <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true">Submit</MudButton>
                                 <MudAlert Severity="Severity.Error" Class="ml-auto">You must enter sap number, Start Time & Operation Name</MudAlert>
-
                             }
                             else
                             {
@@ -141,8 +140,6 @@
 
                     </MudPaper>
                 }
-
-
             </MudItem>
 
             @*Employe View site*@
@@ -163,7 +160,7 @@
 
 
             <MudItem xs="12">
-                <h3 class="font-style">Efficiency Summary</h3>
+                <h3>Efficiency Summary</h3>
                 <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                 </MudPaper>
             </MudItem>

@@ -1,4 +1,5 @@
 ﻿@inject HttpClient Http
+@inject ISnackbar Snackbar
 
 @if (detail is null)
 {
@@ -23,21 +24,23 @@ else
             <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
             <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
             <MudTh>
-                <MudCheckBox @bind-Checked="context.OperationList.IsActive" Color="Color.Success"></MudCheckBox>
+                <MudCheckBox @bind-Checked="context.OperationList.IsActive" @onchange="() => changeActivation(context.OperationList.Id, context.OperationList.IsActive)" Color="Color.Success"></MudCheckBox>
             </MudTh>
             <MudTh>
                 <MudTooltip Text="More Info" Placement="Placement.Right">
-                    <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">              @* <------------navigate to UpdateTargetForOperation page with OperationListId *@
+                    <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">
+                        @* <------------navigate to UpdateTargetForOperation page with OperationListId *@
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"></MudIconButton>
                     </a>
                 </MudTooltip>
-            </MudTh>           
+            </MudTh>
         </RowTemplate>
     </MudTable>
 }
 
 
 @code {
+    OperationList checkActivation = new OperationList();
 
     bool fixed_header = true;
 
@@ -151,6 +154,25 @@ else
         {
             detail = detailsBackups.Where(a => a.OperationList.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
+    }
+
+    async Task changeActivation(int id, bool isActive)
+    {
+        var getresponce = await Http.PostAsJsonAsync<OperationList>("api/OperationLists", checkActivation);
+
+
+
+        Console.WriteLine("active");
+
+        string getresponceCheck = getresponce.Content.ReadAsStringAsync().Result;
+        showBar(getresponceCheck);
+
+       
+    }
+
+    void showBar(string getOnlyStringValue)
+    {
+        Snackbar.Add($"{getOnlyStringValue}", Severity.Success, config => { config.ShowCloseIcon = false; });
     }
 }
 
