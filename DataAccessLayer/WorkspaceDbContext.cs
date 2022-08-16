@@ -2,6 +2,7 @@
 using Workspace.Shared.Entities.ResourceFacilities;
 using Workspace.Shared.Auth;
 using Workspace.Shared.Entities.Warehouse;
+using Workspace.Shared.Entities.SampleApp;
 
 namespace DataAccessLayer
 {
@@ -11,6 +12,8 @@ namespace DataAccessLayer
         {
         }
         public DbSet<ReFaRequest> ReFaRequests { get; set; }
+        public DbSet<SampleTodo> SampleTodos { get; set; }
+
 
 
         // warehouse data entry - efficiency 
