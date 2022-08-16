@@ -24,7 +24,22 @@ else
             <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
             <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
             <MudTh>
-                <MudCheckBox @bind-Checked="context.OperationList.IsActive" @onchange="() => changeActivation(context.OperationList.Id, context.OperationList.IsActive)" Color="Color.Success"></MudCheckBox>
+                @if (Approved)
+                {
+                    <input type="checkbox" checked @onchange="@(async (e) => await ToggleApprovedAsync(false))" />
+                }
+                else
+                {
+                    <input type="checkbox" checked @onchange="@(async (e) => await ToggleApprovedAsync(true))" />
+                }
+                <MudSpacer/>
+                @foreach(var check in CheckBoxList())
+                {
+                    <input class="custom-checkbox" type="checkbox" @onchange="eventArgs => { CheckboxClicked(check, eventArgs.Value);}" />
+                }
+                
+                @*<MudCheckBox @bind-Checked="context.OperationList.IsActive" @onchange="() => changeActivation(context.OperationList.Id, context.OperationList.IsActive)" Color="Color.Success"></MudCheckBox>*@
+                @*<MudCheckBox @bind-Checked="context.OperationList.IsActive" @onchange="@(async (e) => await ToggleApprovedAsync(true))" Color="Color.Success"></MudCheckBox>*@
             </MudTh>
             <MudTh>
                 <MudTooltip Text="More Info" Placement="Placement.Right">
@@ -40,9 +55,13 @@ else
 
 
 @code {
+    bool Approved;
+
     OperationList checkActivation = new OperationList();
 
     bool fixed_header = true;
+
+    public bool OperationActive { get; set; }
 
     public bool _tableState;
     [Parameter]
@@ -103,7 +122,7 @@ else
     {
 
         Recordss = await Http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");   //  >
-
+        
         List<int> listIds = new List<int>();                                                    //  >  Common functions
         listIds = Recordss.Select(a => a.OperationListId).Distinct().ToList();                  //  >
 
@@ -167,12 +186,54 @@ else
         string getresponceCheck = getresponce.Content.ReadAsStringAsync().Result;
         showBar(getresponceCheck);
 
-       
+    }
+    async Task ToggleApprovedAsync(bool isActive)
+    {
+        Console.WriteLine("Toggle Approved = " + isActive);
+        if (isActive)
+        {
+            Console.WriteLine("active");
+            Approved = true;
+        }
+        else
+        {
+            Console.WriteLine("Deactive");
+            Approved = false;
+        }
     }
 
     void showBar(string getOnlyStringValue)
     {
         Snackbar.Add($"{getOnlyStringValue}", Severity.Success, config => { config.ShowCloseIcon = false; });
+    }
+    //
+    public List<string> CheckBox { get; set; } = new List<string>();
+    void CheckboxClicked(string CheckID, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!CheckBox.Contains(CheckID))
+            {
+                CheckBox.Add(CheckID);
+                Console.WriteLine("Activated");
+            }
+        }
+        else
+        {
+            if (CheckBox.Contains(CheckID))
+            {
+                CheckBox.Remove(CheckID);
+                Console.WriteLine("Deactivated");
+            }
+        }
+    }
+
+    public List<String> CheckBoxList()
+    {
+        List<String> checkBox = new List<String>();
+        checkBox.Add("");
+
+        return checkBox;
     }
 }
 
