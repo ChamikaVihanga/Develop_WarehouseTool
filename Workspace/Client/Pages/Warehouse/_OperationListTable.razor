@@ -1,12 +1,13 @@
 ﻿@inject HttpClient Http
+@inject ISnackbar Snackbar
 
-@if (detail is null)
+@if (operationDetails is null)
 {
     <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
 }
 else
 {
-    <MudTable Items="detail" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="true" FixedHeader="@fixed_header" Height="500px">
+    <MudTable Items="operationDetails" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="true" FixedHeader="@fixed_header" Height="500px">
         <HeaderContent>
             <MudTh><b>Organization Unit</b></MudTh>
             <MudTh><b>Operation Name</b></MudTh>
@@ -23,136 +24,109 @@ else
             <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
             <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
             <MudTh>
-                <MudCheckBox @bind-Checked="context.OperationList.IsActive" Color="Color.Success"></MudCheckBox>
+                <input type="checkbox" class="form-check-input" value=@context.OperationList.IsActive />
             </MudTh>
             <MudTh>
                 <MudTooltip Text="More Info" Placement="Placement.Right">
-                    <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">              @* <------------navigate to UpdateTargetForOperation page with OperationListId *@
+                    <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"></MudIconButton>
                     </a>
                 </MudTooltip>
-            </MudTh>           
+            </MudTh>
         </RowTemplate>
     </MudTable>
 }
 
 
 @code {
+    public OperationDetail operationDetail;
+    public List<OperationDetail> operationDetails;
+
+    public List<OperationDetail> activeOperationDetails;
+    public List<OperationDetail> upcommingOperationDetails;
 
     bool fixed_header = true;
 
-    public bool _tableState;
+
     [Parameter]
-    public bool tableState
-    {
-        get
-        {
-            return _tableState;
-        }
-        set
-        {
-            if (value != _tableState)
-            {
-                _tableState = value;
-                changeState();
-            }
-        }
-    }
+    public bool tableState { get; set; }
 
-    public OperationDetail[]? Recordss { get; set; }
-
-    public string _searchString;
     [Parameter]
-    public string? searchString
-    {
-        get
-        {
-            return _searchString;
-        }
-        set
-        {
-            if (value != _searchString)
-            {
-                _searchString = value;
-                HandleIntervalElapsed(value);
-            }
-        }
-    }
+    public string? searchString { get; set; }
 
-    public int id;
-    //List<OperationDetail> detail = new List<OperationDetail>();
-    public static List<OperationDetail> detail { get; set; }
-
-    List<OperationDetail> CuurentActive = new List<OperationDetail>();
-    List<OperationDetail> Upcomming = new List<OperationDetail>();
-
-    List<OperationDetail> detailsBackups = new List<OperationDetail>();
-
-    /// <summary>
-    ///                                             ----Show latest Effective date from Operations----
-    /// In OnInitializedAsync methord get OperationDetail array as a API and named as a Recordss. Get only integer values from that as a listIds and put it in to a list.
-    /// Create OperationDetail list with PassedEffectiveDate variable name.
-    /// From that compair with the (DateTime.Now) whether it less than currant date and create a list from that. After select unique ID's from OperationListId ( using Distinct() )
-    /// From that ID's select Max EffectiveDate using foreach loop. Finally if it is not null add detail.
-    /// </summary>
-    /// <returns></returns>
     protected override async Task OnInitializedAsync()
     {
-
-        Recordss = await Http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");   //  >
-
-        List<int> listIds = new List<int>();                                                    //  >  Common functions
-        listIds = Recordss.Select(a => a.OperationListId).Distinct().ToList();                  //  >
-
-        List<OperationDetail> PassedEffectiveDate = new List<OperationDetail>();
-        PassedEffectiveDate = Recordss.Where(a => a.EffectiveDate < DateTime.Now).ToList();
-
-        foreach (int a in listIds)
-        {
-            List<OperationDetail> relatedDetails = PassedEffectiveDate.Where(x => x.OperationListId == a).ToList();
-            OperationDetail? maxDate = relatedDetails.MaxBy(p => p.EffectiveDate);
-            if (maxDate is not null)
-            {
-                CuurentActive.Add(maxDate);
-            }
-        }
-        // show upcoming operations
-        List<OperationDetail> UpcommingRecordsAll = new List<OperationDetail>();
-        UpcommingRecordsAll = Recordss.Where(a => a.EffectiveDate > DateTime.Now).ToList();
-        foreach (int a in listIds)
-        {
-            List<OperationDetail> UpcommingRelatedDetails = UpcommingRecordsAll.Where(x => x.OperationListId == a).ToList();
-            OperationDetail? minDate = UpcommingRelatedDetails.MinBy(p => p.EffectiveDate);
-            if (minDate is not null)
-            {
-                Upcomming.Add(minDate);
-            }
-        }
-        await changeState();
+        await GetActiveOperations();
     }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        changeState();
+        HandleIntervalElapsed();
+    }
+
 
     async Task changeState()
     {
         if (tableState)
         {
-            detail = Upcomming;
+            await GetUpcommingOperations();
         }
         else
         {
-            detail = CuurentActive;
+            await GetActiveOperations();
         }
-        detailsBackups = detail;
-        //await InvokeAsync(StateHasChanged);
     }
 
-    public async Task HandleIntervalElapsed(string value)
+    async Task HandleIntervalElapsed()
     {
-        if (value.Length >= 0)
+        if (searchString.Length >= 0)
         {
-            detail = detailsBackups.Where(a => a.OperationList.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            operationDetails = operationDetails.Where(a => a.OperationList.Name.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
+    }
+
+    async Task GetActiveOperations()
+    {
+        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationDetailsAPI/Active");  
+    }
+
+    async Task GetUpcommingOperations()
+    {
+        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationDetailsAPI/Upcoming");
+    }
+
+    void showBar(string getOnlyStringValue)
+    {
+        Snackbar.Add($"{getOnlyStringValue}", Severity.Success, config => { config.ShowCloseIcon = false; });
+    }
+    
+    public List<string> CheckBox { get; set; } = new List<string>();
+    void CheckboxClicked(string CheckID, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!CheckBox.Contains(CheckID))
+            {
+                CheckBox.Add(CheckID);
+                Console.WriteLine("Activated");
+            }
+        }
+        else
+        {
+            if (CheckBox.Contains(CheckID))
+            {
+                CheckBox.Remove(CheckID);
+                Console.WriteLine("Deactivated");
+            }
+        }
+    }
+
+    public List<String> CheckBoxList()
+    {
+        List<String> checkBox = new List<String>();
+        checkBox.Add("");
+
+        return checkBox;
     }
 }
-
-
-

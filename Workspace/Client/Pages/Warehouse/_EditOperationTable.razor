@@ -92,7 +92,7 @@ else
     {
         operationEdit.OperationListId = id;
         operationEdit.EffectiveDate = Convert.ToDateTime(newdate);
-        operationEdit.CreatedBy = "lkaspe2";
+        operationEdit.CreatedBy = "Unknowen User";
         var editResponse = await http.PostAsJsonAsync<OperationDetail>("api/OperationDetailsAPI/DetailsOnly", operationEdit);
         MudDialog.Close(DialogResult.Ok(true));
 
