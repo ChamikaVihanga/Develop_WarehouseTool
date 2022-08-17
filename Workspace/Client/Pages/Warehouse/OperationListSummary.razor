@@ -6,10 +6,10 @@
 
 <MudGrid Class="mt-10">
     <MudItem xs="3">
-        <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText" Label="Search operation" Variant="Variant.Text" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
+        <MudTextField T="string" @bind-Value="@SearchString" Immediate="true" Label="Search operation" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
     </MudItem>
     <MudItem xs="3">
-        <MudSwitch @bind-Checked="@state" Color="Color.Error" UnCheckedColor="Color.Success" Style="width:400px">@lable</MudSwitch>
+        <MudSwitch @bind-Checked="@status" Onclick="@swapLable" Color="Color.Error" UnCheckedColor="Color.Success" Style="width:400px">@lable</MudSwitch>
     </MudItem>
     <MudItem xs="3"></MudItem>
     <MudItem xs="3" Class="d-flex justify-end">
@@ -17,65 +17,24 @@
     </MudItem>
     <MudItem xs="12">
         <MudPaper Elevation="1">
-            <_OperationListTable tableState="@state" searchString="@_debouncedTextMirror" />
-        </MudPaper>  
+            <_OperationListTable tableState="@status" searchString="@SearchString" />
+        </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
-    
-    public bool _state;
-
-    public bool state
-    {
-        get
-        {
-            return _state;
-        }
-        set
-        {
-            if (value != _state)
-            {
-                _state = value;
-                swapLable();
-            }
-        }
-    }
-
-    string lable { get; set; } = "Toggle to map upcoming operations";
-
+    public bool status = false;
+    string? lable { get; set; } = "Toggle to view upcoming operations";
+    string? SearchString { get; set; }
     void swapLable()
     {
-        if (lable == "Toggle to map upcoming operations")
+        if (status)
         {
-            lable = "Toggle to map ongoing operations";
+            lable = "Toggle to view upcoming operations";
         }
         else
         {
-            lable = "Toggle to map upcoming operations";
+            lable = "Toggle to view ongoing operations";
         }
     }
-
-    private bool AddOperation = true;
-
-    public int id { get; set; }
-    string _debouncedText;
-    string _debouncedTextMirror;
-
-    protected override async Task OnInitializedAsync()
-    {
-        state = false;
-    }
-
-    /// <summary>
-    /// sort by operation name
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private async Task HandleIntervalElapsed(string value)
-    {
-        _debouncedTextMirror = value;
-        //Console.WriteLine("handler");
-        //Console.WriteLine(_debouncedTextMirror);
-    }
-    }
+}

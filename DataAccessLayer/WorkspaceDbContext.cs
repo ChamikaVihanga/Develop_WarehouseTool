@@ -16,7 +16,6 @@ namespace DataAccessLayer
         // warehouse data entry - efficiency 
         public DbSet<OperationRecord> OperationRecords { get; set; }
         public DbSet<OperationList> OperationLists { get; set; }
-        public DbSet<OperationDetaile> OperationDetailes { get; set; }
         public DbSet<VS_Employees> VS_Employees { get; set; }
         public DbSet<OperationDetail> OperationDetails { get; set; }
 
