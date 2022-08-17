@@ -32,8 +32,38 @@ namespace Workspace.Server.Controllers.Warehouse
             return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();
         }
 
-        
-        
+
+        // GET: api/OperationDetailsAPI/Active
+        [HttpGet("Active")]
+        public async Task<ActionResult<IEnumerable<OperationDetail>>> GetActiveOperationDetails()
+        {
+            if (_context.OperationDetails == null)
+            {
+                return NotFound();
+            }
+            return await _context.OperationDetails.Include(x => x.OperationList)
+                .Where( e => e.EffectiveDate < DateTime.Today)
+                .ToListAsync();
+
+        }
+
+        // GET: api/OperationDetailsAPI/Upcoming
+        [HttpGet("Upcoming")]
+        public async Task<ActionResult<IEnumerable<OperationDetail>>> GetUpcomingOperationDetails()
+        {
+            if (_context.OperationDetails == null)
+            {
+                return NotFound();
+            }
+
+            return await _context.OperationDetails.Include(x => x.OperationList)
+                .Where(e => e.EffectiveDate > DateTime.Today)
+                .ToListAsync();
+
+        }
+
+
+
 
         // GET: api/OperationDetailsAPI/5
         [HttpGet("{id}")]
