@@ -3,9 +3,8 @@
 <_WarehouseNavBar />
 
 <PageTitle>Operation Summary</PageTitle>
-<br />
-<br />
-<MudGrid>
+
+<MudGrid Class="mt-10">
     <MudItem xs="3">
         <MudTextField DebounceInterval="10" OnDebounceIntervalElapsed="(() => HandleIntervalElapsed(_debouncedText))" @bind-Value="@_debouncedText" Label="Search operation" Variant="Variant.Text" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
     </MudItem>

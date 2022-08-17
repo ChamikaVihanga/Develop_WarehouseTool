@@ -24,20 +24,13 @@ else
             <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
             <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
             <MudTh>
-                @if (Approved)
+                @foreach (var check in CheckBoxList())
                 {
-                    <input type="checkbox" checked @onchange="@(async (e) => await ToggleApprovedAsync(false))" />
+                    <div>
+                        <input class="form-check-input" type="checkbox" @onchange="eventArgs => { CheckboxClicked(check, eventArgs.Value);}" />
+                    </div>
                 }
-                else
-                {
-                    <input type="checkbox" checked @onchange="@(async (e) => await ToggleApprovedAsync(true))" />
-                }
-                <MudSpacer/>
-                @foreach(var check in CheckBoxList())
-                {
-                    <input class="custom-checkbox" type="checkbox" @onchange="eventArgs => { CheckboxClicked(check, eventArgs.Value);}" />
-                }
-                
+
                 @*<MudCheckBox @bind-Checked="context.OperationList.IsActive" @onchange="() => changeActivation(context.OperationList.Id, context.OperationList.IsActive)" Color="Color.Success"></MudCheckBox>*@
                 @*<MudCheckBox @bind-Checked="context.OperationList.IsActive" @onchange="@(async (e) => await ToggleApprovedAsync(true))" Color="Color.Success"></MudCheckBox>*@
             </MudTh>
@@ -122,7 +115,7 @@ else
     {
 
         Recordss = await Http.GetFromJsonAsync<OperationDetail[]>("api/OperationDetailsAPI");   //  >
-        
+
         List<int> listIds = new List<int>();                                                    //  >  Common functions
         listIds = Recordss.Select(a => a.OperationListId).Distinct().ToList();                  //  >
 
@@ -186,20 +179,6 @@ else
         string getresponceCheck = getresponce.Content.ReadAsStringAsync().Result;
         showBar(getresponceCheck);
 
-    }
-    async Task ToggleApprovedAsync(bool isActive)
-    {
-        Console.WriteLine("Toggle Approved = " + isActive);
-        if (isActive)
-        {
-            Console.WriteLine("active");
-            Approved = true;
-        }
-        else
-        {
-            Console.WriteLine("Deactive");
-            Approved = false;
-        }
     }
 
     void showBar(string getOnlyStringValue)
