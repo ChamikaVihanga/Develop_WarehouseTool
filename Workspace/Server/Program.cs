@@ -1,6 +1,7 @@
 global using Workspace.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using Workspace.Server.Services.ResourceFacilityService;
+global using Workspace.Server.Services.LoginService;
 global using DataAccessLayer;
 
 using Microsoft.AspNetCore.ResponseCompression;
@@ -94,6 +95,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 
 var app = builder.Build();

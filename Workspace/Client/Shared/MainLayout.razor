@@ -55,12 +55,27 @@
     <MudMainContent>
         <FeatureNavBar />
         <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
-            @Body
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                       @Body
+                </ChildContent>
+                <ErrorContent>
+                      <h1>@context.Message</h1>
+
+                      <button class="btn btn-primary" @onclick="() => errorBoundary.Recover()">Close</button>
+                </ErrorContent>
+            </ErrorBoundary>
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 
 @code {
+    private ErrorBoundary errorBoundary;
+
+    protected override void OnInitialized()
+    {
+        errorBoundary = new ErrorBoundary();
+    }
     //Side Nav Toggle button
     bool _drawerOpen = true;
     void DrawerToggle()
