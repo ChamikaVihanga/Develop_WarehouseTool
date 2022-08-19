@@ -1,0 +1,37 @@
+﻿@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject HttpClient http
+<AuthorizeView>
+    <Authorized>
+        @context.User.FindFirst("DisplayName").Value  <button @onclick="Logout" class="btn btn-danger">Logout</button>
+        <button @onclick="Refresh" class="btn btn-danger">Refresh</button>
+    </Authorized>
+    <NotAuthorized>
+        <button @onclick="Login" class="btn btn-primary">Login</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    void Login()
+    {
+        NavigationManager.NavigateTo("login");
+    }
+
+    async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("token");
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+    async Task Refresh()
+    {
+        var Token = await http.PostAsync("api/Authentication/refresh-Token",null);
+        var token = await Token.Content.ReadAsStringAsync();
+        Console.WriteLine(token);
+        await LocalStorage.RemoveItemAsync("token");
+        await LocalStorage.SetItemAsync("token", token);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+
+    }
+
+}

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
 using Workspace.Server.AuthorizationService.Policies;
-using Workspace.Shared.Auth;
+using Workspace.Shared.AuthData;
 
 namespace Workspace.Server.AuthorizationService.PolicyHandler
 {
@@ -28,13 +28,13 @@ namespace Workspace.Server.AuthorizationService.PolicyHandler
             }
             foreach (AuthenticationClaimRequirement claimRequirement in claimRequirements)
             {
-                if (claimRequirement.AuthenticationClaimValuesClaimValues == null)
+                if (claimRequirement.authenticationClaimValues == null)
                 {
                     return Task.CompletedTask;
                 }
                 else
                 {
-                    foreach (var claimValue in claimRequirement.AuthenticationClaimValuesClaimValues)
+                    foreach (var claimValue in claimRequirement.authenticationClaimValues)
                     {
                         if (claimValue.AuthenticationClaim == null)
                         {

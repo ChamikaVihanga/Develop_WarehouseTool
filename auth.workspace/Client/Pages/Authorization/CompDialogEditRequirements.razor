@@ -1,0 +1,109 @@
+﻿@inject HttpClient http
+<MudDialog Class="p-5 m-4">
+ 
+    <DialogContent>
+
+        <MudAlert Severity="Severity.Normal" NoIcon="true" Class="mb-2 mt-3">@SelectedAuthRequirement?.RequirementName</MudAlert>
+    </DialogContent>
+    <DialogActions>
+        <MudGrid>
+            <MudItem xs="12" sm="7">
+                @if (ClaimIds is not null)
+                {
+                    @foreach (ClaimsValues? claimsValues in ClaimIds)
+                    {
+                        <MudPaper Class="m-4" Elevation="0">
+                            <MudText Class="m-1">@claimsValues?.claimName</MudText>
+                            @foreach (AuthenticationClaimValue AuthenticationClaimValue in SelectedAuthRequirement?.authenticationClaimValues)
+                            {
+                                if (AuthenticationClaimValue.AuthenticationClaimId == claimsValues.ClaimId)
+                                {
+                                    <MudChip Color="Color.Default">@AuthenticationClaimValue.Value</MudChip>
+                                }
+                            }
+                        </MudPaper>
+                    }
+                }
+
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                <MudPaper MaxHeight="70vh" Class="overflow-y-auto overflow-x-auto" Elevation="0">
+                    <CompClaimList claimValue="getClaimValue" AuthenticationClaim="AuthenticationClaim"></CompClaimList>
+                </MudPaper>
+                <MudPaper Class="mt-7" Elevation="0">
+                    @if (claimValues?.ClaimId is not null && claimValues.ValueId is not null)
+                    {
+                        string tooltip = $"Add \"{claimValues.claimName} : {claimValues.Value}\" claim to \"{SelectedAuthRequirement?.Uri}\" End-Point ";
+                        <MudTooltip Text="@tooltip" Arrow="true" Placement="Placement.Right">
+                            <MudFab Color="Color.Warning" @onclick="(() => addClaimRequirements(new DataTransferObject.ClaimValueDTO{ RequirementId = SelectedAuthRequirement?.RequirementId, ValueId = claimValues.ValueId}))" Disabled="false" StartIcon="@Icons.Material.Filled.Add" Size="Size.Medium" />
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudFab Color="Color.Warning" Disabled="true" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" />
+
+                    }
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    public AuthenticationClaim[]? AuthenticationClaim { get; set; }
+
+    public AuthenticationClaimRequirement? SelectedAuthRequirement { get; set; }
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public int? SelectedRequirementId { get; set; }
+    List<ClaimsValues>? ClaimIds = new List<ClaimsValues>();
+
+
+    public DataTransferObject.ClaimValues? claimValues { get; set; }
+
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+    protected override async Task OnInitializedAsync()
+    {
+        await getClaims();
+        AuthenticationClaim = await http.GetFromJsonAsync<AuthenticationClaim[]?>("api/AuthenticationClaims");
+    }
+
+    public async Task getClaims()
+    {
+
+        if (SelectedRequirementId is not null)
+        {
+            SelectedAuthRequirement = await http.GetFromJsonAsync<AuthenticationClaimRequirement?>($"api/AuthenticationPolicyRequirement?id={SelectedRequirementId.ToString()}");
+            if (SelectedAuthRequirement?.authenticationClaimValues is not null)
+            {
+                foreach (AuthenticationClaimValue? values in SelectedAuthRequirement.authenticationClaimValues)
+                {
+                    Console.WriteLine(!ClaimIds.Select(a => a.ClaimId).ToList().Contains(values.AuthenticationClaimId));
+                    if (!ClaimIds.Select(a => a.ClaimId).ToList().Contains(values.AuthenticationClaimId))
+                    {
+                        ClaimIds.Add(new ClaimsValues { ClaimId = values.AuthenticationClaimId, claimName = values.AuthenticationClaim.Claim });
+                    }
+                }
+            }
+        }
+    }
+    void getClaimValue(DataTransferObject.ClaimValues? value)
+    {
+        claimValues = value;
+    }
+
+    async Task addClaimRequirements(DataTransferObject.ClaimValueDTO claimValueDTO)
+    {
+        var response = await http.PostAsJsonAsync<DataTransferObject.ClaimValueDTO>("api/AuthenticationPolicyRequirement/BindClaimValues", claimValueDTO);
+
+        await getClaims();
+    }
+
+    private class ClaimsValues
+    {
+        public int? ClaimId { get; set; }
+        public string? claimName { get; set; }
+    }
+}

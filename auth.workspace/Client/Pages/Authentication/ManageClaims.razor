@@ -1,0 +1,26 @@
+﻿@inject HttpClient http
+
+@if(AuthenticationClaim == null)
+{
+    <h1>Loading</h1>
+}
+else
+{
+    
+}
+
+
+
+
+@code {
+
+    public AuthenticationClaim[]? AuthenticationClaim { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationClaim = await http.GetFromJsonAsync<AuthenticationClaim[]?>("api/AuthenticationClaims");
+
+    }
+
+}

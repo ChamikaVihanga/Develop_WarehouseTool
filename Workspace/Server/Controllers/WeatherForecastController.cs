@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Workspace.Shared;
-using Workspace.Shared.Auth;
+using Workspace.Shared.AuthData;
 
 namespace Workspace.Server.Controllers
 {
@@ -15,9 +15,9 @@ namespace Workspace.Server.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly AuthDbContext _authContext;
+        private readonly WorkspaceDbContext _authContext;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, AuthDbContext authDbContext)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, WorkspaceDbContext authDbContext)
         {
             _logger = logger;
             _authContext = authDbContext;
@@ -37,10 +37,6 @@ namespace Workspace.Server.Controllers
             .ToArray();
         }
 
-        [HttpGet, Route("testAuth")]
-        public async Task<List<AuthenticationClaimRequirement>> getAuth()
-        {
-            return await _authContext.AuthenticationClaimRequirements.Include(a => a.AuthenticationClaimValuesClaimValues).ThenInclude(b => b.AuthenticationClaim).ToListAsync();
-        }
+        
     }
 }

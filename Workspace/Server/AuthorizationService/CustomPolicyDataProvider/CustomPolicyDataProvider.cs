@@ -1,17 +1,17 @@
-﻿using Workspace.Shared.Auth;
+﻿using Workspace.Shared.AuthData;
 
 namespace Workspace.Server.AuthorizationService.CustomPolicyDataProvider
 {
     public class CustomPolicyDataProvider : ICustomPolicyDataProvider
     {
-        private readonly AuthDbContext _context;
-        public CustomPolicyDataProvider(AuthDbContext authDbContext)
+        private readonly WorkspaceDbContext _context;
+        public CustomPolicyDataProvider(WorkspaceDbContext workspaceDbContext)
         {
-            _context = authDbContext;
+            _context = workspaceDbContext;
         }
         public List<AuthenticationClaimRequirement> getClaimRequirement(string ClaimName)
         {
-            var claims = _context.AuthenticationClaimRequirements.Where(a => a.RequirementName == ClaimName).Include(x => x.AuthenticationClaimValuesClaimValues).ThenInclude(x => x.AuthenticationClaim).ToList();
+            List<AuthenticationClaimRequirement> claims = _context.AuthenticationClaimRequirements.Where(x => x.Uri == ClaimName).Include(y => y.authenticationClaimValues).ThenInclude(a => a.AuthenticationClaim).ToList();
 
             return claims;
         }

@@ -1,0 +1,40 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                       <div class="top-row px-4">
+            
+            <Login_Logout_Toggle/>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+                </ChildContent>
+                <ErrorContent>
+                      <h1>@context.Message</h1>
+
+                      <button class="btn btn-primary" @onclick="() => errorBoundary.Recover()">Close</button>
+                </ErrorContent>
+            </ErrorBoundary>
+        
+    </main>
+</div>
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+
+@code{
+    private ErrorBoundary errorBoundary;
+    protected override void OnInitialized()
+    {
+        errorBoundary = new ErrorBoundary();
+    }
+}

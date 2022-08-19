@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "auth.workspace.Client": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:61873;http://localhost:61874"
+    }
+  }
+}
