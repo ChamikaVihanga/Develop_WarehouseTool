@@ -2,13 +2,31 @@
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient http
-<AuthorizeView>
+@*<AuthorizeView>
     <Authorized>
         @context.User.FindFirst("DisplayName").Value  <button @onclick="Logout" class="btn btn-danger">Logout</button>
         <button @onclick="Refresh" class="btn btn-danger">Refresh</button>
     </Authorized>
     <NotAuthorized>
         <button @onclick="Login" class="btn btn-primary">Login</button>
+    </NotAuthorized>
+</AuthorizeView>*@
+
+<AuthorizeView>
+    <Authorized>
+        <MudMenu Icon="@Icons.Filled.AccountCircle" ActivationEvent="@MouseEvent.MouseOver" >
+            <ChildContent>
+                <MudMenuItem Disabled="true" Style="background-color:lightsteelblue">@context.User.Identity.Name.ToString().ToUpper()</MudMenuItem>
+                <MudMenuItem>Profile</MudMenuItem>
+                <MudMenuItem>Settings</MudMenuItem>
+                <MudMenuItem @onclick="Logout">Sign Out</MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+    </Authorized>
+    <NotAuthorized>
+        <MudTooltip Text="Login">
+            <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Small" StartIcon="@Icons.Filled.Login" />
+        </MudTooltip>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -22,6 +40,7 @@
     {
         await LocalStorage.RemoveItemAsync("token");
         await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/login");
     }
     async Task Refresh()
     {
