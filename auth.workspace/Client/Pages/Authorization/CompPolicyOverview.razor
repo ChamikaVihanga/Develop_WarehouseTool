@@ -3,7 +3,7 @@
 
 <MudGrid>
     <MudItem xs="9">
-        <MudText Typo="Typo.h5">Workspace Policy Overview</MudText>
+        <MudText Typo="Typo.h6">Workspace Policy Overview</MudText>
     </MudItem>
     <MudItem xs="3">
 
@@ -16,9 +16,8 @@
 }
 else
 {
-    <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" />
-
-
+    
+    <MudTextField  DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End"  AdornmentIcon="@Icons.Filled.Search" />
     <MudPaper MinHeight="60vh" MaxHeight="60vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
         <MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
             @foreach (AuthenticationClaimRequirement? policy in PolicyRequirements)
@@ -69,7 +68,15 @@ else
 
         if (debouncedText.Length >= 0)
         {
-            PolicyRequirements = PolicyRequirementsBackup?.Where(x => x.RequirementName.Contains(debouncedText, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+            try
+            {
+                PolicyRequirements = PolicyRequirementsBackup?.Where(x => x.Uri.Contains(debouncedText, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+
+            }
+            catch
+            {
+                
+            }
         }
 
     }

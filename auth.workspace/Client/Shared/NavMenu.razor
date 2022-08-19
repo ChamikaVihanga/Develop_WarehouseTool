@@ -1,4 +1,4 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@*<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">VS Auth Manager</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -21,7 +21,20 @@
             </NavLink>
         </div>
     </nav>
-</div>
+</div>*@
+
+<MudPaper Width="250px" Elevation="0" Class="py-3">
+    <MudNavMenu Color="Color.Info">
+        <MudNavLink Href="/" Icon="@Icons.Filled.Dashboard">Dashboard</MudNavLink>
+        <MudNavLink Href="/UserManager"  Icon="@Icons.Filled.AccountTree">User Managaer</MudNavLink>
+        <MudNavLink Href="/" Disabled="true">Instructions</MudNavLink>
+        <MudNavGroup Title="Settings" Expanded="true" Disabled="true">
+            <MudNavLink Href="/users">Users</MudNavLink>
+            <MudNavLink Href="/security">Security</MudNavLink>
+        </MudNavGroup>
+    </MudNavMenu>
+</MudPaper>
+
 
 @code {
     private bool collapseNavMenu = true;
