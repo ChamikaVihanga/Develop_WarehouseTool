@@ -1,32 +1,56 @@
 ﻿@page "/Warehouse"
-
+@inject NavigationManager UriHelper
+@inject HttpClient Http
 <_WarehouseNavBar />
 
+<MudGrid Class="mt-4">
+    <MudItem xs="3">
+        <MudTextField T="string" @bind-Value="name" Label="Current Shift"></MudTextField>
+    </MudItem>
+    <MudItem xs="3">
+        <MudTextField @bind-Value="number" Label="Search SAP NO" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary"></MudTextField>
+    </MudItem>
+    <MudItem xs="6"></MudItem>
+</MudGrid>
 
-@*<MudGrid Class="mt-10"> *@   
-    @*<MudItem  xs="12">*@
-    <div style="height:500px">
-        @*<MudPaper Elevation="1">*@
-            @for (int i = 0; i < 3; i++)
-            {
-                <MudItem xs="3">
-                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
-                </MudItem>
-                <MudItem xs="3">
-                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
-                </MudItem>
-                <MudItem xs="3">
-                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
-                </MudItem>
-                <MudItem xs="3">
-                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
-                </MudItem>
-            }
-        @*</MudPaper>*@
-    </div>
-    @*</MudItem>*@
-@*</MudGrid>*@
+<MudPaper MaxHeight="60vh" Class="overflow-y-auto overflow-x-hidden mt-10">
+    <MudGrid Justify="Justify.Center" Spacing="5" Class="p-3">
+
+        @for (int i = 0; i < 20; i++)
+        {
+            <MudItem sm="4" md="2" Class="mud-width-full justify-content-center">
+                <div onclick=@checkvalue class="media-img">
+                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Fluid="true" Class="rounded-lg" />
+                    <p>
+                        <b>Known Name</b><br/>
+                        <b>SAP No</b>
+                    </p>
+                </div>
+            </MudItem>
+        }
+    </MudGrid>
+</MudPaper>
 
 @code {
+    public List<VS_Employees> vS_Employees = new();
+    VS_Employees _vS_Employees = new VS_Employees();
 
+    [Parameter]
+    public int id { get; set; } = 1;
+    public string? name { get; set; }
+    public int? number { get; set; }
+
+    public int? integer { get; set; }
+
+    public void checkvalue()
+    {
+        UriHelper.NavigateTo("Warehouse/Efficiency");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responce = await Http.GetFromJsonAsync<VS_Employees>($"api/VS_Employees/filter?id={id}");
+        name = responce.FullName;
+        number = responce.Id; 
+    }
 }
