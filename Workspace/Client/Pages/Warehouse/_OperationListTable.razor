@@ -1,0 +1,132 @@
+﻿@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+@if (operationDetails is null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudTable Items="operationDetails" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="true" FixedHeader="@fixed_header" Height="500px">
+        <HeaderContent>
+            <MudTh><b>Organization Unit</b></MudTh>
+            <MudTh><b>Operation Name</b></MudTh>
+            <MudTh><b>Target</b></MudTh>
+            <MudTh><b>Allocated Time</b></MudTh>
+            <MudTh><b>Effective Date</b></MudTh>
+            <MudTh><b>Activation</b></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd></MudTd>
+            <MudTd>@context.OperationList?.Name</MudTd>
+            <MudTd>@context.Target</MudTd>
+            <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
+            <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
+            <MudTh>
+                <input type="checkbox" class="form-check-input" value=@context.OperationList.IsActive />
+            </MudTh>
+            <MudTh>
+                <MudTooltip Text="More Info" Placement="Placement.Right">
+                    <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"></MudIconButton>
+                    </a>
+                </MudTooltip>
+            </MudTh>
+        </RowTemplate>
+    </MudTable>
+}
+
+
+@code {
+    public OperationDetail operationDetail;
+    public List<OperationDetail> operationDetails;
+
+    public List<OperationDetail> activeOperationDetails;
+    public List<OperationDetail> upcommingOperationDetails;
+
+    bool fixed_header = true;
+
+
+    [Parameter]
+    public bool tableState { get; set; }
+
+    [Parameter]
+    public string? searchString { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetActiveOperations();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        changeState();
+        HandleIntervalElapsed();
+    }
+
+
+    async Task changeState()
+    {
+        if (tableState)
+        {
+            await GetUpcommingOperations();
+        }
+        else
+        {
+            await GetActiveOperations();
+        }
+    }
+
+    async Task HandleIntervalElapsed()
+    {
+        if (searchString.Length >= 0)
+        {
+            operationDetails = operationDetails.Where(a => a.OperationList.Name.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+    }
+
+    async Task GetActiveOperations()
+    {
+        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationDetailsAPI/Active");  
+    }
+
+    async Task GetUpcommingOperations()
+    {
+        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationDetailsAPI/Upcoming");
+    }
+
+    void showBar(string getOnlyStringValue)
+    {
+        Snackbar.Add($"{getOnlyStringValue}", Severity.Success, config => { config.ShowCloseIcon = false; });
+    }
+    
+    public List<string> CheckBox { get; set; } = new List<string>();
+    void CheckboxClicked(string CheckID, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!CheckBox.Contains(CheckID))
+            {
+                CheckBox.Add(CheckID);
+                Console.WriteLine("Activated");
+            }
+        }
+        else
+        {
+            if (CheckBox.Contains(CheckID))
+            {
+                CheckBox.Remove(CheckID);
+                Console.WriteLine("Deactivated");
+            }
+        }
+    }
+
+    public List<String> CheckBoxList()
+    {
+        List<String> checkBox = new List<String>();
+        checkBox.Add("");
+
+        return checkBox;
+    }
+}

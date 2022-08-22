@@ -1,10 +1,31 @@
 ﻿@page "/Warehouse"
 
-<_WarehouseNavBar/>
+<_WarehouseNavBar />
 
 
-
-<h3>Index</h3>
+@*<MudGrid Class="mt-10"> *@   
+    @*<MudItem  xs="12">*@
+    <div style="height:500px">
+        @*<MudPaper Elevation="1">*@
+            @for (int i = 0; i < 3; i++)
+            {
+                <MudItem xs="3">
+                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
+                </MudItem>
+                <MudItem xs="3">
+                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
+                </MudItem>
+                <MudItem xs="3">
+                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
+                </MudItem>
+                <MudItem xs="3">
+                    <MudImage Src="https://www.pureingenuity.com/wp-content/uploads/2018/07/empty-profile-image.jpg" Width="200" Height="180" Class="rounded-lg ma-4" />
+                </MudItem>
+            }
+        @*</MudPaper>*@
+    </div>
+    @*</MudItem>*@
+@*</MudGrid>*@
 
 @code {
 

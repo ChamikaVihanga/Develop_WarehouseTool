@@ -1,0 +1,40 @@
+﻿@page "/warehouse/listsummary"
+@inject HttpClient http
+<_WarehouseNavBar />
+
+<PageTitle>Operation Summary</PageTitle>
+
+<MudGrid Class="mt-10">
+    <MudItem xs="3">
+        <MudTextField T="string" @bind-Value="@SearchString" Immediate="true" Label="Search operation" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
+    </MudItem>
+    <MudItem xs="3">
+        <MudSwitch @bind-Checked="@status" Onclick="@swapLable" Color="Color.Error" UnCheckedColor="Color.Success" Style="width:400px">@lable</MudSwitch>
+    </MudItem>
+    <MudItem xs="3"></MudItem>
+    <MudItem xs="3" Class="d-flex justify-end">
+        <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
+    </MudItem>
+    <MudItem xs="12">
+        <MudPaper Elevation="1">
+            <_OperationListTable tableState="@status" searchString="@SearchString" />
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    public bool status = false;
+    string? lable { get; set; } = "Toggle to view upcoming operations";
+    string? SearchString { get; set; }
+    void swapLable()
+    {
+        if (status)
+        {
+            lable = "Toggle to view upcoming operations";
+        }
+        else
+        {
+            lable = "Toggle to view ongoing operations";
+        }
+    }
+}

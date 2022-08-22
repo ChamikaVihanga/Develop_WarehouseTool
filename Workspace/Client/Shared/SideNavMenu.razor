@@ -6,15 +6,23 @@
 
     <MudNavLink Href="SampleApp/ToolTemplate" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.DisplaySettings">Layout</MudNavLink>
 
+    @*<MudNavGroup Title="Warehouse" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false" >
+    <MudNavGroup Title="Employee Efficiency" Icon="@Icons.Filled.AccessTime" Expanded="false">
+    <MudNavLink Href="/ch/Warehouse" Icon="@Icons.Filled.ArrowRight">Home CH</MudNavLink>
+    <MudNavLink Href="/Warehouse" Icon="@Icons.Filled.ArrowRight">Home</MudNavLink>
+    <MudNavLink Href="/Warehouse/OperationList" Icon="@Icons.Filled.ArrowRight">Admin</MudNavLink>
+    <MudNavLink Href="/Warehouse/EfficiencySummary" Icon="@Icons.Filled.ArrowRight">Summary</MudNavLink>
+    </MudNavGroup>
+    </MudNavGroup>*@
 
-    <MudNavLink Href="/Warehouse" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.DashboardCustomize">Warehouse</MudNavLink>
+    <MudNavGroup Title="Warehouse" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+        <MudNavLink Href="/Warehouse" Icon="@Icons.Filled.Home">Efficency</MudNavLink>        
+    </MudNavGroup>
+
 
 
     <MudNavLink Href="/WorkspaceSettings" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.PeopleAlt">Auth Settings</MudNavLink>
     <MudNavLink Href="/Profiles/employee" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.Settings">Employee Profile</MudNavLink>
-    <MudNavLink Href="/WorkspaceSettings" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.Settings">Workspace Settings</MudNavLink>
-
-
 </MudNavMenu>
 
 

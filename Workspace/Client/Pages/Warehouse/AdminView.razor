@@ -1,0 +1,64 @@
+﻿@page "/warehouse/adminview"
+@inject HttpClient Http
+
+<_WarehouseNavBar />
+
+<PageTitle>Admin View</PageTitle>
+
+<MudGrid>
+    <MudItem xs="3">
+        <MudPaper Elevation="0">
+            <MudSelect T="string" Label="Select Date" Variant="Variant.Text" Margin="Margin.Normal">
+                <MudSelectItem Value="@("Daily")" />
+                <MudSelectItem Value="@("Weekly")" />
+                <MudSelectItem Value="@("Monthly")" />
+            </MudSelect>
+            <MudTextField @bind-Value="nullableInt" Label="Enter Employee SAP Number" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12">
+        @if (list == null)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        }
+        else
+        {
+            <MudPaper Elevation="1">
+                <MudTable Items="list" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
+                    <HeaderContent>
+                        <MudTh><b>Date</b></MudTh>
+                        <MudTh><b>Operation Name</b></MudTh>
+                        <MudTh><b>Achivement</b></MudTh>
+                        <MudTh><b>Time Span</b></MudTh>
+                        <MudTh><b>Efficiency</b></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd></MudTd>
+                        <MudTd>@context.OperationList.Name</MudTd>
+                        <MudTd>@context.Achivement</MudTd>
+                        <MudTd></MudTd>
+                        <MudTh></MudTh>
+                    </RowTemplate>                   
+                </MudTable>
+            </MudPaper>
+        }
+    </MudItem>
+
+    <MudItem xs="9">
+    </MudItem>
+    <MudItem xs="3">
+        <MudTextField Label="hhfh" T="string"></MudTextField>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private bool border = true;
+    int? nullableInt;
+
+    private OperationRecord[]? list;
+
+    protected override async Task OnInitializedAsync()
+    {
+        list = await Http.GetFromJsonAsync<OperationRecord[]>("api/OperationRecords");
+    }
+}
