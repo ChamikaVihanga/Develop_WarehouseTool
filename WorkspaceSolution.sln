@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{25A3424E
 		Info.txt = Info.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceClassLibraries", "ServiceClassLibraries", "{1DAB1538-8FD1-4A5A-A32A-DC0388766F80}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionClassLibraries", "SolutionClassLibraries", "{1DAB1538-8FD1-4A5A-A32A-DC0388766F80}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "admin.workspace.vsag.ch", "admin.workspace.vsag.ch", "{DD842DE5-584A-4645-9847-CF16E5025AD3}"
 EndProject
