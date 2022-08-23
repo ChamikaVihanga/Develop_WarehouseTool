@@ -61,9 +61,10 @@ else
         {
             isLoading = true;
             var result = await Http.PostAsJsonAsync("api/UserLogin", user);
-            var token = await result.Content.ReadAsStringAsync();
-            Console.WriteLine(token);
-            await LocalStorage.SetItemAsync("token", token);
+            var token = result.Content.ReadAsStringAsync().Result;
+            string newToken = token.Trim('"');
+            Console.WriteLine(newToken);
+            await LocalStorage.SetItemAsync("token", newToken);
             var stateResult = await AuthStateProvider.GetAuthenticationStateAsync();
 
             if (stateResult == null)

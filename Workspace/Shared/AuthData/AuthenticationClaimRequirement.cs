@@ -14,7 +14,7 @@ namespace Workspace.Shared.AuthData
         public string? description { get; set; }
 
         public int? AuthenticationHttpMethodsId { get; set; }
-        public AuthenticationHttpMethod? AuthenticationHttpMethod { get; set; }
+        public AuthenticationHttpMethod? AuthenticationHttpMethods { get; set; }
 
         public int? AuthenticationClaimGroupId { get; set; }
         public AuthenticationClaimGroup? AuthenticationClaimGroup { get; set; }

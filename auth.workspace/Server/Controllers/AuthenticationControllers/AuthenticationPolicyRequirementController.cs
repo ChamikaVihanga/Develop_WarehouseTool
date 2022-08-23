@@ -26,8 +26,10 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
             else
             {
                 return await _context.AuthenticationClaimRequirements
+                    .Include(b => b.AuthenticationHttpMethods)
                     .Include(a => a.authenticationClaimValues)
-                    .ThenInclude(a => a.AuthenticationClaim).ToListAsync();
+                    .ThenInclude(a => a.AuthenticationClaim)
+                    .ToListAsync();
             }
 
         }

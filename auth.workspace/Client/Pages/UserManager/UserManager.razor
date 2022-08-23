@@ -1,6 +1,7 @@
 ﻿@page "/UserManager"
 @inject IDialogService DialogService
 @inject HttpClient http
+@inject ISnackbar Snackbar
 
 <MudText>
     <MudText Typo="Typo.h6">User Manager</MudText>
@@ -87,13 +88,24 @@
     protected override async Task OnInitializedAsync()
     {
         Users = await http.GetFromJsonAsync<AuthenticationUserClaimsHolder[]?>("api/AuthenticationUserClaimHolders/GetUsersList");
-        Console.WriteLine("test");
-
+   
 
     }
     public async Task AddDomainUser()
     {
         var response = await http.PostAsJsonAsync<AuthenticationUserClaimsHolder>("api/AuthenticationUserClaimHolders/AddDomainUser", new AuthenticationUserClaimsHolder() { UserName = User });
+        string message = await response.Content.ReadAsStringAsync();
+        await OnInitializedAsync();
+        User = null;
+        ShowSnackBar(message, Defaults.Classes.Position.TopEnd);
+
+    }
+
+    void ShowSnackBar(string message, string position)
+    {
+        Snackbar.Clear();
+        Snackbar.Configuration.PositionClass = position;
+        Snackbar.Add(message, Severity.Normal);
     }
     public async Task GetUser()
     {
