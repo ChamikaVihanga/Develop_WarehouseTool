@@ -34,11 +34,19 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
         }
 
         [HttpPost, Route("AddDomainUser")]
-        public async Task AddDomainUser(AuthenticationUserClaimsHolder username)
+        public async Task<ActionResult<string>> AddDomainUser(AuthenticationUserClaimsHolder username)
         {
-           
-            await _context.AddAsync(username);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.AddAsync(username);
+                await _context.SaveChangesAsync();
+                return Ok("User has been added.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);  
+            }
+            
 
         }
 

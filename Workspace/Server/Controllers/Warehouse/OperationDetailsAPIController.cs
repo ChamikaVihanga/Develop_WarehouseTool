@@ -185,7 +185,7 @@ namespace Workspace.Server.Controllers.Warehouse
         /// </summary>
         /// <param name="operationSummeryDTO"></param>
         /// <returns></returns>
-        [HttpPost, Authorize]
+        [HttpPost, Authorize(Policy ="VSPolicy")]
         public async Task<ActionResult<string>> PostOperationDetail(OperationSummeryDTO operationSummeryDTO)
         {
             try

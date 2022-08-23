@@ -22,7 +22,7 @@ else
         <MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
             @foreach (AuthenticationClaimRequirement? policy in PolicyRequirements)
             {
-            <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = null, RequirementId= policy.RequirementId}))" Value='$"{policy.RequirementName}"' Icon="@Icons.Filled.AccountBox">
+            <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = null, RequirementId= policy.RequirementId}))" Value='$"{policy.Uri}"' Icon="@Icons.Filled.AccountBox">
                 @foreach (var item in policy.authenticationClaimValues)
                 {
                 <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = item.ClaimValueId, RequirementId= policy.RequirementId}))" IconColor="Color.Default" Value='$"{item.AuthenticationClaim.Claim} : {item.Value}"' Icon="@Icons.Filled.Build" />
