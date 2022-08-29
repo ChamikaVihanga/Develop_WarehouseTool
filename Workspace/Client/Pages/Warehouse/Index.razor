@@ -5,12 +5,14 @@
 
 <MudGrid Class="mt-4">
     <MudItem xs="3">
-        <MudTextField T="string" @bind-Value="name" Label="Current Shift"></MudTextField>
-    </MudItem>
-    <MudItem xs="3">
-        <MudTextField @bind-Value="number" Label="Search SAP NO" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary"></MudTextField>
-    </MudItem>
-    <MudItem xs="6"></MudItem>
+        <MudSelect @bind-Value="stringValue" Label="Current Shift" Placeholder="Please Select Your Shift" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
+            @foreach (var shifttime in shiftCollection)
+            {
+                <MudSelectItem T="string" Value="@shifttime">@shifttime</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>    
+    <MudItem xs="9"></MudItem>
 </MudGrid>
 
 <MudPaper MaxHeight="60vh" Class="overflow-y-auto overflow-x-hidden mt-10">
@@ -36,11 +38,11 @@
     VS_Employees _vS_Employees = new VS_Employees();
 
     [Parameter]
-    public int id { get; set; } = 1;
-    public string? name { get; set; }
-    public int? number { get; set; }
+    public int id { get; set; } = 3;
 
+    public string? name { get; set; }    
     public int? integer { get; set; }
+    private string stringValue { get; set; }
 
     public void checkvalue()
     {
@@ -50,7 +52,16 @@
     protected override async Task OnInitializedAsync()
     {
         var responce = await Http.GetFromJsonAsync<VS_Employees>($"api/VS_Employees/filter?id={id}");
-        name = responce.FullName;
-        number = responce.Id; 
+        name = responce.FullName;         
     }
+
+    private string[] shiftCollection = 
+    { 
+        "06:00:00 - 16:00:00", "07:30:00 - 17:30:00", "12:00:00 - 22:00:00",
+        "18:00:00 - 04:00:00", "06:00:00 - 14:00:00", "14:00:00 - 22:00:00",
+        "18:00:00 - 02:00:00", "22:00:00 - 06:00:00", "06:00:00 - 18:00:00",
+        "18:00:00 - 06:00:00", "19:30:00 - 05:30:00", "09:00:00 - 19:00:00",
+        "05:00:00 - 22:00:00"
+
+    };
 }

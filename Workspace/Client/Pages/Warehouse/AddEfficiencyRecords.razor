@@ -20,7 +20,7 @@
                     <MudItem xs="12">
                         <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                             <div style="position:absolute; top:30vh; width:100%; text-align:center">
-                                <h3>Plase for waite</h3>
+                                <h3>Please wait</h3>
                                 <div style="display:flex; gap:10px; justify-content:center; align-items:center">
                                     <div class="spinner-border" role="status"></div>
                                     The application is loading...
@@ -301,7 +301,7 @@
         if (putId != 0)
         {
             operationRecord.Id = putId;
-            var response = await httpClient.PutAsJsonAsync<OperationRecord>($"api/OperationRecords/{putId}", operationRecord);
+            var response = await httpClient.PutAsJsonAsync<OperationRecord>($"api/OperationRecords?id={putId}", operationRecord);
             _LogEfficiencyData get = new _LogEfficiencyData();
             string Val = await response.Content.ReadAsStringAsync();
             AddCloseAfterNavSnackbar(Val);
@@ -366,7 +366,7 @@
         {
             isLoading = true;
 
-            manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/{debouncedText}/{SelectedDate.Value.ToString("yyyy-MM-dd")}");
+            manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
             isLoading = false;
 
             foreach (OperationRecord operationRecord in manageRecord)
