@@ -1,0 +1,157 @@
+﻿@page "/"
+@inject HttpClient http
+@inject IDialogService DialogService
+
+<MudGrid>
+    <MudItem xs="12" sm="6">
+        <MudPaper MinHeight="85vh" MaxHeight="85vh" Class="pa-5 ma-2 overflow-y-auto overflow-x-auto" Elevation="2">
+            <CompPolicyOverview SelectedRequirement="SelectedRequiremnet" ClaimValue="getClaimValue" PolicyRequirements="PolicyRequirements"></CompPolicyOverview>
+            <MudGrid>
+                <MudItem xs="9">
+                    <MudPopover Open="@_isOpen" Fixed="true" Class="px-4 pt-4">
+                        <div class="d-flex flex-column">
+                            <MudGrid>
+                                <MudItem xs="12">
+                                    <MudText>End-Point Path</MudText>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudTextField Immediate="true" @bind-Value="AuthenticationClaimRequirement.RequirementName" Label="API Route" Variant="Variant.Filled" Margin="Margin.Dense"></MudTextField>
+                                </MudItem>
+                                <MudItem Class="m-2" xs="12">
+                                    @if (AuthenticationClaimRequirement?.RequirementName != string.Empty)
+                                    {
+                                        <MudFab Color="Color.Success" @onclick="AddEndPoint" Disabled="false" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                        <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+
+                                    }
+                                    else
+                                    {
+                                        <MudFab Color="Color.Surface" Disabled="true" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                        <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+
+                                    }
+                                </MudItem>
+
+                            </MudGrid>
+
+                        </div>
+                    </MudPopover>
+                    <MudButton Variant="Variant.Filled" Color="Color.Transparent" StartIcon="@Icons.Material.Filled.Add" OnClick="@ToggleOpen">
+                        @(_isOpen? "Close" : "Add End-Point")
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="3">
+                    @if (ClaimValue?.RequirementId is not null)
+                    {
+                        <MudFab Color="Color.Warning" @onclick="OpenRequirementEditor" Disabled="false" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                    }
+                    else
+                    {
+                        <MudFab Color="Color.Surface" Disabled="true" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                    }
+                    @if (ClaimValue?.valueId is not null || ClaimValue?.RequirementId is not null)
+                    {
+                        <MudIconButton Color="Color.Error" @onclick="DeleteBindValues" Disabled="false" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" aria-label="delete"></MudIconButton>
+                    }
+                    else
+                    {
+                        <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+                    }
+
+
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudPaper MinHeight="85vh" MaxHeight="85vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="2"><CompClaimCard OnClicks="getClaimSeletecdValue"></CompClaimCard></MudPaper>
+    </MudItem>
+
+</MudGrid>
+
+@*
+    <MudText>RequirementOnly: @SelectedRequiremnet</MudText>
+    <MudText>Requirement: @ClaimValue?.RequirementId</MudText>
+    <MudText>RequirementValue: @ClaimValue?.valueId</MudText>
+*@
+<MudGrid>
+
+</MudGrid>
+
+
+
+@code {
+    public bool _isOpen;
+    public string TextValue { get; set; }
+
+    public AuthenticationClaimRequirement[]? PolicyRequirements { get; set; }
+    public AuthenticationClaimRequirement? AuthenticationClaimRequirement { get; set; } = new AuthenticationClaimRequirement { RequirementName = string.Empty };
+    public string? ClaimOrValueSelected { get; set; }
+    public int? SelectedRequiremnet { get; set; }
+    public CompPolicyOverview.ValueIDRequirementID? ClaimValue { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetValues();
+
+
+    }
+    async Task GetValues()
+    {
+        PolicyRequirements = await http.GetFromJsonAsync<AuthenticationClaimRequirement[]?>("api/AuthenticationPolicyRequirement/getallrequirements");
+    }
+
+    void getClaimSeletecdValue(string value)
+    {
+        ClaimOrValueSelected = value;
+    }
+    void getRequirementSeletecdValue(int value)
+    {
+        SelectedRequiremnet = value;
+    }
+    void getClaimValue(CompPolicyOverview.ValueIDRequirementID value)
+    {
+        ClaimValue = value;
+    }
+
+    private async Task OpenRequirementEditor()
+    {
+        var parameter = new DialogParameters();
+
+        parameter.Add("SelectedRequirementId", ClaimValue?.RequirementId);
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, FullScreen = true, CloseButton = true, };
+        var dialog = DialogService.Show<CompDialogEditRequirements>("End-Point Claim Requirement Editor", parameter, options);
+        var result = await dialog.Result;
+
+        if (result.Cancelled)
+        {
+            await GetValues();
+        }
+
+    }
+
+    async Task DeleteBindValues()
+    {
+        var response = await http.PostAsJsonAsync<DataTransferObject.ClaimValueDTO>("api/AuthenticationPolicyRequirement/DeleteBindValues", new DataTransferObject.ClaimValueDTO { ValueId = ClaimValue?.valueId, RequirementId = ClaimValue?.RequirementId });
+        await GetValues();
+    }
+
+    async Task AddEndPoint()
+    {
+        var response = await http.PostAsJsonAsync("api/AuthenticationPolicyRequirement/AddEnd-Point", AuthenticationClaimRequirement);
+        _isOpen = false;
+        await GetValues();
+    }
+
+
+
+    public void ToggleOpen()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+
+}

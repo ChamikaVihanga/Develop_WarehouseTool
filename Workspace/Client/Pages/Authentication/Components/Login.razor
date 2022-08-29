@@ -60,7 +60,7 @@ else
         if (form.IsValid)
         {
             isLoading = true;
-            var result = await Http.PostAsJsonAsync("https://auth.workspace.vsag.ch/api/Authentication/Login-User", user);
+            var result = await Http.PostAsJsonAsync("api/UserLogin", user);
             var token = await result.Content.ReadAsStringAsync();
             Console.WriteLine(token);
             await LocalStorage.SetItemAsync("token", token);

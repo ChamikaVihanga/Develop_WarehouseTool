@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Workspace.Shared.Entities.ResourceFacilities;
-using Workspace.Shared.Auth;
+using Workspace.Shared.AuthData;
 using Workspace.Shared.Entities.Warehouse;
 using Workspace.Shared.Entities.SampleApp;
 
@@ -23,14 +23,14 @@ namespace DataAccessLayer
         public DbSet<OperationDetail> OperationDetails { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // If DB have defferent names
-            //modelBuilder.Entity<TodoItem>().ToTable("TodoItems");
-            //modelBuilder.Entity<TodoList>().ToTable("TodoLists");
-        }
 
-        //public DbSet<AuthenticationClaimRequirement> authenticationClaimRequirements { get; set; }
+        //Authentication data access
+        public DbSet<AuthenticationClaim> AuthenticationClaims { get; set; } = null!;
+        public DbSet<AuthenticationClaimGroup> AuthenticationClaimGroups { get; set; } = null!;
+        public DbSet<AuthenticationClaimRequirement> AuthenticationClaimRequirements { get; set; } = null!;
+        public DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
+        public DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
+        public DbSet<AuthenticationHttpMethod> AuthenticationHttpMethods { get; set; } = null!;
     }
 
 }

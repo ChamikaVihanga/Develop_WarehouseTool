@@ -1,6 +1,7 @@
 global using Workspace.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using Workspace.Server.Services.ResourceFacilityService;
+global using Workspace.Server.Services.LoginService;
 global using DataAccessLayer;
 
 using Microsoft.AspNetCore.ResponseCompression;
@@ -30,7 +31,7 @@ builder.Services.AddDbContext<WorkspaceDbContext>(options =>
 //DB connection for authorization requirements
 //builder.Services.AddDbContext<AuthDbContext>(options =>
 //   options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDb")));
-builder.Services.AddDbContext<AuthDbContext>();
+
 
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
@@ -74,13 +75,11 @@ PoliciesList.Add("VSPolicy");
 
 builder.Services.AddAuthorization(options =>
 {
-
     foreach (string policy in PoliciesList)
     {
         string name = policy;
         options.AddPolicy(name, policy => policy.Requirements.Add(new CustomPolicy(name)));
     }
-
 });
 
 
@@ -105,6 +104,7 @@ builder.Services.AddControllersWithViews()
 
 
 builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 
 var app = builder.Build();

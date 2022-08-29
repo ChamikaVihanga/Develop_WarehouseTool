@@ -22,6 +22,189 @@ namespace DataAccessLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("AuthenticationClaimGroupAuthenticationClaimValue", b =>
+                {
+                    b.Property<int>("AuthenticationClaimGroupsClaimGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AuthenticationClaimValuesClaimValueId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthenticationClaimGroupsClaimGroupId", "AuthenticationClaimValuesClaimValueId");
+
+                    b.HasIndex("AuthenticationClaimValuesClaimValueId");
+
+                    b.ToTable("AuthenticationClaimGroupAuthenticationClaimValue");
+                });
+
+            modelBuilder.Entity("AuthenticationClaimRequirementAuthenticationClaimValue", b =>
+                {
+                    b.Property<int>("AuthenticationClaimsRequirementsRequirementId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("authenticationClaimValuesClaimValueId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthenticationClaimsRequirementsRequirementId", "authenticationClaimValuesClaimValueId");
+
+                    b.HasIndex("authenticationClaimValuesClaimValueId");
+
+                    b.ToTable("AuthenticationClaimRequirementAuthenticationClaimValue");
+                });
+
+            modelBuilder.Entity("AuthenticationClaimValueAuthenticationUserClaimsHolder", b =>
+                {
+                    b.Property<int>("AuthenticationUserClaimsHoldersUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("authenticationClaimValuesClaimValueId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthenticationUserClaimsHoldersUserId", "authenticationClaimValuesClaimValueId");
+
+                    b.HasIndex("authenticationClaimValuesClaimValueId");
+
+                    b.ToTable("AuthenticationClaimValueAuthenticationUserClaimsHolder");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
+                {
+                    b.Property<int>("ClaimId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClaimId"), 1L, 1);
+
+                    b.Property<string>("Claim")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ClaimId");
+
+                    b.ToTable("AuthenticationClaims");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimGroup", b =>
+                {
+                    b.Property<int>("ClaimGroupId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClaimGroupId"), 1L, 1);
+
+                    b.Property<string>("ClaimGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ClaimGroupId");
+
+                    b.ToTable("AuthenticationClaimGroups");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimRequirement", b =>
+                {
+                    b.Property<int>("RequirementId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequirementId"), 1L, 1);
+
+                    b.Property<int?>("AuthenticationClaimGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AuthenticationHttpMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AuthenticationHttpMethodsId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RequirementName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Uri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("beenReviewed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RequirementId");
+
+                    b.HasIndex("AuthenticationClaimGroupId");
+
+                    b.HasIndex("AuthenticationHttpMethodId");
+
+                    b.ToTable("AuthenticationClaimRequirements");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimValue", b =>
+                {
+                    b.Property<int>("ClaimValueId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClaimValueId"), 1L, 1);
+
+                    b.Property<int?>("AuthenticationClaimId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ClaimValueId");
+
+                    b.HasIndex("AuthenticationClaimId");
+
+                    b.ToTable("AuthenticationClaimValues");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationHttpMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuthenticationHttpMethods");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationUserClaimsHolder", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("AuthenticationUserClaimsHolders");
+                });
+
             modelBuilder.Entity("Workspace.Shared.Entities.ResourceFacilities.ReFaRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -199,6 +382,75 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("VS_Employees");
                 });
 
+            modelBuilder.Entity("AuthenticationClaimGroupAuthenticationClaimValue", b =>
+                {
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimGroup", null)
+                        .WithMany()
+                        .HasForeignKey("AuthenticationClaimGroupsClaimGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimValue", null)
+                        .WithMany()
+                        .HasForeignKey("AuthenticationClaimValuesClaimValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AuthenticationClaimRequirementAuthenticationClaimValue", b =>
+                {
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimRequirement", null)
+                        .WithMany()
+                        .HasForeignKey("AuthenticationClaimsRequirementsRequirementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimValue", null)
+                        .WithMany()
+                        .HasForeignKey("authenticationClaimValuesClaimValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AuthenticationClaimValueAuthenticationUserClaimsHolder", b =>
+                {
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationUserClaimsHolder", null)
+                        .WithMany()
+                        .HasForeignKey("AuthenticationUserClaimsHoldersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimValue", null)
+                        .WithMany()
+                        .HasForeignKey("authenticationClaimValuesClaimValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimRequirement", b =>
+                {
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimGroup", "AuthenticationClaimGroup")
+                        .WithMany("AuthenticationClaimRequirement")
+                        .HasForeignKey("AuthenticationClaimGroupId");
+
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethod")
+                        .WithMany("AuthenticationClaimRequirements")
+                        .HasForeignKey("AuthenticationHttpMethodId");
+
+                    b.Navigation("AuthenticationClaimGroup");
+
+                    b.Navigation("AuthenticationHttpMethod");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimValue", b =>
+                {
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaim", "AuthenticationClaim")
+                        .WithMany("AuthenticationClaimValues")
+                        .HasForeignKey("AuthenticationClaimId");
+
+                    b.Navigation("AuthenticationClaim");
+                });
+
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationDetail", b =>
                 {
                     b.HasOne("Workspace.Shared.Entities.Warehouse.OperationList", "OperationList")
@@ -225,6 +477,21 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("OperationList");
 
                     b.Navigation("VS_Employees");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
+                {
+                    b.Navigation("AuthenticationClaimValues");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimGroup", b =>
+                {
+                    b.Navigation("AuthenticationClaimRequirement");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationHttpMethod", b =>
+                {
+                    b.Navigation("AuthenticationClaimRequirements");
                 });
 
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationList", b =>

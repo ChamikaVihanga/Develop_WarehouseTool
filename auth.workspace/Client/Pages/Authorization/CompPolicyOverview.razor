@@ -1,0 +1,90 @@
+﻿@using System.Text.Json
+@inject HttpClient http
+
+<MudGrid>
+    <MudItem xs="9">
+        <MudText Typo="Typo.h6">Workspace Policy Overview</MudText>
+    </MudItem>
+    <MudItem xs="3">
+
+    </MudItem>
+</MudGrid>
+
+@if (PolicyRequirements == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    
+    <MudTextField  DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End"  AdornmentIcon="@Icons.Filled.Search" />
+    <MudPaper MinHeight="60vh" MaxHeight="60vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
+        <MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
+            @foreach (AuthenticationClaimRequirement? policy in PolicyRequirements)
+            {
+            <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = null, RequirementId= policy.RequirementId}))" Value='$"{policy.RequirementName}"' Icon="@Icons.Filled.AccountBox">
+                @foreach (var item in policy.authenticationClaimValues)
+                {
+                <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = item.ClaimValueId, RequirementId= policy.RequirementId}))" IconColor="Color.Default" Value='$"{item.AuthenticationClaim.Claim} : {item.Value}"' Icon="@Icons.Filled.Build" />
+                }
+        </MudTreeViewItem>
+            }
+    </MudTreeView>
+    <MudText></MudText>
+</MudPaper>
+
+
+}
+
+@code {
+    string? _debouncedText;
+
+    [Parameter] public EventCallback<ValueIDRequirementID> ClaimValue { get; set; }
+
+
+    [Parameter] public int? SelectedRequirement { get; set; }
+
+
+    public string SelectedValue { get; set; }
+
+    [Parameter] public AuthenticationClaimRequirement[]? PolicyRequirements { get; set; }
+    public AuthenticationClaimRequirement[]? PolicyRequirementsBackup { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        PolicyRequirementsBackup = PolicyRequirements;
+        Console.WriteLine(PolicyRequirementsBackup?.Count());
+
+    }
+
+
+    async Task SearchPolicies(string debouncedText)
+    {
+        if (PolicyRequirementsBackup is null)
+        {
+            PolicyRequirementsBackup = PolicyRequirements;
+        }
+
+        if (debouncedText.Length >= 0)
+        {
+            try
+            {
+                PolicyRequirements = PolicyRequirementsBackup?.Where(x => x.Uri.Contains(debouncedText, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+
+            }
+            catch
+            {
+                
+            }
+        }
+
+    }
+    public class ValueIDRequirementID
+    {
+        public int? valueId { get; set; }
+        public int RequirementId { get; set; }
+    }
+
+
+}
