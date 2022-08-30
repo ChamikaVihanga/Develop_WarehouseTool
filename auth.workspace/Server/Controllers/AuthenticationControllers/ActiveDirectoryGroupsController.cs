@@ -10,6 +10,11 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
     [ApiController]
     public class ActiveDirectoryGroupsController : ControllerBase
     {
+        public WorkspaceDbContext _context { get; set; }
+        public ActiveDirectoryGroupsController()
+        {
+
+        }
         [HttpGet]
         public async Task<List<AuthenticationADGroupModal>> getADGroups()
         {

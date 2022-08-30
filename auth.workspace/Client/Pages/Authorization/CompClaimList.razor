@@ -12,7 +12,7 @@ else
         <MudTreeViewItem TextTypo="Typo.body2" @onclick="(() => claimValue.InvokeAsync(new DataTransferObject.ClaimValues{ ClaimId=claim.ClaimId, claimName=claim.Claim }))" Value='$"{claim.Claim}"' Icon="@Icons.Filled.AccountBox">
             @foreach (var item in claim.AuthenticationClaimValues)
             {
-            <MudTreeViewItem TextTypo="Typo.body2" @onclick="(() => claimValue.InvokeAsync(new DataTransferObject.ClaimValues{ ClaimId=claim.ClaimId, ValueId= item.ClaimValueId, Value= item.Value, claimName=claim.Claim }))" IconColor="Color.Info" Value='$"{item.Value}"' Icon="@Icons.Filled.Build" />
+            <MudTreeViewItem TextTypo="Typo.body2" @onclick="(() => claimValue.InvokeAsync(new DataTransferObject.ClaimValues{ ClaimId=claim.ClaimId, ValueId= item.ClaimValueId, Value= item.Value, claimName=claim.Claim }))" IconColor="Color.Default" Value='$"{item.Value}"' Icon="@Icons.Filled.Info" />
             }
     </MudTreeViewItem>
         }

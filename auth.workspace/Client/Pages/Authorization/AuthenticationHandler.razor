@@ -5,7 +5,7 @@
 <MudGrid>
     <MudItem xs="12" sm="6">
         <MudPaper MinHeight="85vh" MaxHeight="85vh" Class="pa-5 ma-2 overflow-y-auto overflow-x-auto" Elevation="2">
-            <CompPolicyOverview SelectedRequirement="SelectedRequiremnet" ClaimValue="getClaimValue" PolicyRequirements="PolicyRequirements"></CompPolicyOverview>
+            <CompPolicyOverview SelectedRequirement="SelectedRequiremnet" ClaimValue="getClaimValue" ></CompPolicyOverview>
             <MudGrid>
                 <MudItem xs="9">
                     <MudPopover Open="@_isOpen" Fixed="true" Class="px-4 pt-4">
@@ -98,7 +98,7 @@
     }
     async Task GetValues()
     {
-        PolicyRequirements = await http.GetFromJsonAsync<AuthenticationClaimRequirement[]?>("api/AuthenticationPolicyRequirement/getallrequirements");
+        
     }
 
     void getClaimSeletecdValue(string value)

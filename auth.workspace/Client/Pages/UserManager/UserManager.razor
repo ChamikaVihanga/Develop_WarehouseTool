@@ -69,8 +69,6 @@
             </MudGrid>
             <CompUserClaimsWithValues claimValue="getClaimValue" AuthenticationUserClaimsHolder="AuthenticationUserClaimsHolder"></CompUserClaimsWithValues>
         </MudPaper>
-        @_claimValues?.claimName
-        @_claimValues?.Value
     </MudItem>
 </MudGrid>
 
@@ -88,7 +86,7 @@
     protected override async Task OnInitializedAsync()
     {
         Users = await http.GetFromJsonAsync<AuthenticationUserClaimsHolder[]?>("api/AuthenticationUserClaimHolders/GetUsersList");
-   
+
 
     }
     public async Task AddDomainUser()
@@ -114,7 +112,7 @@
             try
             {
                 loading = true;
-                AuthenticationUserClaimsHolder = await http.GetFromJsonAsync<AuthenticationUserClaimsHolder?>($"api/AuthenticationUserClaimHolders/{User?.ToString()}");
+                AuthenticationUserClaimsHolder = await http.GetFromJsonAsync<AuthenticationUserClaimsHolder?>($"api/AuthenticationUserClaimHolders?UserName={User?.ToString()}");
                 loading = false;
 
             }
@@ -123,6 +121,11 @@
                 Console.WriteLine(ex);
             }
         }
+    }
+
+    async Task Review()
+    {
+        
     }
 
     async Task HandleIntervalElapsed(string debouncedText)

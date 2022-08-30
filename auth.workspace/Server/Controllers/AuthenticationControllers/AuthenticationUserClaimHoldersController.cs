@@ -17,8 +17,8 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
 
         }
 
-        [HttpGet("{UserName}")]
-        public async Task<ActionResult<AuthenticationUserClaimsHolder>> GetUsers(string UserName)
+        [HttpGet]
+        public async Task<ActionResult<AuthenticationUserClaimsHolder>> GetUsers(string? UserName)
         {
             var user = _context.AuthenticationUserClaimsHolders
                 .Where(a => a.UserName == UserName)

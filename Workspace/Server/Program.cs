@@ -14,8 +14,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Workspace.Server.AuthorizationService.PolicyHandler;
 using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
-
-
+using Workspace.Server.Services.ClaimProviderService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +63,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value)),
             ValidateIssuer = false,
             ValidateAudience = false,
+            
         };
     });
 
@@ -105,6 +105,7 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IClaimProviderService, ClaimProviderService>();
 
 
 var app = builder.Build();
