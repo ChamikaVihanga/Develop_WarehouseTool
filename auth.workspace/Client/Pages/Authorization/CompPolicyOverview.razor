@@ -6,7 +6,11 @@
         <MudText Typo="Typo.h6">Workspace Policy Overview</MudText>
     </MudItem>
     <MudItem xs="3">
-
+        <MudItem Class="d-flex justify-end flex-grow-1 gap-4">
+            <MudToggleIconButton Class="align-self-end" @bind-Toggled="@NewEndpoints"
+                                 Icon="@Icons.Filled.FiberNew" Size="Size.Large" Color="@Color.Success" Title="Toggle to records which hasn't been reviewed"
+                                 ToggledIcon="@Icons.Filled.FolderZip" ToggledSize="Size.Large" ToggledColor="@Color.Warning" ToggledTitle="Toggle to records which has been reviewed" />
+        </MudItem>
     </MudItem>
 </MudGrid>
 
@@ -16,11 +20,7 @@
 }
 else
 {
-    <MudItem Class="d-flex justify-end flex-grow-1 gap-4">
-        <MudToggleIconButton Class="align-self-end" @bind-Toggled="@NewEndpoints"
-                         Icon="@Icons.Filled.FiberNew" Size="Size.Large" Color="@Color.Success" Title="Toggle to records which hasn't been reviewed"
-                         ToggledIcon="@Icons.Filled.FolderZip" ToggledSize="Size.Large" ToggledColor="@Color.Warning" ToggledTitle="Toggle to records which has been reviewed" />
-    </MudItem>
+    
     <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" />
     <MudPaper MinHeight="60vh" MaxHeight="60vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
         <MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
@@ -129,7 +129,7 @@ else
         {
             try
             {
-                PolicyRequirements = PolicyRequirementsBackup?.Where(x => x.Uri.Contains(debouncedText, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                PolicyRequirements = PolicyRequirementsBackup?.Where(x => x.RequirementName.Contains(debouncedText, StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
             }
             catch
