@@ -2,9 +2,12 @@
 <MudDialog Class="p-5 m-4">
  
     <DialogContent>
+        <MudTextField T="string" @bind-Text="@pathName" OnBlur="Review" Margin="Margin.Dense" Label="Action Name" Variant="Variant.Outlined" Lines="1" />
         <MudAlert Severity="Severity.Normal" NoIcon="true" Class="mb-2 mt-3">@SelectedAuthRequirement?.Uri</MudAlert>
+        
     </DialogContent>
     <DialogActions>
+        
         <MudGrid>
             <MudItem xs="12" sm="7">
                 @if (ClaimIds is not null)
@@ -44,11 +47,17 @@
                     }
                 </MudPaper>
             </MudItem>
+         
+                <MudTextField Class="align-self-end py-4 flex-1" T="string" @bind-Text="@Description" OnBlur="Review" Margin="Margin.Dense" Label="Description" Variant="Variant.Outlined" Lines="5" />
+
+            
         </MudGrid>
     </DialogActions>
 </MudDialog>
 
 @code {
+    string pathName;
+    string Description;
     public AuthenticationClaim[]? AuthenticationClaim { get; set; }
 
     public AuthenticationClaimRequirement? SelectedAuthRequirement { get; set; }
@@ -67,6 +76,7 @@
     {
         await getClaims();
         AuthenticationClaim = await http.GetFromJsonAsync<AuthenticationClaim[]?>("api/AuthenticationClaims");
+        pathName = SelectedAuthRequirement.RequirementName;
     }
 
     public async Task getClaims()
@@ -98,6 +108,18 @@
         var response = await http.PostAsJsonAsync<DataTransferObject.ClaimValueDTO>("api/AuthenticationPolicyRequirement/BindClaimValues", claimValueDTO);
 
         await getClaims();
+    }
+    async Task Review(){
+        if(pathName != null){
+
+            SelectedAuthRequirement.beenReviewed = true;
+        }
+        else{
+            SelectedAuthRequirement.beenReviewed = false;
+        }
+        SelectedAuthRequirement.description = Description;
+        SelectedAuthRequirement.RequirementName = pathName;
+        await http.PutAsJsonAsync<AuthenticationClaimRequirement>($"api/AuthenticationPolicyRequirement/ReviewPath?id={SelectedAuthRequirement?.RequirementId}", SelectedAuthRequirement);
     }
 
     private class ClaimsValues

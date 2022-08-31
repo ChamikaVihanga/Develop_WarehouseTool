@@ -32,6 +32,5 @@ namespace DataAccessLayer
         public DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
         public DbSet<AuthenticationHttpMethod> AuthenticationHttpMethods { get; set; } = null!;
     }
-
 }
 
