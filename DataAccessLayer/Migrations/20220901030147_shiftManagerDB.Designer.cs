@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    [Migration("20220822164100_Init")]
-    partial class Init
+    [Migration("20220901030147_shiftManagerDB")]
+    partial class shiftManagerDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,6 +69,21 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AuthenticationClaimValueAuthenticationUserClaimsHolder");
                 });
 
+            modelBuilder.Entity("ShiftGroupVS_Employees", b =>
+                {
+                    b.Property<int>("VS_EmployeesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("shiftGroupsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("VS_EmployeesId", "shiftGroupsId");
+
+                    b.HasIndex("shiftGroupsId");
+
+                    b.ToTable("ShiftGroupVS_Employees");
+                });
+
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
                 {
                     b.Property<int>("ClaimId")
@@ -120,9 +135,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<int?>("AuthenticationClaimGroupId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AuthenticationHttpMethodId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("AuthenticationHttpMethodsId")
                         .HasColumnType("int");
 
@@ -146,7 +158,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("AuthenticationClaimGroupId");
 
-                    b.HasIndex("AuthenticationHttpMethodId");
+                    b.HasIndex("AuthenticationHttpMethodsId");
 
                     b.ToTable("AuthenticationClaimRequirements");
                 });
@@ -351,6 +363,36 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("OperationRecords");
                 });
 
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.ShiftGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GroupTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WorkingShiftId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WorkingShiftsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkingShiftsId");
+
+                    b.ToTable("ShiftGroups");
+                });
+
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
                 {
                     b.Property<int>("Id")
@@ -382,6 +424,31 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VS_Employees");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.WorkingShifts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ShiftDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShiftTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkingShift");
                 });
 
             modelBuilder.Entity("AuthenticationClaimGroupAuthenticationClaimValue", b =>
@@ -429,19 +496,34 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ShiftGroupVS_Employees", b =>
+                {
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees", null)
+                        .WithMany()
+                        .HasForeignKey("VS_EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.ShiftGroup", null)
+                        .WithMany()
+                        .HasForeignKey("shiftGroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimRequirement", b =>
                 {
                     b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimGroup", "AuthenticationClaimGroup")
                         .WithMany("AuthenticationClaimRequirement")
                         .HasForeignKey("AuthenticationClaimGroupId");
 
-                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethod")
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethods")
                         .WithMany("AuthenticationClaimRequirements")
-                        .HasForeignKey("AuthenticationHttpMethodId");
+                        .HasForeignKey("AuthenticationHttpMethodsId");
 
                     b.Navigation("AuthenticationClaimGroup");
 
-                    b.Navigation("AuthenticationHttpMethod");
+                    b.Navigation("AuthenticationHttpMethods");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimValue", b =>
@@ -481,6 +563,15 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("VS_Employees");
                 });
 
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.ShiftGroup", b =>
+                {
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.WorkingShifts", "WorkingShifts")
+                        .WithMany("ShiftGroups")
+                        .HasForeignKey("WorkingShiftsId");
+
+                    b.Navigation("WorkingShifts");
+                });
+
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
                 {
                     b.Navigation("AuthenticationClaimValues");
@@ -506,6 +597,11 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
                 {
                     b.Navigation("OperationRecords");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.WorkingShifts", b =>
+                {
+                    b.Navigation("ShiftGroups");
                 });
 #pragma warning restore 612, 618
         }

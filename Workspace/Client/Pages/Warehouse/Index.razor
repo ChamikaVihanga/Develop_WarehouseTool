@@ -51,8 +51,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var responce = await Http.GetFromJsonAsync<VS_Employees>($"api/VS_Employees/filter?id={id}");
-        name = responce.FullName;         
+        //var responce = await Http.GetFromJsonAsync<VS_Employees>($"api/VS_Employees/filter?id={id}");
+        //name = responce.FullName;         
     }
 
     private string[] shiftCollection = 

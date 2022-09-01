@@ -133,9 +133,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<int?>("AuthenticationClaimGroupId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AuthenticationHttpMethodId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("AuthenticationHttpMethodsId")
                         .HasColumnType("int");
 
@@ -159,7 +156,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("AuthenticationClaimGroupId");
 
-                    b.HasIndex("AuthenticationHttpMethodId");
+                    b.HasIndex("AuthenticationHttpMethodsId");
 
                     b.ToTable("AuthenticationClaimRequirements");
                 });
@@ -435,7 +432,7 @@ namespace DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("EndTime")
+                    b.Property<DateTime?>("EndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ShiftDescription")
@@ -444,7 +441,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("ShiftTitle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<DateTime?>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -518,13 +515,13 @@ namespace DataAccessLayer.Migrations
                         .WithMany("AuthenticationClaimRequirement")
                         .HasForeignKey("AuthenticationClaimGroupId");
 
-                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethod")
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethods")
                         .WithMany("AuthenticationClaimRequirements")
-                        .HasForeignKey("AuthenticationHttpMethodId");
+                        .HasForeignKey("AuthenticationHttpMethodsId");
 
                     b.Navigation("AuthenticationClaimGroup");
 
-                    b.Navigation("AuthenticationHttpMethod");
+                    b.Navigation("AuthenticationHttpMethods");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimValue", b =>

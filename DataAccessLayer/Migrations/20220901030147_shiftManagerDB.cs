@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class yyy : Migration
+    public partial class shiftManagerDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,6 +64,67 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OperationLists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OperationLists", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReFaRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestedFor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RequestedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReFaRequests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SampleTodos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDone = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SampleTodos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VS_Employees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrganizationalUnit = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VS_Employees", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WorkingShift",
                 columns: table => new
                 {
@@ -110,7 +171,6 @@ namespace DataAccessLayer.Migrations
                     beenReviewed = table.Column<bool>(type: "bit", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AuthenticationHttpMethodsId = table.Column<int>(type: "int", nullable: true),
-                    AuthenticationHttpMethodId = table.Column<int>(type: "int", nullable: true),
                     AuthenticationClaimGroupId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -122,10 +182,66 @@ namespace DataAccessLayer.Migrations
                         principalTable: "AuthenticationClaimGroups",
                         principalColumn: "ClaimGroupId");
                     table.ForeignKey(
-                        name: "FK_AuthenticationClaimRequirements_AuthenticationHttpMethods_AuthenticationHttpMethodId",
-                        column: x => x.AuthenticationHttpMethodId,
+                        name: "FK_AuthenticationClaimRequirements_AuthenticationHttpMethods_AuthenticationHttpMethodsId",
+                        column: x => x.AuthenticationHttpMethodsId,
                         principalTable: "AuthenticationHttpMethods",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OperationDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OperationListId = table.Column<int>(type: "int", nullable: false),
+                    EffectiveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Target = table.Column<int>(type: "int", nullable: true),
+                    TimeSpan = table.Column<int>(type: "int", nullable: true),
+                    TimePeriod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OperationDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OperationDetails_OperationLists_OperationListId",
+                        column: x => x.OperationListId,
+                        principalTable: "OperationLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OperationRecords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OperationListId = table.Column<int>(type: "int", nullable: true),
+                    VS_EmployeesId = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Achivement = table.Column<int>(type: "int", nullable: true),
+                    Efficiency = table.Column<int>(type: "int", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OperationRecords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OperationRecords_OperationLists_OperationListId",
+                        column: x => x.OperationListId,
+                        principalTable: "OperationLists",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OperationRecords_VS_Employees_VS_EmployeesId",
+                        column: x => x.VS_EmployeesId,
+                        principalTable: "VS_Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -262,9 +378,9 @@ namespace DataAccessLayer.Migrations
                 column: "AuthenticationClaimGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthenticationClaimRequirements_AuthenticationHttpMethodId",
+                name: "IX_AuthenticationClaimRequirements_AuthenticationHttpMethodsId",
                 table: "AuthenticationClaimRequirements",
-                column: "AuthenticationHttpMethodId");
+                column: "AuthenticationHttpMethodsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuthenticationClaimValueAuthenticationUserClaimsHolder_authenticationClaimValuesClaimValueId",
@@ -275,6 +391,21 @@ namespace DataAccessLayer.Migrations
                 name: "IX_AuthenticationClaimValues_AuthenticationClaimId",
                 table: "AuthenticationClaimValues",
                 column: "AuthenticationClaimId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OperationDetails_OperationListId",
+                table: "OperationDetails",
+                column: "OperationListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OperationRecords_OperationListId",
+                table: "OperationRecords",
+                column: "OperationListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OperationRecords_VS_EmployeesId",
+                table: "OperationRecords",
+                column: "VS_EmployeesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShiftGroups_WorkingShiftsId",
@@ -299,6 +430,18 @@ namespace DataAccessLayer.Migrations
                 name: "AuthenticationClaimValueAuthenticationUserClaimsHolder");
 
             migrationBuilder.DropTable(
+                name: "OperationDetails");
+
+            migrationBuilder.DropTable(
+                name: "OperationRecords");
+
+            migrationBuilder.DropTable(
+                name: "ReFaRequests");
+
+            migrationBuilder.DropTable(
+                name: "SampleTodos");
+
+            migrationBuilder.DropTable(
                 name: "ShiftGroupVS_Employees");
 
             migrationBuilder.DropTable(
@@ -311,7 +454,13 @@ namespace DataAccessLayer.Migrations
                 name: "AuthenticationUserClaimsHolders");
 
             migrationBuilder.DropTable(
+                name: "OperationLists");
+
+            migrationBuilder.DropTable(
                 name: "ShiftGroups");
+
+            migrationBuilder.DropTable(
+                name: "VS_Employees");
 
             migrationBuilder.DropTable(
                 name: "AuthenticationClaimGroups");
