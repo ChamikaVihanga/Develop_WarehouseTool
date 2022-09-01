@@ -46,7 +46,7 @@
                                             </MudDatePicker>
                                         </MudItem>
                                         <MudItem xs="6">
-                                            <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" />
+                                            <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("0"))" For="@(()=>EnteredSapNo)" />
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -348,7 +348,7 @@
             return operationList.Select(x => x.Name);
         return operationList.Select(y => y.Name.ToString()).Where(a => a.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
-
+    
 
     async Task HandleIntervalElapsed(string debouncedText)
     {
