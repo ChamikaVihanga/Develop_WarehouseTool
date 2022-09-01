@@ -16,5 +16,7 @@
 
         //relation
         public List<OperationRecord>? OperationRecords { get; set; }
+
+        public List<ShiftGroup>? shiftGroups { get; set; }   
     }
 }

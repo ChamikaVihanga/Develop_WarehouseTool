@@ -21,6 +21,8 @@ namespace DataAccessLayer
         public DbSet<OperationList> OperationLists { get; set; }
         public DbSet<VS_Employees> VS_Employees { get; set; }
         public DbSet<OperationDetail> OperationDetails { get; set; }
+        public DbSet<ShiftGroup> ShiftGroups { get; set; }
+        public DbSet<WorkingShifts> WorkingShift { get; set; } 
 
 
 

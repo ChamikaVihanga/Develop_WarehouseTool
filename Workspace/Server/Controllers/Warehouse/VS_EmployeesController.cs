@@ -20,8 +20,8 @@ namespace Workspace.Server.Controllers.Warehouse
             _context = context;
         }
 
-        // GET: api/VS_Employees
-        [HttpGet]
+        //GET: api/VS_Employees
+       [HttpGet]
         public async Task<ActionResult<IEnumerable<VS_Employees>>> GetVS_Employees()
         {
             if (_context.VS_Employees == null)
@@ -32,8 +32,8 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
         // GET: api/VS_Employees/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<VS_Employees>> GetVS_Employees(int id)
+        [HttpGet, Route("filter")]
+        public async Task<ActionResult<VS_Employees>> GetVS_Employees(int? id)
         {
             if (_context.VS_Employees == null)
             {
