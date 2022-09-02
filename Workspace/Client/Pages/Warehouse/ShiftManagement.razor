@@ -1,0 +1,130 @@
+﻿@page "/Warehouse/ShiftManage"
+@using Microsoft.AspNetCore.Components
+@inject HttpClient Http
+<_WarehouseNavBar />
+
+<MudGrid Class="mt-4">
+    <MudItem xs="3">
+        <MudDatePicker @ref="_picker" @bind-Date="date" Label="From(Date)">
+            <PickerActions>
+                <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
+                <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+            </PickerActions>
+        </MudDatePicker>
+    </MudItem>
+    <MudItem xs="3">
+        <MudDatePicker @ref="_secondpicker" Label="To">
+            <PickerActions>
+                <MudButton Class="mr-auto align-self-start" OnClick="@(() => _secondpicker.Clear())">Clear</MudButton>
+                <MudButton OnClick="@(() => _secondpicker.Close(false))">Cancel</MudButton>
+                <MudButton Color="Color.Primary" OnClick="@(() => _secondpicker.Close())">Ok</MudButton>
+            </PickerActions>
+        </MudDatePicker>
+    </MudItem>
+    <MudItem xs="6"></MudItem>
+    <MudItem xs="3">
+        
+            <MudSelect @bind-Value="stringValue" Label="Working Shifts" Placeholder="Please Select Shift" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
+
+                @if (workingShifts is not null)
+                {
+                    @foreach (var shifttime in workingShifts)
+                    {
+                        <MudSelectItem Value="@shifttime?.ShiftDescription">@shifttime?.ShiftTitle @shifttime?.ShiftDescription</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+        
+        
+    </MudItem>
+    <MudItem xs="9"></MudItem>
+    <MudItem xs="3"><h5>Add Employee</h5></MudItem>
+    <MudItem xs="9"></MudItem>
+</MudGrid>
+<MudGrid>
+    <MudItem xs="3">
+        <MudPaper Height="400px" Class="overflow-y-auto overflow-x-hidden mt-10 mud-background-gray pa-4  d-flex flex-column" Elevation="2">
+            @if (isOpen)
+            {
+                <MudPaper Elevation="25" Class="pa-2 rounded-lg">
+
+                    @*<input type="text" @onkeydown="@enter" placeholder="Enter Emp/SAP NO:" @bind-value="sapNo" maxlength="5" Class="mx-2 mt-n2" />*@
+                    <MudTextField @bind-Value="sapNo" Mask="@(new PatternMask("00000"))" Placeholder="Enter Emp/SAP NO:" DisableUnderLine="true" Margin="Margin.Dense" OnKeyDown="@(e => enter(e))" Class="mx-2 mt-n2"></MudTextField>
+                    @if (sapNo == null || sapNo == 0)
+                    {
+                        <MudButton OnClick="@(() => AddEmployee((int)sapNo))" Disabled="true" Size="Size.Small" Color="Color.Info" FullWidth="true" Style="text-transform:none"><b>Add Employee</b></MudButton>
+                    }
+                    else
+                    { 
+                        <MudButton OnClick="@(() => AddEmployee((int)sapNo))"  Disabled="false" Size="Size.Small" Color="Color.Info" FullWidth="true" Style="text-transform:none"><b>Add Employee</b></MudButton>
+                    }
+                </MudPaper>
+            }
+            else
+            {
+                <MudButton OnClick="@(() => isOpen = !isOpen)" StartIcon="@Icons.Filled.Add" IconColor="Color.Error" FullWidth="true" Class="rounded-lg py-2" Style="text-transform:none">Add Employee</MudButton>
+            }
+
+            @foreach (int number in SapList)
+            {                
+                <MudPaper Elevation="25" Class="pa-4 rounded-1g my-1">@number</MudPaper>
+            }
+        </MudPaper>
+    </MudItem>
+    <br />
+    <MudItem xs="3">
+        <MudPaper Elevation="0" Height="440px" Class="d-flex align-content-space-between flex-wrap flex-grow-1 gap-1">
+            @for (int i = 0; i < 15; i++)
+            {
+                <MudItem xs="3"></MudItem>
+            }
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Success" Size="Size.Medium"><b>Save</b></MudButton>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+@*Class="d-flex align-center oi-justify-left mud-width-full py-8"*@
+
+@code {
+
+    MudDatePicker? _picker;
+    MudDatePicker? _secondpicker;
+
+    private List<WorkingShifts?>? workingShifts;   
+    private string stringValue { get; set; }
+
+    DateTime? date = DateTime.Today;
+    List<int?> SapList = new List<int?>();
+    //public List<int> SapList { get; set; }
+
+    public bool isOpen { get; set; } = false;
+
+    public int? sapNo { get; set; }
+
+    async Task AddEmployee(int sapN)
+    {
+        SapList.Add(sapN);
+        sapNo = null;
+    }
+    public void enter(KeyboardEventArgs e)
+    {
+        Console.WriteLine("trigger");
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            AddEmployee((int)sapNo);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetShifts();
+        
+    }
+
+    async Task GetShifts()
+    {
+        workingShifts = await Http.GetFromJsonAsync<List<WorkingShifts>>("api/WorkingShifts");        
+    }
+}

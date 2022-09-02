@@ -33,27 +33,75 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // GET: api/OperationLists/Active
         [HttpGet("Active")]
-        public async Task<ActionResult<IEnumerable<OperationList>>> GetActiveOperationLists()
+        public async Task<ActionResult<IEnumerable<OperationDetail>>> GetActiveOperationLists()
         {
             if (_context.OperationLists == null)
             {
                 return NotFound();
             }
-            return await _context.OperationLists
-                .Include(x => x.OperationDetails)
-                .ToListAsync();
+            //return await _context.OperationLists
+            //    .Include(x => x.OperationDetails)
+            //    .ToListAsync();
+
+    
+            var opDetail = await _context.OperationDetails.Include(a => a.OperationList).ToListAsync();
+            List<OperationDetail> getUpcommingOperations = new List<OperationDetail>();
+
+            List<int> listIds = new List<int>();
+            listIds = opDetail.Select(a => a.Id).Distinct().ToList();
+
+            List<OperationDetail> UpcommingRecords = new List<OperationDetail>();
+            UpcommingRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
+
+            foreach (int a in listIds)
+            {
+                List<OperationDetail> UpcommingDetails = UpcommingRecords.Where(b => b.OperationListId == a).ToList();
+                OperationDetail? maxDate = UpcommingDetails.MaxBy(p => p.EffectiveDate);
+                if (maxDate != null)
+                {
+                    getUpcommingOperations.Add(maxDate);
+                }
+            }
+
+            return getUpcommingOperations;
+
         }
 
 
         // GET: api/OperationLists/Upcoming
         [HttpGet("Upcoming")]
-        public async Task<ActionResult<IEnumerable<OperationList>>> GetUpcomingOperationLists()
+        public async Task<ActionResult<IEnumerable<OperationDetail>>> GetUpcomingOperationLists()
         {
             if (_context.OperationLists == null)
             {
                 return NotFound();
             }
-            return await _context.OperationLists.ToListAsync();
+
+            //return await _context.OperationLists
+            //    .Include(x => x.OperationDetails)
+            //    .ToListAsync();
+           
+            var opDetail = await _context.OperationDetails.Include(b =>b.OperationList).ToListAsync();
+            List<OperationDetail> getUpcommingOperations = new List<OperationDetail>();
+
+            List<int> listIds = new List<int>();
+            listIds = opDetail.Select(a => a.OperationList.Id).Distinct().ToList();
+
+            List<OperationDetail> UpcommingRecords = new List<OperationDetail>();
+            UpcommingRecords = opDetail.Where(b => b.EffectiveDate > DateTime.Now).ToList();
+
+            foreach (int a in listIds)
+            {
+                List<OperationDetail> UpcommingDetails = UpcommingRecords.Where(b => b.OperationListId == a).ToList();
+                OperationDetail? minDate = UpcommingDetails.MinBy(p => p.EffectiveDate);
+                if (minDate != null)
+                {
+                    getUpcommingOperations.Add(minDate);
+                }
+            }
+
+            return getUpcommingOperations;
+
         }
 
 
