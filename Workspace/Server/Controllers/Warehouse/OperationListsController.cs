@@ -52,13 +52,31 @@ namespace Workspace.Server.Controllers.Warehouse
             if (_context.OperationLists == null)
             {
                 return NotFound();
-            }
-            var opList =  await _context.OperationLists.ToListAsync();
+            }          
 
             return await _context.OperationLists
                 .Include(x => x.OperationDetails)
                 .ToListAsync();
-            //return null;
+
+            var opList = await _context.OperationLists.ToListAsync();
+            var opDetail = await _context.OperationDetails.ToListAsync();
+            List<OperationDetail> getUpcommingOperations = new List<OperationDetail>();
+
+            List<int> listIds = new List<int>();
+            listIds = opList.Select(a => a.Id).Distinct().ToList(); 
+
+            List<OperationDetail> UpcommingRecords = new List<OperationDetail>();
+            UpcommingRecords = opDetail.Where(b => b.EffectiveDate > DateTime.Now).ToList();
+
+            foreach (int a in listIds)
+            {
+                List<OperationDetail> UpcommingDetails = UpcommingRecords.Where(b => b.Id == a).ToList();
+                OperationDetail? minDate = UpcommingDetails.MinBy(p => p.EffectiveDate);
+                if(minDate != null)
+                {
+                    getUpcommingOperations.Add(minDate);
+                }
+            }
         }
 
 

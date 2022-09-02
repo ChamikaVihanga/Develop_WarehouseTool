@@ -14,7 +14,6 @@
         public int? TimeSpan { get; set; }
         public string? TimePeriod { get; set; }
         public DateTime CreateDate { get; set; }
-        public string CreatedBy { get; set; }
-
+        public string CreatedBy { get; set; }       
     }
 }

@@ -18,9 +18,11 @@
             <EditForm Model="summeryDTO">
                 <DataAnnotationsValidator />
                 <MudSelect T="string" Label="Select a Organizational Unit">
-                    <MudSelectItem Value="@("Catogery A")" />
-                    <MudSelectItem Value="@("Catogery B")" />
-                    <MudSelectItem Value="@("Catogery C")" />
+                    <MudSelectItem Value="@("Warehouse Harness")" />                    
+                    <MudSelectItem Value="@("Warehouse SMT")" />                    
+                    <MudSelectItem Value="@("Warehouse THT")" />                    
+                    <MudSelectItem Value="@("Warehouse Preparation")" />                    
+                    <MudSelectItem Value="@("Warehouse Others")" />                    
                 </MudSelect>
                 <MudTextField @bind-Value="summeryDTO.OperationName" Label="Operation Name" For="@(() => summeryDTO.OperationName)"></MudTextField>
                 <MudGrid>
