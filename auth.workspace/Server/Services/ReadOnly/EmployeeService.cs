@@ -1,4 +1,4 @@
-﻿namespace auth.workspace.Server.Services.ReadOnly
+﻿namespace admin.workspace.Server.Services.ReadOnly
 {
     public class EmployeeService : IEmployeeService
     {

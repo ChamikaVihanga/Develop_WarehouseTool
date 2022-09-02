@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace auth.workspace.Client
+namespace admin.workspace.Client
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {

@@ -1,8 +1,8 @@
-﻿using auth.workspace.Server.Authorization.DataProviderInterfaces;
+﻿using admin.workspace.Server.Authorization.DataProviderInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
-namespace auth.workspace.Server.Authorization.Handlers
+namespace admin.workspace.Server.Authorization.Handlers
 {
     public class EmployeesWithXPHandler : AuthorizationHandler<UsersWithITClaimAnd2YearsExpRequirement>
     {

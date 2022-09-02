@@ -1,6 +1,6 @@
 ﻿
 
-namespace auth.workspace.Server.Authorization.DataProviders
+namespace admin.workspace.Server.Authorization.DataProviders
 {
     public class CustomClaimChecker : ICustomClaimChecker
     {

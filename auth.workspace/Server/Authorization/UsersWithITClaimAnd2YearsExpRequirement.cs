@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace auth.workspace.Server.Authorization
+namespace admin.workspace.Server.Authorization
 {
     public class UsersWithITClaimAnd2YearsExpRequirement : IAuthorizationRequirement
     {
