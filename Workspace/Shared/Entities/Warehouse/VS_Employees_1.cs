@@ -1,6 +1,7 @@
 ﻿namespace Workspace.Shared.Entities.Warehouse
 {
-    public class VS_Employees
+    public class VS_Employees_1
+
     {
         public int Id { get; set; }
 
