@@ -26,8 +26,10 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
             else
             {
                 return await _context.AuthenticationClaimRequirements
+                    .Include(b => b.AuthenticationHttpMethods)
                     .Include(a => a.authenticationClaimValues)
-                    .ThenInclude(a => a.AuthenticationClaim).ToListAsync();
+                    .ThenInclude(a => a.AuthenticationClaim)
+                    .ToListAsync();
             }
 
         }
@@ -56,6 +58,17 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
             }
 
 
+        }
+        [HttpPut, Route("ReviewPath"), Authorize(Policy = "VSPolicy")]
+        public async Task UpdateRecords(int id, AuthenticationClaimRequirement authenticationClaimRequirement)
+        {
+            var current = _context.AuthenticationClaimRequirements.FirstOrDefault(x => x.RequirementId == id);
+            current.RequirementName = authenticationClaimRequirement.RequirementName;
+            current.beenReviewed = authenticationClaimRequirement.beenReviewed;
+            current.description = authenticationClaimRequirement.description;
+
+            _context.Update(current);
+            await _context.SaveChangesAsync();
         }
 
         [HttpPost, Route("AddEnd-Point"), Authorize(Policy = "VSPolicy")]

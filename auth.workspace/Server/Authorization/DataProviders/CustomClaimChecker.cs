@@ -12,7 +12,7 @@ namespace auth.workspace.Server.Authorization.DataProviders
        
         public async Task<List<AuthenticationClaimRequirement>> getClaimRequirement(string EndPoint, string Method, QueryString queryString)
         {
-            int Methods = Method.Length;
+           
             var claimRequirementSTEST = _context.AuthenticationClaimRequirements.Where(b => b.Uri == EndPoint).Count();
             if (claimRequirementSTEST == 0)
             {
@@ -30,8 +30,8 @@ namespace auth.workspace.Server.Authorization.DataProviders
                 await _context.SaveChangesAsync();  
 
             }
-            
-            var claims = await _context.AuthenticationClaimRequirements.Where(a => a.Uri == EndPoint).Include(x => x.authenticationClaimValues).ThenInclude(x => x.AuthenticationClaim).ToListAsync();
+            var httpMethodId = await _context.AuthenticationHttpMethods.Where(a => a.HttpMethod == Method).ToListAsync();
+            var claims = await _context.AuthenticationClaimRequirements.Where(a => a.Uri == EndPoint && a.AuthenticationHttpMethodsId == httpMethodId.Select(b => b.Id).LastOrDefault()).Include(x => x.authenticationClaimValues).ThenInclude(x => x.AuthenticationClaim).ToListAsync();
          
             return claims;
         }

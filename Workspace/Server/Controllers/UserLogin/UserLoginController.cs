@@ -17,7 +17,7 @@ namespace Workspace.Server.Controllers.UserLogin
         public async Task<string> Login(dto.UserLogin userLogin)
         {
             string token = await _loginService.Login(userLogin.UserName, userLogin.Password);
-            return token;
+            return token.ToString();
         }
     }
 }

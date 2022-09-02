@@ -17,8 +17,8 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
 
         }
 
-        [HttpGet("{UserName}")]
-        public async Task<ActionResult<AuthenticationUserClaimsHolder>> GetUsers(string UserName)
+        [HttpGet]
+        public async Task<ActionResult<AuthenticationUserClaimsHolder>> GetUsers(string? UserName)
         {
             var user = _context.AuthenticationUserClaimsHolders
                 .Where(a => a.UserName == UserName)
@@ -34,11 +34,19 @@ namespace auth.workspace.Server.Controllers.AuthenticationControllers
         }
 
         [HttpPost, Route("AddDomainUser")]
-        public async Task AddDomainUser(AuthenticationUserClaimsHolder username)
+        public async Task<ActionResult<string>> AddDomainUser(AuthenticationUserClaimsHolder username)
         {
-           
-            await _context.AddAsync(username);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.AddAsync(username);
+                await _context.SaveChangesAsync();
+                return Ok("User has been added.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);  
+            }
+            
 
         }
 

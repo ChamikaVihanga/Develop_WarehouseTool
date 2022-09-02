@@ -25,8 +25,8 @@
 
 <MudPaper Width="250px" Elevation="0" Class="py-3">
     <MudNavMenu Color="Color.Info">
-        <MudNavLink Href="/" Icon="@Icons.Filled.Dashboard">Dashboard</MudNavLink>
-        <MudNavLink Href="/UserManager"  Icon="@Icons.Filled.AccountTree">User Managaer</MudNavLink>
+        <MudNavLink Icon="@Icons.Filled.Dashboard" Match="NavLinkMatch.Prefix" Href="">Dashboard</MudNavLink>
+        <MudNavLink Href="/UserManager" Icon="@Icons.Filled.AccountTree" Match="NavLinkMatch.Prefix">User Manager</MudNavLink>
         <MudNavLink Href="/" Disabled="true">Instructions</MudNavLink>
         <MudNavGroup Title="Settings" Expanded="true" Disabled="true">
             <MudNavLink Href="/users">Users</MudNavLink>

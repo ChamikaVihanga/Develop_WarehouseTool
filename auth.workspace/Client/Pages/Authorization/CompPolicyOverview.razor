@@ -6,7 +6,11 @@
         <MudText Typo="Typo.h6">Workspace Policy Overview</MudText>
     </MudItem>
     <MudItem xs="3">
-
+        <MudItem Class="d-flex justify-end flex-grow-1 gap-4">
+            <MudToggleIconButton Class="align-self-end" @bind-Toggled="@NewEndpoints"
+                                 Icon="@Icons.Filled.FiberNew" Size="Size.Large" Color="@Color.Success" Title="Toggle to records which hasn't been reviewed"
+                                 ToggledIcon="@Icons.Filled.FolderZip" ToggledSize="Size.Large" ToggledColor="@Color.Warning" ToggledTitle="Toggle to records which has been reviewed" />
+        </MudItem>
     </MudItem>
 </MudGrid>
 
@@ -17,12 +21,12 @@
 else
 {
     
-    <MudTextField  DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End"  AdornmentIcon="@Icons.Filled.Search" />
+    <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" />
     <MudPaper MinHeight="60vh" MaxHeight="60vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
         <MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
             @foreach (AuthenticationClaimRequirement? policy in PolicyRequirements)
             {
-            <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = null, RequirementId= policy.RequirementId}))" Value='$"{policy.RequirementName}"' Icon="@Icons.Filled.AccountBox">
+            <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = null, RequirementId= policy.RequirementId}))" Value='$"{policy.AuthenticationHttpMethods.HttpMethod}: {policy.RequirementName}"' Icon="@Icons.Filled.AccountBox">
                 @foreach (var item in policy.authenticationClaimValues)
                 {
                 <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = item.ClaimValueId, RequirementId= policy.RequirementId}))" IconColor="Color.Default" Value='$"{item.AuthenticationClaim.Claim} : {item.Value}"' Icon="@Icons.Filled.Build" />
@@ -37,6 +41,26 @@ else
 }
 
 @code {
+
+    public bool _NewEndpoint;
+    public bool NewEndpoints
+    {
+        get
+        {
+            return _NewEndpoint;
+        }
+        set
+        {
+            if (value != _NewEndpoint)
+            {
+                _NewEndpoint = value;
+                SwapChanages();
+            }
+        }
+    }
+
+
+
     string? _debouncedText;
 
     [Parameter] public EventCallback<ValueIDRequirementID> ClaimValue { get; set; }
@@ -47,30 +71,65 @@ else
 
     public string SelectedValue { get; set; }
 
-    [Parameter] public AuthenticationClaimRequirement[]? PolicyRequirements { get; set; }
+    public AuthenticationClaimRequirement[]? PolicyRequirements { get; set; }
     public AuthenticationClaimRequirement[]? PolicyRequirementsBackup { get; set; }
+
+    List<AuthenticationClaimRequirement> NotReviewed = new List<AuthenticationClaimRequirement>();
+    List<AuthenticationClaimRequirement> Reviewed = new List<AuthenticationClaimRequirement>();
 
     protected override async Task OnInitializedAsync()
     {
-
+        PolicyRequirements = await http.GetFromJsonAsync<AuthenticationClaimRequirement[]?>("api/AuthenticationPolicyRequirement/getallrequirements");
         PolicyRequirementsBackup = PolicyRequirements;
-        Console.WriteLine(PolicyRequirementsBackup?.Count());
+        foreach (AuthenticationClaimRequirement? authenticationClaimRequirement in PolicyRequirements)
+        {
+            if (authenticationClaimRequirement.beenReviewed)
+            {
+                Reviewed.Add(authenticationClaimRequirement);
+            }
+            else
+            {
+                NotReviewed.Add(authenticationClaimRequirement);
+            }
+        }
+        PolicyRequirements = Reviewed.ToArray();
+
+
+    }
+
+    async Task SwapChanages()
+    {
+
+        if (NewEndpoints)
+        {
+            PolicyRequirements = NotReviewed.ToArray();
+        }
+        else
+        {
+            PolicyRequirements = Reviewed.ToArray();
+        }
+        await InvokeAsync(StateHasChanged);
 
     }
 
 
     async Task SearchPolicies(string debouncedText)
     {
-        if (PolicyRequirementsBackup is null)
+        if (NewEndpoints)
         {
-            PolicyRequirementsBackup = PolicyRequirements;
+            PolicyRequirementsBackup = NotReviewed.ToArray();
         }
+        else
+        {
+            PolicyRequirementsBackup = Reviewed.ToArray();
+        }
+       
 
         if (debouncedText.Length >= 0)
         {
             try
             {
-                PolicyRequirements = PolicyRequirementsBackup?.Where(x => x.Uri.Contains(debouncedText, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                PolicyRequirements = PolicyRequirementsBackup?.Where(x => x.RequirementName.Contains(debouncedText, StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
             }
             catch
