@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    [Migration("20220822164100_Init")]
-    partial class Init
+    [Migration("20220901031833_FinalEFdbUpdate")]
+    partial class FinalEFdbUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,9 +120,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<int?>("AuthenticationClaimGroupId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AuthenticationHttpMethodId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("AuthenticationHttpMethodsId")
                         .HasColumnType("int");
 
@@ -146,7 +143,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("AuthenticationClaimGroupId");
 
-                    b.HasIndex("AuthenticationHttpMethodId");
+                    b.HasIndex("AuthenticationHttpMethodsId");
 
                     b.ToTable("AuthenticationClaimRequirements");
                 });
@@ -435,13 +432,13 @@ namespace DataAccessLayer.Migrations
                         .WithMany("AuthenticationClaimRequirement")
                         .HasForeignKey("AuthenticationClaimGroupId");
 
-                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethod")
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethods")
                         .WithMany("AuthenticationClaimRequirements")
-                        .HasForeignKey("AuthenticationHttpMethodId");
+                        .HasForeignKey("AuthenticationHttpMethodsId");
 
                     b.Navigation("AuthenticationClaimGroup");
 
-                    b.Navigation("AuthenticationHttpMethod");
+                    b.Navigation("AuthenticationHttpMethods");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimValue", b =>

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class Init : Migration
+    public partial class FinalEFdbUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -155,7 +155,6 @@ namespace DataAccessLayer.Migrations
                     beenReviewed = table.Column<bool>(type: "bit", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AuthenticationHttpMethodsId = table.Column<int>(type: "int", nullable: true),
-                    AuthenticationHttpMethodId = table.Column<int>(type: "int", nullable: true),
                     AuthenticationClaimGroupId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -167,8 +166,8 @@ namespace DataAccessLayer.Migrations
                         principalTable: "AuthenticationClaimGroups",
                         principalColumn: "ClaimGroupId");
                     table.ForeignKey(
-                        name: "FK_AuthenticationClaimRequirements_AuthenticationHttpMethods_AuthenticationHttpMethodId",
-                        column: x => x.AuthenticationHttpMethodId,
+                        name: "FK_AuthenticationClaimRequirements_AuthenticationHttpMethods_AuthenticationHttpMethodsId",
+                        column: x => x.AuthenticationHttpMethodsId,
                         principalTable: "AuthenticationHttpMethods",
                         principalColumn: "Id");
                 });
@@ -317,9 +316,9 @@ namespace DataAccessLayer.Migrations
                 column: "AuthenticationClaimGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthenticationClaimRequirements_AuthenticationHttpMethodId",
+                name: "IX_AuthenticationClaimRequirements_AuthenticationHttpMethodsId",
                 table: "AuthenticationClaimRequirements",
-                column: "AuthenticationHttpMethodId");
+                column: "AuthenticationHttpMethodsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuthenticationClaimValueAuthenticationUserClaimsHolder_authenticationClaimValuesClaimValueId",

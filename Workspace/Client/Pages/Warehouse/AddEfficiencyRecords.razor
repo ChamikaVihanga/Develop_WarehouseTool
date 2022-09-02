@@ -62,28 +62,29 @@
                                 <MudContainer>
                                     <MudGrid>
                                         <MudItem xs="6">
-                                            <MudTimePicker @ref="_pickerS" PickerVariant="PickerVariant.Dialog" Label="Start Time" AmPm="true" @bind-Time="@StartTime" Variant="Variant.Outlined">
+                                            @*<MudTimePicker @ref="_pickerS" PickerVariant="PickerVariant.Dialog" Label="Start Time" AmPm="true" @bind-Time="@StartTime" Variant="Variant.Outlined">
                                                 <PickerActions>
                                                     <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerS.Clear())">Clear</MudButton>
                                                     <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>
+                                            </MudTimePicker>*@
+                                            <MudTextField @bind-Value="@StartTime" Label="Start Time" InputType="InputType.Time" Variant="Variant.Outlined"/>
                                         </MudItem>
                                         <MudItem xs="6">
-                                            <MudTimePicker @ref="_pickerE" PickerClosed="PickEndDate" PickerVariant="PickerVariant.Dialog" Label="End Time" AmPm="true" @bind-Time="@EndTime" Variant="Variant.Outlined">
+                                            @*<MudTimePicker @ref="_pickerE" PickerClosed="PickEndDate" PickerVariant="PickerVariant.Dialog" Label="End Time" AmPm="true" @bind-Time="@EndTime" Variant="Variant.Outlined">
                                                 <PickerActions>
                                                     <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerE.Clear())">Clear</MudButton>
                                                     <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>
+                                            </MudTimePicker>*@
+                                            <MudTextField @bind-Value="@EndTime" Label="End Time" InputType="InputType.Time" Variant="Variant.Outlined" />
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
                             </MudPaper>
                         </MudItem>
-
                         <MudItem xs="12">
                             <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                                 <MudItem xs="6">
@@ -169,10 +170,9 @@
 
         @*Data view table*@
         <_LogEfficiencyData manageRecord="@manageRecord" />
+        @*<AdminView manageRecords="@manageRecord" />*@
     </MudPaper>
 </MudItem>
-
-
 
 @code {
     bool isLoading = false;
@@ -220,7 +220,7 @@
 
 
     OperationRecord operationRecord = new OperationRecord();
-    private VS_Employees[]? vsEmployees;
+    private VS_Employees_1[]? vsEmployees;
 
 
     void PickEndDate()
@@ -287,7 +287,6 @@
             else
             {
                 operationRecord.EndTime = DateTime.Today + EndTime;
-
             }
 
         }

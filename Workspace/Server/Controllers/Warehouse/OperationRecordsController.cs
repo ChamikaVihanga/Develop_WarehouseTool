@@ -60,6 +60,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
             var recordDate = await _context.OperationRecords
                 .Include(a => a.OperationList)
+                .ThenInclude(b => b.OperationDetails)
                 .Include(d => d.VS_Employees)
                 .Where(b => b.VS_EmployeesId == id)
                 .ToListAsync();

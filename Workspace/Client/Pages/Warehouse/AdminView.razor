@@ -29,23 +29,23 @@
                 <MudSelectItem Value="@("Weekly")" />
                 <MudSelectItem Value="@("Monthly")" />
             </MudSelect>*@
-            <MudTextField @bind-Value="nullableInt" Label="Enter SAP Number" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="nullableInt" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Variant="Variant.Text"></MudTextField>
         </MudPaper>
     </MudItem>
     <MudItem xs="12">
-        @if (list == null)
+        @if (manageRecords == null)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
         }
         else
         {
             <MudPaper Elevation="1">
-                <MudTable Items="list" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
+                <MudTable Items="manageRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
                     <HeaderContent>
                         <MudTh><b>Date</b></MudTh>
                         <MudTh><b>Operation Name</b></MudTh>
                         <MudTh><b>Achivement</b></MudTh>
-                        <MudTh><b>Time Span</b></MudTh>
+                        <MudTh><b>Targot</b></MudTh>
                         <MudTh><b>Efficiency</b></MudTh>
                     </HeaderContent>
                     <RowTemplate>
@@ -71,13 +71,18 @@
     private bool border = true;
     int? nullableInt;
 
-    private OperationRecord[]? list;
+    //private List<OperationRecord>? list;
 
-    protected override async Task OnInitializedAsync()
-    {
-        list = await Http.GetFromJsonAsync<OperationRecord[]?>("api/OperationRecords");
-    }
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    list = await Http.GetFromJsonAsync<List<OperationRecord>>("api/OperationRecords");
+    //}
 
     DateTime? date = DateTime.Now;
     DateTime? _month;
+
+    [Parameter]
+    public OperationRecord[]? manageRecords { get; set; }
+
+    public string EnteredSapNo { get; set; }
 }
