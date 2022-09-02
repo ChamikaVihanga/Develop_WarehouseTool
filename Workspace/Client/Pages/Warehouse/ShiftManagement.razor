@@ -24,12 +24,19 @@
     </MudItem>
     <MudItem xs="6"></MudItem>
     <MudItem xs="3">
-        <MudSelect @bind-Value="stringValue" Label="Working Shifts" Placeholder="Please Select Shift" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
-            @foreach (var shifttime in shiftCollection)
-            {
-                <MudSelectItem T="string" Value="@shifttime">@shifttime</MudSelectItem>
-            }
-        </MudSelect>
+        
+            <MudSelect @bind-Value="stringValue" Label="Working Shifts" Placeholder="Please Select Shift" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
+
+                @if (workingShifts is not null)
+                {
+                    @foreach (var shifttime in workingShifts)
+                    {
+                        <MudSelectItem Value="@shifttime?.ShiftDescription">@shifttime?.ShiftTitle @shifttime?.ShiftDescription</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+        
+        
     </MudItem>
     <MudItem xs="9"></MudItem>
     <MudItem xs="3"><h5>Add Employee</h5></MudItem>
@@ -77,12 +84,15 @@
     </MudItem>
 </MudGrid>
 @*Class="d-flex align-center oi-justify-left mud-width-full py-8"*@
+
 @code {
 
     MudDatePicker? _picker;
     MudDatePicker? _secondpicker;
 
+    private List<WorkingShifts?>? workingShifts;   
     private string stringValue { get; set; }
+
     DateTime? date = DateTime.Today;
     List<int?> SapList = new List<int?>();
     //public List<int> SapList { get; set; }
@@ -96,16 +106,6 @@
         SapList.Add(sapN);
         sapNo = null;
     }
-
-    private string[] shiftCollection =
-    {
-        "06:00:00 - 16:00:00", "07:30:00 - 17:30:00", "12:00:00 - 22:00:00",
-        "18:00:00 - 04:00:00", "06:00:00 - 14:00:00", "14:00:00 - 22:00:00",
-        "18:00:00 - 02:00:00", "22:00:00 - 06:00:00", "06:00:00 - 18:00:00",
-        "18:00:00 - 06:00:00", "19:30:00 - 05:30:00", "09:00:00 - 19:00:00",
-        "05:00:00 - 22:00:00"
-    };
-
     public void enter(KeyboardEventArgs e)
     {
         Console.WriteLine("trigger");
@@ -117,8 +117,14 @@
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //protected override Task OnInitializedAsync()
-    //{
-    //    return base.OnInitializedAsync();
-    //}
+    protected override async Task OnInitializedAsync()
+    {
+        await GetShifts();
+        
+    }
+
+    async Task GetShifts()
+    {
+        workingShifts = await Http.GetFromJsonAsync<List<WorkingShifts>>("api/WorkingShifts");        
+    }
 }

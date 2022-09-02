@@ -53,7 +53,12 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return NotFound();
             }
-            return await _context.OperationLists.ToListAsync();
+            var opList =  await _context.OperationLists.ToListAsync();
+
+            return await _context.OperationLists
+                .Include(x => x.OperationDetails)
+                .ToListAsync();
+            //return null;
         }
 
 
