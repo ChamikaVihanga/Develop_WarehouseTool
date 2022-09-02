@@ -67,7 +67,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AuthenticationClaimValueAuthenticationUserClaimsHolder");
                 });
 
-            modelBuilder.Entity("ShiftGroupVS_Employees", b =>
+            modelBuilder.Entity("ShiftGroupVS_Employees_1", b =>
                 {
                     b.Property<int>("VS_EmployeesId")
                         .HasColumnType("int");
@@ -79,7 +79,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("shiftGroupsId");
 
-                    b.ToTable("ShiftGroupVS_Employees");
+                    b.ToTable("ShiftGroupVS_Employees_1");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
@@ -394,7 +394,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("ShiftGroups");
                 });
 
-            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees_1", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -424,7 +424,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VS_Employees");
+                    b.ToTable("VS_Employees_1");
                 });
 
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.WorkingShifts", b =>
@@ -497,9 +497,9 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ShiftGroupVS_Employees", b =>
+            modelBuilder.Entity("ShiftGroupVS_Employees_1", b =>
                 {
-                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees", null)
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees_1", null)
                         .WithMany()
                         .HasForeignKey("VS_EmployeesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -553,7 +553,7 @@ namespace DataAccessLayer.Migrations
                         .WithMany("OperationRecords")
                         .HasForeignKey("OperationListId");
 
-                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees", "VS_Employees")
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees_1", "VS_Employees")
                         .WithMany("OperationRecords")
                         .HasForeignKey("VS_EmployeesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -595,7 +595,7 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("OperationRecords");
                 });
 
-            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees_1", b =>
                 {
                     b.Navigation("OperationRecords");
                 });

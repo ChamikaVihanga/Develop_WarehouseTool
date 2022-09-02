@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class shiftManagerDB : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -108,7 +108,7 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VS_Employees",
+                name: "VS_Employees_1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -121,7 +121,7 @@ namespace DataAccessLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VS_Employees", x => x.Id);
+                    table.PrimaryKey("PK_VS_Employees_1", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,8 +132,8 @@ namespace DataAccessLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ShiftTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShiftDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -200,7 +200,8 @@ namespace DataAccessLayer.Migrations
                     TimeSpan = table.Column<int>(type: "int", nullable: true),
                     TimePeriod = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrganizationUnit = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -237,9 +238,9 @@ namespace DataAccessLayer.Migrations
                         principalTable: "OperationLists",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_OperationRecords_VS_Employees_VS_EmployeesId",
+                        name: "FK_OperationRecords_VS_Employees_1_VS_EmployeesId",
                         column: x => x.VS_EmployeesId,
-                        principalTable: "VS_Employees",
+                        principalTable: "VS_Employees_1",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -339,7 +340,7 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShiftGroupVS_Employees",
+                name: "ShiftGroupVS_Employees_1",
                 columns: table => new
                 {
                     VS_EmployeesId = table.Column<int>(type: "int", nullable: false),
@@ -347,17 +348,17 @@ namespace DataAccessLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShiftGroupVS_Employees", x => new { x.VS_EmployeesId, x.shiftGroupsId });
+                    table.PrimaryKey("PK_ShiftGroupVS_Employees_1", x => new { x.VS_EmployeesId, x.shiftGroupsId });
                     table.ForeignKey(
-                        name: "FK_ShiftGroupVS_Employees_ShiftGroups_shiftGroupsId",
+                        name: "FK_ShiftGroupVS_Employees_1_ShiftGroups_shiftGroupsId",
                         column: x => x.shiftGroupsId,
                         principalTable: "ShiftGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ShiftGroupVS_Employees_VS_Employees_VS_EmployeesId",
+                        name: "FK_ShiftGroupVS_Employees_1_VS_Employees_1_VS_EmployeesId",
                         column: x => x.VS_EmployeesId,
-                        principalTable: "VS_Employees",
+                        principalTable: "VS_Employees_1",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -413,8 +414,8 @@ namespace DataAccessLayer.Migrations
                 column: "WorkingShiftsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShiftGroupVS_Employees_shiftGroupsId",
-                table: "ShiftGroupVS_Employees",
+                name: "IX_ShiftGroupVS_Employees_1_shiftGroupsId",
+                table: "ShiftGroupVS_Employees_1",
                 column: "shiftGroupsId");
         }
 
@@ -442,7 +443,7 @@ namespace DataAccessLayer.Migrations
                 name: "SampleTodos");
 
             migrationBuilder.DropTable(
-                name: "ShiftGroupVS_Employees");
+                name: "ShiftGroupVS_Employees_1");
 
             migrationBuilder.DropTable(
                 name: "AuthenticationClaimRequirements");
@@ -460,7 +461,7 @@ namespace DataAccessLayer.Migrations
                 name: "ShiftGroups");
 
             migrationBuilder.DropTable(
-                name: "VS_Employees");
+                name: "VS_Employees_1");
 
             migrationBuilder.DropTable(
                 name: "AuthenticationClaimGroups");
