@@ -18,7 +18,7 @@ else
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd></MudTd>
+            <MudTd>@context.OrganizationUnit</MudTd>
             <MudTd>@context.OperationList?.Name</MudTd>
             <MudTd>@context.Target</MudTd>
             <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
@@ -41,18 +41,51 @@ else
 @code {
     public OperationDetail operationDetail;
     public List<OperationDetail> operationDetails;
+    public List<OperationDetail> operationDetails2;
 
     public List<OperationDetail> activeOperationDetails;
     public List<OperationDetail> upcommingOperationDetails;
 
     bool fixed_header = true;
 
-
+    public bool _tableState = true;
     [Parameter]
-    public bool tableState { get; set; }
+    public bool tableState
+    {
+        get
+        {
+            return _tableState;
+        }
+        set
+        {
+            if (_tableState != value)
+            {
+                _tableState = value;
+                changeState();
+            }
 
+        }
+    } 
+
+
+
+    public string? _searchString;
     [Parameter]
-    public string? searchString { get; set; }
+    public string? searchString
+    {
+        get
+        {
+            return _searchString;
+        }
+        set
+        {
+            if (value != _searchString)
+            {
+                _searchString = value;
+                HandleIntervalElapsed();
+            }
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,8 +94,8 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        changeState();
-        HandleIntervalElapsed();
+
+
     }
 
 
@@ -70,37 +103,43 @@ else
     {
         if (tableState)
         {
-            await GetUpcommingOperations();
+
+            await GetActiveOperations();
+            operationDetails2 = operationDetails;
+
         }
         else
         {
-            await GetActiveOperations();
+            await GetUpcommingOperations();
+            operationDetails2 = operationDetails;
+
         }
     }
 
     async Task HandleIntervalElapsed()
     {
+        Console.WriteLine("Activated");
         if (searchString.Length >= 0)
         {
-            operationDetails = operationDetails.Where(a => a.OperationList.Name.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            operationDetails = operationDetails2.Where(a => a.OperationList.Name.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
     }
 
     async Task GetActiveOperations()
     {
-        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationDetailsAPI/Active");  
+        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Active");
     }
 
     async Task GetUpcommingOperations()
     {
-        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationDetailsAPI/Upcoming");
+        operationDetails = await Http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Upcoming");
     }
 
     void showBar(string getOnlyStringValue)
     {
         Snackbar.Add($"{getOnlyStringValue}", Severity.Success, config => { config.ShowCloseIcon = false; });
     }
-    
+
     public List<string> CheckBox { get; set; } = new List<string>();
     void CheckboxClicked(string CheckID, object checkedValue)
     {

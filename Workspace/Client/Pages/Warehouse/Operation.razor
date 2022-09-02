@@ -17,7 +17,7 @@
             <br />
             <EditForm Model="summeryDTO">
                 <DataAnnotationsValidator />
-                <MudSelect T="string" Label="Select a Organizational Unit">
+                <MudSelect Label="Select a Organizational Unit" @bind-Value="summeryDTO.OrganizationUnit" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
                     <MudSelectItem Value="@("Warehouse Harness")" />                    
                     <MudSelectItem Value="@("Warehouse SMT")" />                    
                     <MudSelectItem Value="@("Warehouse THT")" />                    
@@ -33,7 +33,7 @@
                         <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time" For="@(() => summeryDTO.AllocatedTime)"></MudTextField>
                     </MudItem>
                     <MudItem xs="3">
-                        <MudSelect @bind-Value="summeryDTO.TimePeriod" Label="Select a Time Period">
+                        <MudSelect @bind-Value="summeryDTO.TimePeriod" Label="Select a Time Period" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
                             <MudSelectItem Value="@("Minutes")" />
                             <MudSelectItem Value="@("Hours")" />
                         </MudSelect>
@@ -50,7 +50,7 @@
             <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
                 <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
 
-                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target== null || summeryDTO.AllocatedTime == null || summeryDTO.TimePeriod == null || summeryDTO.Target == 0 || summeryDTO.AllocatedTime == 0)
+                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target== null || summeryDTO.AllocatedTime == null || summeryDTO.TimePeriod == null || summeryDTO.Target == 0 || summeryDTO.AllocatedTime == 0 || summeryDTO.OrganizationUnit == null)
                 {
                     <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="true">Add Task</MudButton>
                 }
