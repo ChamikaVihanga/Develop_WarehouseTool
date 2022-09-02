@@ -1,4 +1,4 @@
-﻿namespace auth.workspace.Client.BackgroundServices
+﻿namespace admin.workspace.Client.BackgroundServices
 {
     public class TokenTimer
     {

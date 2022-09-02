@@ -1,6 +1,6 @@
 ﻿
 
-namespace auth.workspace.Server.Authorization.DataProviderInterfaces
+namespace admin.workspace.Server.Authorization.DataProviderInterfaces
 {
     public interface ICustomClaimChecker
     {
