@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "auth.workspace.Client": {
+    "admin.workspace.Client": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

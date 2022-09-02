@@ -1,10 +1,10 @@
 global using Microsoft.EntityFrameworkCore;
 
-global using auth.workspace.Server.Authorization;
+global using admin.workspace.Server.Authorization;
 global using Microsoft.AspNetCore.Authorization;
-global using auth.workspace.Server.Authorization.Handlers;
-global using auth.workspace.Server.Authorization.DataProviderInterfaces;
-global using auth.workspace.Server.Authorization.DataProviders;
+global using admin.workspace.Server.Authorization.Handlers;
+global using admin.workspace.Server.Authorization.DataProviderInterfaces;
+global using admin.workspace.Server.Authorization.DataProviders;
 global using DataAccessLayer;
 global using Workspace.Shared.AuthData;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

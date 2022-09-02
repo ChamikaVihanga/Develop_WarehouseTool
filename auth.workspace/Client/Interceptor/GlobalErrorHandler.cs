@@ -1,4 +1,4 @@
-﻿namespace auth.workspace.Client.Interceptor
+﻿namespace admin.workspace.Client.Interceptor
 {
     public class GlobalErrorHandler
     {

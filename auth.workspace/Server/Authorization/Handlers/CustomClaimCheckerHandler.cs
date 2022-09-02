@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace auth.workspace.Server.Authorization.Handlers
+namespace admin.workspace.Server.Authorization.Handlers
 {
     public class CustomClaimCheckerHandler : AuthorizationHandler<CustomClaimRequirement>
     {

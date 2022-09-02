@@ -1,6 +1,6 @@
 ﻿
 
-namespace auth.workspace.Server.Authorization
+namespace admin.workspace.Server.Authorization
 {
     public class CustomClaimRequirement : IAuthorizationRequirement
     {
