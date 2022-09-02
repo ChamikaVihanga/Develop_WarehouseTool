@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
 using Workspace.Server.AuthorizationService.Policies;
-using Workspace.Shared.Auth;
+using Workspace.Shared.AuthData;
 
 namespace Workspace.Server.AuthorizationService.PolicyHandler
 {
@@ -14,13 +14,21 @@ namespace Workspace.Server.AuthorizationService.PolicyHandler
             _customPolicyDataProvider = customPolicyDataProvider;
             _contextAccessor = contextAccessor;
         }
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, CustomPolicy requirement)
+        protected async override Task<Task> HandleRequirementAsync(AuthorizationHandlerContext context, CustomPolicy requirement)
         {
             HttpContext httpContext = _contextAccessor.HttpContext;
             var RequestString = httpContext.Request.Path.Value.ToString();
             var Method = httpContext.Request.Method.ToString();
-            
-            List<AuthenticationClaimRequirement> claimRequirements = _customPolicyDataProvider.getClaimRequirement($"{RequestString}::{Method}");
+
+            QueryString queryString = QueryString.Empty;
+            if (httpContext.Request.QueryString != QueryString.Empty)
+            {
+                queryString = httpContext.Request.QueryString;
+                RequestString = RequestString.Replace(queryString.ToString(), "");
+            }
+
+
+            List<AuthenticationClaimRequirement> claimRequirements = await _customPolicyDataProvider.getClaimRequirement(RequestString, Method);
 
             if (claimRequirements == null)
             {
@@ -28,13 +36,13 @@ namespace Workspace.Server.AuthorizationService.PolicyHandler
             }
             foreach (AuthenticationClaimRequirement claimRequirement in claimRequirements)
             {
-                if (claimRequirement.AuthenticationClaimValuesClaimValues == null)
+                if (claimRequirement.authenticationClaimValues == null)
                 {
                     return Task.CompletedTask;
                 }
                 else
                 {
-                    foreach (var claimValue in claimRequirement.AuthenticationClaimValuesClaimValues)
+                    foreach (var claimValue in claimRequirement.authenticationClaimValues)
                     {
                         if (claimValue.AuthenticationClaim == null)
                         {

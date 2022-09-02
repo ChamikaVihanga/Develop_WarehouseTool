@@ -1,6 +1,7 @@
 global using Workspace.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using Workspace.Server.Services.ResourceFacilityService;
+global using Workspace.Server.Services.LoginService;
 global using DataAccessLayer;
 
 using Microsoft.AspNetCore.ResponseCompression;
@@ -13,8 +14,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Workspace.Server.AuthorizationService.PolicyHandler;
 using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
-
-
+using Workspace.Server.Services.ClaimProviderService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +30,7 @@ builder.Services.AddDbContext<WorkspaceDbContext>(options =>
 //DB connection for authorization requirements
 //builder.Services.AddDbContext<AuthDbContext>(options =>
 //   options.UseSqlServer(builder.Configuration.GetConnectionString("AuthDb")));
-builder.Services.AddDbContext<AuthDbContext>();
+
 
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
@@ -63,6 +63,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value)),
             ValidateIssuer = false,
             ValidateAudience = false,
+            
         };
     });
 
@@ -74,13 +75,11 @@ PoliciesList.Add("VSPolicy");
 
 builder.Services.AddAuthorization(options =>
 {
-
     foreach (string policy in PoliciesList)
     {
         string name = policy;
         options.AddPolicy(name, policy => policy.Requirements.Add(new CustomPolicy(name)));
     }
-
 });
 
 
@@ -105,6 +104,8 @@ builder.Services.AddControllersWithViews()
 
 
 builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IClaimProviderService, ClaimProviderService>();
 
 
 var app = builder.Build();

@@ -10,19 +10,23 @@
 	<ItemGroup>
 	  <Compile Remove="Pages\EmployeeProfile\**" />
 	  <Compile Remove="Pages\WorkspaceApp\Login\**" />
+	  <Compile Remove="Pages\WorkspaceApp\Warehouse\**" />
 	  <Content Remove="Pages\EmployeeProfile\**" />
 	  <Content Remove="Pages\WorkspaceApp\Login\**" />
+	  <Content Remove="Pages\WorkspaceApp\Warehouse\**" />
 	  <EmbeddedResource Remove="Pages\EmployeeProfile\**" />
 	  <EmbeddedResource Remove="Pages\WorkspaceApp\Login\**" />
+	  <EmbeddedResource Remove="Pages\WorkspaceApp\Warehouse\**" />
 	  <None Remove="Pages\EmployeeProfile\**" />
 	  <None Remove="Pages\WorkspaceApp\Login\**" />
+	  <None Remove="Pages\WorkspaceApp\Warehouse\**" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.7" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
 		<PackageReference Include="MudBlazor" Version="6.0.14" />
 		<PackageReference Include="Toolbelt.Blazor.LoadingBar" Version="13.1.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -35,10 +39,6 @@
 
 	<ItemGroup>
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Pages\WorkspaceApp\Warehouse\" />
 	</ItemGroup>
 
 

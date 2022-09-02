@@ -1,0 +1,143 @@
+﻿@inject HttpClient http
+
+
+<MudDialog Class="p-5 m-4">
+    <DialogContent></DialogContent>
+
+    <DialogActions>
+
+        <MudGrid>
+            @if (isNewClaim is not true)
+            {
+                <MudItem xs="8">
+                    <MudAutocomplete  Label="Claim" @bind-Value="value1" SearchFunc="@Search1" ResetValueOnEmptyText="@resetValueOnEmptyText" CoerceText="@coerceText" CoerceValue="@coerceValue" />
+                </MudItem>
+            }
+            else
+            {
+                <MudItem xs="8">
+                    <MudTextField T="string" @bind-Value="value1" Label="Claim" Required="true" RequiredError="Claim name is required!" />
+                </MudItem>
+            }
+
+            <MudItem xs="4">
+                <MudCheckBox Label="Create a new claim" @bind-Checked="isNewClaim"></MudCheckBox>
+            </MudItem>
+            @if (newClaimvalues is not null)
+            {
+                <MudItem xs="12">
+
+                    @foreach (string? claimValue in newClaimvalues)
+                    {
+                        <MudChip Color="Color.Error" OnClose="(() => Closed(claimValue))">@claimValue</MudChip>
+                    }
+                </MudItem>
+
+            }
+
+
+            <MudItem xs="8">
+                <MudTextField @bind-Value="newClaimValue" Label="Value" Required="true" RequiredError="Claim value is required!" />
+            </MudItem>
+            <MudItem xs="4">
+                <MudFab Color="Color.Secondary" @onclick="addToValueList" Class="mt-4" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" />
+            </MudItem>
+
+            <MudItem xs="8"></MudItem>
+            @if (newClaimvalues.Count <= 0 && value1 == "")
+            {
+                <MudItem xs="4">
+                    <MudButton Disabled="true" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Save</MudButton>
+                </MudItem>
+            }
+            else
+            {
+                <MudItem xs="4">
+                    <MudButton @onclick="SaveChanages" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Save</MudButton>
+                </MudItem>
+            }
+
+        </MudGrid>
+
+
+    </DialogActions>
+</MudDialog>
+
+
+
+
+@code {
+    private string? newClaimValue { get; set; }
+
+    List<string> newClaimvalues = new List<string>();
+
+    private bool resetValueOnEmptyText;
+    private bool coerceText;
+    private bool coerceValue;
+    public string? value1 { get; set; }
+    private bool isNewClaim { get; set; }
+    [Parameter] public AuthenticationClaim[]? Claims { get; set; }
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    private async Task<IEnumerable<string>> Search1(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return Claims.Select(a => a.Claim);
+
+        if (Claims.Select(a => a.Claim).Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Count() <= 0)
+        {
+            isNewClaim = true;
+            Console.WriteLine("Not found");
+        }
+
+
+        return Claims.Select(a => a.Claim).Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    void Closed(string claim)
+    {
+        Console.WriteLine(claim);
+        newClaimvalues.Remove(claim);
+    }
+    void addToValueList()
+    {
+        if (newClaimValue is not null)
+        {
+            if (!newClaimvalues.Contains(newClaimValue))
+            {
+                newClaimvalues.Add(newClaimValue);
+                newClaimValue = string.Empty;
+            }
+
+        }
+
+    }
+    private async Task SaveChanages()
+    {
+        DataTransferObject.ClaimValueDTO claimValues = new DataTransferObject.ClaimValueDTO();
+        if (!isNewClaim)
+        {
+            claimValues.ClaimId = Claims.Where(a => a.Claim == value1).Select(x => x.ClaimId).ToList().Last();
+            Console.WriteLine(claimValues.ClaimId);
+        }
+        else
+        {
+            claimValues.newClaimName = value1;
+        }
+        claimValues.Values = newClaimvalues;
+
+        var response = await http.PostAsJsonAsync("api/authenticationclaims/addclaimswithvalues", claimValues);
+        MudDialog.Close(DialogResult.Ok(true));
+      
+        
+    }
+    void test()
+    {
+        Console.Write("test");
+    }
+
+}

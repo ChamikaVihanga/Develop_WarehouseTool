@@ -1,19 +1,24 @@
-﻿using Workspace.Shared.Auth;
+﻿using Workspace.Server.Services.ClaimProviderService;
+using Workspace.Shared.AuthData;
 
 namespace Workspace.Server.AuthorizationService.CustomPolicyDataProvider
 {
     public class CustomPolicyDataProvider : ICustomPolicyDataProvider
     {
-        private readonly AuthDbContext _context;
-        public CustomPolicyDataProvider(AuthDbContext authDbContext)
+        private readonly WorkspaceDbContext _context;
+        private readonly IClaimProviderService _claimProviderService;
+        public CustomPolicyDataProvider(WorkspaceDbContext workspaceDbContext, IClaimProviderService claimProviderService)
         {
-            _context = authDbContext;
+            _context = workspaceDbContext;
+            _claimProviderService = claimProviderService;
         }
-        public List<AuthenticationClaimRequirement> getClaimRequirement(string ClaimName)
+        public async Task<List<AuthenticationClaimRequirement>> getClaimRequirement(string EndPoint, string Method)
         {
-            var claims = _context.AuthenticationClaimRequirements.Where(a => a.RequirementName == ClaimName).Include(x => x.AuthenticationClaimValuesClaimValues).ThenInclude(x => x.AuthenticationClaim).ToList();
-
+            
+            var claims = await _claimProviderService.GetClaims(EndPoint, Method);
             return claims;
+
+
         }
     }
 }

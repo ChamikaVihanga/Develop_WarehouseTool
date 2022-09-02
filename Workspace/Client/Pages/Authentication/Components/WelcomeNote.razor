@@ -3,11 +3,11 @@
 
     <AuthorizeView>
         <Authorized>
-            <MudSpacer />Good @partOfDay @context.User.FindFirst("DisplayName").Value.Split(" ").First()<MudSpacer/>
+            <MudSpacer />Good @partOfDay @context.User.FindFirst("DisplayName").Value.Split(" ").First(), Welcome to the workspace.<MudSpacer/>
             
         </Authorized>
         <NotAuthorized>
-            <MudSpacer/>Good @partOfDay <MudSpacer/>
+            <MudSpacer/>Good @partOfDay, Welcome to workspace. <MudSpacer/>
         </NotAuthorized>
     </AuthorizeView>
 
