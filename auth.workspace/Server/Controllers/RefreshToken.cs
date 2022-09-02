@@ -1,4 +1,4 @@
-﻿namespace auth.workspace.Server.Controllers
+﻿namespace admin.workspace.Server.Controllers
 {
     public class RefreshToken
     {

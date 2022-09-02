@@ -1,10 +1,10 @@
 ﻿
-using auth.workspace.Server.ActiveDirectoryAccess;
+using admin.workspace.Server.ActiveDirectoryAccess;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.DirectoryServices.AccountManagement;
 
-namespace auth.workspace.Server.Controllers.AuthenticationControllers
+namespace admin.workspace.Server.Controllers.AuthenticationControllers
 {
     [Route("api/[controller]")]
     [ApiController]

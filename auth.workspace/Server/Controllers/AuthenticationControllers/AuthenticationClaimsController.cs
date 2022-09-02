@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 
 
-namespace auth.workspace.Server.Controllers.AuthenticationControllers
+namespace admin.workspace.Server.Controllers.AuthenticationControllers
 {
     [Route("api/[controller]")]
     [ApiController]

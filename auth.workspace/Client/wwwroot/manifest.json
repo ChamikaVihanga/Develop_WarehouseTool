@@ -1,6 +1,6 @@
 {
-  "name": "auth.workspace",
-  "short_name": "auth.workspace",
+  "name": "admin.workspace",
+  "short_name": "admin.workspace",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

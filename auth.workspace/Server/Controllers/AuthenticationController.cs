@@ -1,4 +1,4 @@
-﻿using auth.workspace.Server.Utils;
+﻿using admin.workspace.Server.Utils;
 
 
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 
 
 
-namespace auth.workspace.Server.Controllers
+namespace admin.workspace.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
