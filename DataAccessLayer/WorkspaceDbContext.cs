@@ -3,6 +3,7 @@ using Workspace.Shared.Entities.ResourceFacilities;
 using Workspace.Shared.AuthData;
 using Workspace.Shared.Entities.Warehouse;
 using Workspace.Shared.Entities.SampleApp;
+using Workspace.Shared.Entities.Readonly;
 
 namespace DataAccessLayer
 {
@@ -11,6 +12,10 @@ namespace DataAccessLayer
         public WorkspaceDbContext(DbContextOptions<WorkspaceDbContext> options) : base(options)
         {
         }
+
+        public DbSet<Vs_Employee> Vs_Employees { get; set; }
+
+
         public DbSet<ReFaRequest> ReFaRequests { get; set; }
         public DbSet<SampleTodo> SampleTodos { get; set; }
 
@@ -31,6 +36,13 @@ namespace DataAccessLayer
         public DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
         public DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
         public DbSet<AuthenticationHttpMethod> AuthenticationHttpMethods { get; set; } = null!;
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Vs_Employee>().ToTable(nameof(Vs_Employees), t => t.ExcludeFromMigrations());
+        }
+
     }
 }
 
