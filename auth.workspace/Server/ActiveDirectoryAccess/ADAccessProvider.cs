@@ -1,6 +1,6 @@
 ﻿using System.DirectoryServices.AccountManagement;
 
-namespace auth.workspace.Server.ActiveDirectoryAccess
+namespace admin.workspace.Server.ActiveDirectoryAccess
 {
     public class ADAccessProvider
     {

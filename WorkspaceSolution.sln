@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workspace.vsag.ch", "workspace.vsag.ch", "{61C05B3E-920E-4898-B5C1-6316BBFC5E10}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "auth.workspace.vsag.ch", "auth.workspace.vsag.ch", "{3D9F66EB-8C16-4C87-9DB8-AE9FAD170663}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "admin.workspace.vsag.ch", "admin.workspace.vsag.ch", "{3D9F66EB-8C16-4C87-9DB8-AE9FAD170663}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{D0E5963B-C76B-478E-85CA-808D7B66926B}"
 EndProject
@@ -33,9 +33,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkspaceServices", "Worksp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workspace.vsag.ch", "workspace.vsag.ch", "{7D9EDD95-3FAE-4D46-AAAB-E269E27137AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "auth.workspace.Client", "auth.workspace\Client\auth.workspace.Client.csproj", "{B8DDE1B5-6FD2-44EE-9B88-E24BBB89946B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "admin.workspace.Client", "auth.workspace\Client\admin.workspace.Client.csproj", "{B8DDE1B5-6FD2-44EE-9B88-E24BBB89946B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "auth.workspace.Server", "auth.workspace\Server\auth.workspace.Server.csproj", "{A47E870D-6DD4-486A-A94B-E30AF907A61F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "admin.workspace.Server", "auth.workspace\Server\admin.workspace.Server.csproj", "{A47E870D-6DD4-486A-A94B-E30AF907A61F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -33,7 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DataAccessLayer\DataAccessLayer.csproj" />
     <ProjectReference Include="..\..\Workspace\Shared\Workspace.Shared.csproj" />
-    <ProjectReference Include="..\Client\auth.workspace.Client.csproj" />
+    <ProjectReference Include="..\Client\admin.workspace.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>

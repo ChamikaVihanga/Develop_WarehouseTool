@@ -1,4 +1,4 @@
-﻿namespace auth.workspace.Server.Utils
+﻿namespace admin.workspace.Server.Utils
 {
     public static class CustomClaimTypes
     {

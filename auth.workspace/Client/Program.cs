@@ -2,7 +2,7 @@ global using Microsoft.AspNetCore.Components.Authorization;
 global using Blazored.LocalStorage;
 using MudBlazor.Services;
 
-using auth.workspace.Client;
+using admin.workspace.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
