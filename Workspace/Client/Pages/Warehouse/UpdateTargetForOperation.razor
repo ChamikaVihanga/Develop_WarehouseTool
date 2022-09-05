@@ -17,9 +17,9 @@
     <MudItem xs="3" Class="d-flex justify-end">
         <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" OnClick="@((e) => OpenDialog())">Update Target</MudButton>
     </MudItem>
-    <MudItem xs="3">       
+    @*<MudItem xs="3">       
         <MudTextField T="String" Label="Organization Unit" ></MudTextField>
-    </MudItem>
+    </MudItem>*@
     <MudItem xs="3">
         <MudTextField T="String" Label="Operation Name" @bind-Value="name" ReadOnly="true"></MudTextField>
     </MudItem>
