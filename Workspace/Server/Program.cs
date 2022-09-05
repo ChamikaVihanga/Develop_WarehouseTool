@@ -1,19 +1,17 @@
-global using Workspace.Shared;
-global using Microsoft.EntityFrameworkCore;
-global using Workspace.Server.Services.ResourceFacilityService;
-global using Workspace.Server.Services.LoginService;
 global using DataAccessLayer;
+global using Microsoft.EntityFrameworkCore;
+global using Workspace.Server.Services.LoginService;
+global using Workspace.Server.Services.ResourceFacilityService;
+global using Workspace.Shared;
 
-using Microsoft.AspNetCore.ResponseCompression;
-using Workspace.Server.Extensions;
-using Microsoft.OpenApi.Models;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Workspace.Server.AuthorizationService.Policies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using Workspace.Server.AuthorizationService.PolicyHandler;
 using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
+using Workspace.Server.AuthorizationService.Policies;
+using Workspace.Server.AuthorizationService.PolicyHandler;
 using Workspace.Server.Services.ClaimProviderService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,7 +61,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value)),
             ValidateIssuer = false,
             ValidateAudience = false,
-            
+
         };
     });
 

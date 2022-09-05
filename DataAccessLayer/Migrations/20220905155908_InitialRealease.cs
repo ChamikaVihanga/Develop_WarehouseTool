@@ -5,10 +5,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitialRealease : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AuthenticationADAssignedGroup",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ADGroupGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthenticationADAssignedGroup", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AuthenticationClaimGroups",
                 columns: table => new
@@ -221,7 +234,7 @@ namespace DataAccessLayer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OperationListId = table.Column<int>(type: "int", nullable: true),
-                    VS_EmployeesId = table.Column<int>(type: "int", nullable: false),
+                    SAPNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Achivement = table.Column<int>(type: "int", nullable: true),
@@ -237,12 +250,6 @@ namespace DataAccessLayer.Migrations
                         column: x => x.OperationListId,
                         principalTable: "OperationLists",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_OperationRecords_VS_Employees_1_VS_EmployeesId",
-                        column: x => x.VS_EmployeesId,
-                        principalTable: "VS_Employees_1",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -316,6 +323,30 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AuthenticationADAssignedGroupAuthenticationClaimRequirement",
+                columns: table => new
+                {
+                    AuthenticationADAssignedGroupsid = table.Column<int>(type: "int", nullable: false),
+                    authenticationClaimRequirementsRequirementId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthenticationADAssignedGroupAuthenticationClaimRequirement", x => new { x.AuthenticationADAssignedGroupsid, x.authenticationClaimRequirementsRequirementId });
+                    table.ForeignKey(
+                        name: "FK_AuthenticationADAssignedGroupAuthenticationClaimRequirement_AuthenticationADAssignedGroup_AuthenticationADAssignedGroupsid",
+                        column: x => x.AuthenticationADAssignedGroupsid,
+                        principalTable: "AuthenticationADAssignedGroup",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AuthenticationADAssignedGroupAuthenticationClaimRequirement_AuthenticationClaimRequirements_authenticationClaimRequirementsR~",
+                        column: x => x.authenticationClaimRequirementsRequirementId,
+                        principalTable: "AuthenticationClaimRequirements",
+                        principalColumn: "RequirementId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AuthenticationClaimRequirementAuthenticationClaimValue",
                 columns: table => new
                 {
@@ -364,6 +395,11 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AuthenticationADAssignedGroupAuthenticationClaimRequirement_authenticationClaimRequirementsRequirementId",
+                table: "AuthenticationADAssignedGroupAuthenticationClaimRequirement",
+                column: "authenticationClaimRequirementsRequirementId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AuthenticationClaimGroupAuthenticationClaimValue_AuthenticationClaimValuesClaimValueId",
                 table: "AuthenticationClaimGroupAuthenticationClaimValue",
                 column: "AuthenticationClaimValuesClaimValueId");
@@ -404,11 +440,6 @@ namespace DataAccessLayer.Migrations
                 column: "OperationListId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OperationRecords_VS_EmployeesId",
-                table: "OperationRecords",
-                column: "VS_EmployeesId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ShiftGroups_WorkingShiftsId",
                 table: "ShiftGroups",
                 column: "WorkingShiftsId");
@@ -421,6 +452,9 @@ namespace DataAccessLayer.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AuthenticationADAssignedGroupAuthenticationClaimRequirement");
+
             migrationBuilder.DropTable(
                 name: "AuthenticationClaimGroupAuthenticationClaimValue");
 
@@ -444,6 +478,9 @@ namespace DataAccessLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "ShiftGroupVS_Employees_1");
+
+            migrationBuilder.DropTable(
+                name: "AuthenticationADAssignedGroup");
 
             migrationBuilder.DropTable(
                 name: "AuthenticationClaimRequirements");

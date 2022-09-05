@@ -22,6 +22,21 @@ namespace DataAccessLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("AuthenticationADAssignedGroupAuthenticationClaimRequirement", b =>
+                {
+                    b.Property<int>("AuthenticationADAssignedGroupsid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("authenticationClaimRequirementsRequirementId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthenticationADAssignedGroupsid", "authenticationClaimRequirementsRequirementId");
+
+                    b.HasIndex("authenticationClaimRequirementsRequirementId");
+
+                    b.ToTable("AuthenticationADAssignedGroupAuthenticationClaimRequirement");
+                });
+
             modelBuilder.Entity("AuthenticationClaimGroupAuthenticationClaimValue", b =>
                 {
                     b.Property<int>("AuthenticationClaimGroupsClaimGroupId")
@@ -80,6 +95,22 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("shiftGroupsId");
 
                     b.ToTable("ShiftGroupVS_Employees_1");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationADAssignedGroup", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<Guid>("ADGroupGuid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("id");
+
+                    b.ToTable("AuthenticationADAssignedGroup");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
@@ -217,6 +248,109 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AuthenticationUserClaimsHolders");
                 });
 
+            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.Vs_Employee", b =>
+                {
+                    b.Property<string>("SAPNo")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("BirthDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CostCenterID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CostCenterName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPFNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmpLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Initials")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaritalStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NickName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrganizationalUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrganizationalUnitID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RFID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Religion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salutation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SysUserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkContract")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SAPNo");
+
+                    b.ToTable("Vs_Employees", null, t => t.ExcludeFromMigrations());
+                });
+
             modelBuilder.Entity("Workspace.Shared.Entities.ResourceFacilities.ReFaRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -349,17 +483,15 @@ namespace DataAccessLayer.Migrations
                     b.Property<int?>("OperationListId")
                         .HasColumnType("int");
 
+                    b.Property<string>("SAPNo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("VS_EmployeesId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OperationListId");
-
-                    b.HasIndex("VS_EmployeesId");
 
                     b.ToTable("OperationRecords");
                 });
@@ -450,6 +582,21 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkingShift");
+                });
+
+            modelBuilder.Entity("AuthenticationADAssignedGroupAuthenticationClaimRequirement", b =>
+                {
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationADAssignedGroup", null)
+                        .WithMany()
+                        .HasForeignKey("AuthenticationADAssignedGroupsid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimRequirement", null)
+                        .WithMany()
+                        .HasForeignKey("authenticationClaimRequirementsRequirementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AuthenticationClaimGroupAuthenticationClaimValue", b =>
@@ -553,15 +700,7 @@ namespace DataAccessLayer.Migrations
                         .WithMany("OperationRecords")
                         .HasForeignKey("OperationListId");
 
-                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees_1", "VS_Employees")
-                        .WithMany("OperationRecords")
-                        .HasForeignKey("VS_EmployeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("OperationList");
-
-                    b.Navigation("VS_Employees");
                 });
 
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.ShiftGroup", b =>
@@ -592,11 +731,6 @@ namespace DataAccessLayer.Migrations
                 {
                     b.Navigation("OperationDetails");
 
-                    b.Navigation("OperationRecords");
-                });
-
-            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees_1", b =>
-                {
                     b.Navigation("OperationRecords");
                 });
 
