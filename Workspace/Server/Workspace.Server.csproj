@@ -27,5 +27,9 @@
     <ProjectReference Include="..\Shared\Workspace.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\ReadOnly\" />
+  </ItemGroup>
+
 
 </Project>

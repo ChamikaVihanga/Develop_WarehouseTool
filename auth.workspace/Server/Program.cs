@@ -23,6 +23,10 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
 
 using System.Text.Json;
+using admin.workspace.Server.Services.ReadOnly;
+
+
+
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -102,6 +106,13 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthorizationHandler, CustomClaimCheckerHandler>();
 
 builder.Services.AddScoped<ICustomClaimChecker, CustomClaimChecker>();
+
+#region SAP Read Only tables
+
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+#endregion SAP Read Only tables
+
 
 
 var app = builder.Build();

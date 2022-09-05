@@ -91,6 +91,8 @@ builder.Services.AddScoped<IAuthorizationHandler, CustomPolicyHandler>();
 
 builder.Services.AddScoped<ICustomPolicyDataProvider, CustomPolicyDataProvider>();
 
+
+
 // Register the Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

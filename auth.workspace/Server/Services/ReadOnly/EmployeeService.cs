@@ -17,7 +17,7 @@ namespace admin.workspace.Server.Services.ReadOnly
 
             var response = new ServiceResponse<List<Vs_Employee>>
             {
-               // Data = await _context.VS_Employees.ToListAsync()
+                Data = await _context.Vs_Employees.ToListAsync()
             };
 
             return response;
