@@ -1,8 +1,12 @@
-global using Workspace.Shared;
 global using Microsoft.EntityFrameworkCore;
+
 global using Workspace.Server.Services.ResourceFacilityService;
 global using Workspace.Server.Services.LoginService;
+
 global using DataAccessLayer;
+
+global using Workspace.Shared;
+global using Workspace.Shared.Entities.Readonly;
 
 using Microsoft.AspNetCore.ResponseCompression;
 using Workspace.Server.Extensions;

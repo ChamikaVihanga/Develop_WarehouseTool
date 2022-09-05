@@ -8,7 +8,7 @@ namespace Workspace.Shared.Entities.Readonly
 {
     public class SapOrganizationalUnit
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; }
         public Guid SapCostCenterId { get; set; }
     }

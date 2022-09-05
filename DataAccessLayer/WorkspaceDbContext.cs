@@ -13,12 +13,29 @@ namespace DataAccessLayer
         {
         }
 
+
+        #region ReadOnly Databases
         public DbSet<Vs_Employee> Vs_Employees { get; set; }
+        public DbSet<SapEmployee> SapEmployee { get; set; }
+        public DbSet<SapPlant> SapPlants { get; set; }
+        public DbSet<SapWorkContract> SapWorkContracts { get; set; }
+        public DbSet<SapOrganizationalUnit> SapOrganizationalUnits { get; set; }
+        public DbSet<SapCostCenter> SapCostCenters { get; set; }
+        #endregion ReadOnly Databases
+
+
+        #region Authentication data access
+        public DbSet<AuthenticationClaim> AuthenticationClaims { get; set; } = null!;
+        public DbSet<AuthenticationClaimGroup> AuthenticationClaimGroups { get; set; } = null!;
+        public DbSet<AuthenticationClaimRequirement> AuthenticationClaimRequirements { get; set; } = null!;
+        public DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
+        public DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
+        public DbSet<AuthenticationHttpMethod> AuthenticationHttpMethods { get; set; } = null!;
+        #endregion Authentication data access
 
 
         public DbSet<ReFaRequest> ReFaRequests { get; set; }
         public DbSet<SampleTodo> SampleTodos { get; set; }
-
 
 
         // warehouse data entry - efficiency 
@@ -29,13 +46,6 @@ namespace DataAccessLayer
 
 
 
-        //Authentication data access
-        public DbSet<AuthenticationClaim> AuthenticationClaims { get; set; } = null!;
-        public DbSet<AuthenticationClaimGroup> AuthenticationClaimGroups { get; set; } = null!;
-        public DbSet<AuthenticationClaimRequirement> AuthenticationClaimRequirements { get; set; } = null!;
-        public DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
-        public DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
-        public DbSet<AuthenticationHttpMethod> AuthenticationHttpMethods { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
