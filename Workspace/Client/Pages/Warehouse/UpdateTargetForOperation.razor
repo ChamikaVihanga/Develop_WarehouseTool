@@ -18,7 +18,7 @@
         <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" OnClick="@((e) => OpenDialog())">Update Target</MudButton>
     </MudItem>
     <MudItem xs="3">       
-        <MudTextField T="String" Label="Organization Unit"></MudTextField>       
+        <MudTextField T="String" Label="Organization Unit" ></MudTextField>
     </MudItem>
     <MudItem xs="3">
         <MudTextField T="String" Label="Operation Name" @bind-Value="name" ReadOnly="true"></MudTextField>
@@ -52,6 +52,7 @@
     public int? id { get; set; }
 
     public string? name { get; set; }     //  <------- Display operation name
+    public string? OU { get; set; }   //  <------- Display operation name
 
     private OperationDetail[]? updateRecords { get; set; }
 
@@ -60,6 +61,8 @@
         var list = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/{id}");
         name = list.Name;
         updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails/{id}");
+ 
+        
 
     }
 

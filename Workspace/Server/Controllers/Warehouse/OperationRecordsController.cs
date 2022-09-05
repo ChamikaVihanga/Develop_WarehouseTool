@@ -33,7 +33,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
 
 
-        // GET: api/OperationRecords/5
+        // GET: api/OperationRecords/getbyid?id=5
         [HttpGet("{id}")]
         public async Task<ActionResult<List<OperationRecord>>> GetOperationRecord(int id)
         {
@@ -54,12 +54,13 @@ namespace Workspace.Server.Controllers.Warehouse
         // GET: api/OperationRecords/Sap/Date
         // GET: api/OperationRecords/12045/2022-06-03
 
-        [HttpGet("{id}/{SelectedDate}")]
+        [HttpGet, Route("Filter")]
         public async Task<ActionResult<List<OperationRecord>>> OperationRecordsSapDate(int id, DateTime SelectedDate)
         {
 
             var recordDate = await _context.OperationRecords
                 .Include(a => a.OperationList)
+                .ThenInclude(b => b.OperationDetails)
                 .Include(d => d.VS_Employees)
                 .Where(b => b.VS_EmployeesId == id)
                 .ToListAsync();
@@ -69,7 +70,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // PUT: api/OperationRecords/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> PutOperationRecord(int id, OperationRecord operationRecord)
         {
             if (id != operationRecord.Id)

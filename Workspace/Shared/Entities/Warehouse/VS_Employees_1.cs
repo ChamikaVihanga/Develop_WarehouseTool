@@ -1,6 +1,7 @@
 ﻿namespace Workspace.Shared.Entities.Warehouse
 {
-    public class VS_Employees
+    public class VS_Employees_1
+
     {
         public int Id { get; set; }
 
@@ -16,5 +17,7 @@
 
         //relation
         public List<OperationRecord>? OperationRecords { get; set; }
+
+        public List<ShiftGroup>? shiftGroups { get; set; }   
     }
 }
