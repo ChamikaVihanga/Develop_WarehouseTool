@@ -10,8 +10,9 @@
         public OperationList? OperationList { get; set; }
 
 
-        public int VS_EmployeesId { get; set; }
-        public VS_Employees_1? VS_Employees { get; set; }
+
+
+        public string? SAPNo { get; set; }
         //.....
 
         public DateTime StartTime { get; set; }

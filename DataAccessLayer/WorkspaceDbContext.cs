@@ -28,7 +28,7 @@ namespace DataAccessLayer
         public DbSet<OperationDetail> OperationDetails { get; set; }
         public DbSet<ShiftGroup> ShiftGroups { get; set; }
         public DbSet<WorkingShifts> WorkingShift { get; set; } 
-
+ 
 
 
         //Authentication data access

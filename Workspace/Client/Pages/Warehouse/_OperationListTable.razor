@@ -9,23 +9,23 @@ else
 {
     <MudTable Items="operationDetails" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="true" FixedHeader="@fixed_header" Height="60vh">
         <HeaderContent>
-            <MudTh><b>Organization Unit</b></MudTh>
+            @*<MudTh><b>Organization Unit</b></MudTh>*@
             <MudTh><b>Operation Name</b></MudTh>
             <MudTh><b>Target</b></MudTh>
             <MudTh><b>Allocated Time</b></MudTh>
             <MudTh><b>Effective Date</b></MudTh>
-            <MudTh><b>Activation</b></MudTh>
+            @*<MudTh><b>Activation</b></MudTh>*@
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd>@context.OrganizationUnit</MudTd>
+            @*<MudTd>@context.OrganizationUnit</MudTd>*@
             <MudTd>@context.OperationList?.Name</MudTd>
             <MudTd>@context.Target</MudTd>
             <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
             <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
-            <MudTh>
+           @* <MudTh>
                 <input type="checkbox" class="form-check-input" value=@context.OperationList.IsActive />
-            </MudTh>
+            </MudTh>*@
             <MudTh>
                 <MudTooltip Text="More Info" Placement="Placement.Right">
                     <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">
