@@ -7,50 +7,61 @@
         
     </DialogContent>
     <DialogActions>
-        
         <MudGrid>
-            <MudItem xs="12" sm="7">
-                @if (ClaimIds is not null)
-                {
-                    @foreach (ClaimsValues? claimsValues in ClaimIds)
-                    {
-                        <MudPaper Class="m-4" Elevation="0">
-                            <MudText Class="m-1">@claimsValues?.claimName</MudText>
-                            @foreach (AuthenticationClaimValue AuthenticationClaimValue in SelectedAuthRequirement?.authenticationClaimValues)
+            <MudItem xs="12" lg="7" sm="12">
+                <MudItem xs="12" lg="12" sm="12">
+                    <MudPaper MaxHeight="250px" Elevation="0" Class="overflow-y-auto overflow-x-auto">
+                        @if (ClaimIds is not null)
+                        {
+                            @foreach (ClaimsValues? claimsValues in ClaimIds)
                             {
-                                if (AuthenticationClaimValue.AuthenticationClaimId == claimsValues.ClaimId)
-                                {
-                                    <MudChip Color="Color.Default">@AuthenticationClaimValue.Value</MudChip>
-                                }
+                                <MudPaper Class="m-4" Elevation="0">
+                                    <MudText Class="m-1">@claimsValues?.claimName</MudText>
+                                    @foreach (AuthenticationClaimValue AuthenticationClaimValue in SelectedAuthRequirement?.authenticationClaimValues)
+                                    {
+                                        if (AuthenticationClaimValue.AuthenticationClaimId == claimsValues.ClaimId)
+                                        {
+                                            <MudChip Color="Color.Default">@AuthenticationClaimValue.Value</MudChip>
+                                        }
+                                    }
+                                </MudPaper>
                             }
-                        </MudPaper>
-                    }
-                }
+                        }
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" lg="12" sm="12">
+                    <MudText Class="mt-2"> Select claim requirement to the end-point</MudText>
+                    <MudPaper MaxHeight="70vh" Class="mt-2 overflow-y-auto overflow-x-auto" Elevation="0">
+                        <CompClaimList claimValue="getClaimValue" AuthenticationClaim="AuthenticationClaim"></CompClaimList>
+                    </MudPaper>
+                    <MudPaper Class="mt-7" Elevation="0">
+                        @if (claimValues?.ClaimId is not null && claimValues.ValueId is not null)
+                        {
+                            string tooltip = $"Add \"{claimValues.claimName} : {claimValues.Value}\" claim to \"{SelectedAuthRequirement?.Uri}\" End-Point ";
+                            <MudTooltip Text="@tooltip" Arrow="true" Placement="Placement.Right">
+                                <MudFab Color="Color.Warning" @onclick="(() => addClaimRequirements(new DataTransferObject.ClaimValueDTO{ RequirementId = SelectedAuthRequirement?.RequirementId, ValueId = claimValues.ValueId}))" Disabled="false" StartIcon="@Icons.Material.Filled.Add" Size="Size.Medium" />
+                            </MudTooltip>
+                        }
+                        else
+                        {
+                            <MudFab Color="Color.Warning" Disabled="true" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" />
 
+                        }
+                    </MudPaper>
+                </MudItem>
             </MudItem>
-            <MudItem xs="12" sm="5">
-                <MudPaper MaxHeight="70vh" Class="overflow-y-auto overflow-x-auto" Elevation="0">
-                    <CompClaimList claimValue="getClaimValue" AuthenticationClaim="AuthenticationClaim"></CompClaimList>
-                </MudPaper>
-                <MudPaper Class="mt-7" Elevation="0">
-                    @if (claimValues?.ClaimId is not null && claimValues.ValueId is not null)
-                    {
-                        string tooltip = $"Add \"{claimValues.claimName} : {claimValues.Value}\" claim to \"{SelectedAuthRequirement?.Uri}\" End-Point ";
-                        <MudTooltip Text="@tooltip" Arrow="true" Placement="Placement.Right">
-                            <MudFab Color="Color.Warning" @onclick="(() => addClaimRequirements(new DataTransferObject.ClaimValueDTO{ RequirementId = SelectedAuthRequirement?.RequirementId, ValueId = claimValues.ValueId}))" Disabled="false" StartIcon="@Icons.Material.Filled.Add" Size="Size.Medium" />
-                        </MudTooltip>
-                    }
-                    else
-                    {
-                        <MudFab Color="Color.Warning" Disabled="true" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" />
+            <MudItem xs="12" lg="5" sm="12">
+                <MudItem xs="12" lg="12" sm="12">
+                    <MudTextField Class="align-self-end py-4 flex-1" T="string" @bind-Text="@Description" OnBlur="Review" Margin="Margin.Dense" Label="Description" Variant="Variant.Outlined" Lines="4" />
 
-                    }
+                </MudItem>
+                <MudItem xs="12" lg="12" sm="12">
+                    <MudPaper MaxHeight="400px" Elevation="0" Class="overflow-y-auto overflow-x-auto">
+                    <CompADGroupList></CompADGroupList>
+
                 </MudPaper>
+                </MudItem>
             </MudItem>
-         
-                <MudTextField Class="align-self-end py-4 flex-1" T="string" @bind-Text="@Description" OnBlur="Review" Margin="Margin.Dense" Label="Description" Variant="Variant.Outlined" Lines="5" />
-
-            
         </MudGrid>
     </DialogActions>
 </MudDialog>

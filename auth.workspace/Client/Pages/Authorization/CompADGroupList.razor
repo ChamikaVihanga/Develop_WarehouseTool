@@ -1,14 +1,56 @@
-﻿@inject HttpClient http
+﻿@using System.Net.Http.Json
 
+@inject HttpClient http
 
+@if (authenticationADGroup == null)
+{
+    <MudText>Loading...</MudText>
+}
+else
+{
+    <MudTable Dense="true" Items="@authenticationADGroup" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="@hover">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Selected AD group's members will have Access to the end-point</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" DebounceInterval="1" OnDebounceIntervalElapsed="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+
+            <MudTh>Name</MudTh>
+
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.GroupName</MudTd>
+
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{12, 6}" />
+        </PagerContent>
+        <FooterContent>
+            <MudTd colspan="5">Select All</MudTd>
+        </FooterContent>
+    </MudTable>
+
+    <MudText Inline="true">Selected items: @(selectedItems1 == null ? "" : string.Join(", ", selectedItems1.OrderBy(x => x.GroupName).Select(x => x.GroupName)))</MudText>
+
+}
 
 @code {
+    string searchString1;
+    private bool hover = true;
+    private HashSet<AuthenticationADGroupModal> selectedItems1 = new HashSet<AuthenticationADGroupModal>();
 
-    public AuthenticationADGroupModal authenticationADGroup { get; set; }
+    private IEnumerable<AuthenticationADGroupModal> authenticationADGroup = new List<AuthenticationADGroupModal>();
+
+
 
     protected override async Task OnInitializedAsync()
     {
-        authenticationADGroup = await http.GetFromJsonAsync<AuthenticationADGroupModal>("api/ActiveDirectoryGroups");
+        authenticationADGroup = await http.GetFromJsonAsync<List<AuthenticationADGroupModal>>("api/ActiveDirectoryGroups");
     }
 
+
+    async Task Search(){
+
+    }
 }
