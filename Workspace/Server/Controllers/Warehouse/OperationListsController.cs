@@ -45,26 +45,24 @@ namespace Workspace.Server.Controllers.Warehouse
 
     
             var opDetail = await _context.OperationDetails.Include(a => a.OperationList).ToListAsync();
-            List<OperationDetail> getUpcommingOperations = new List<OperationDetail>();
+            List<OperationDetail> getActiveOperations = new List<OperationDetail>();
 
             List<int> listIds = new List<int>();
             listIds = opDetail.Select(a => a.Id).Distinct().ToList();
 
-            List<OperationDetail> UpcommingRecords = new List<OperationDetail>();
-            UpcommingRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
+            List<OperationDetail> ActiveRecords = new List<OperationDetail>();
+            ActiveRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
 
             foreach (int a in listIds)
             {
-                List<OperationDetail> UpcommingDetails = UpcommingRecords.Where(b => b.OperationListId == a).ToList();
-                OperationDetail? maxDate = UpcommingDetails.MaxBy(p => p.EffectiveDate);
+                List<OperationDetail> ActiveDetails = ActiveRecords.Where(b => b.OperationListId == a).ToList();
+                OperationDetail? maxDate = ActiveDetails.MaxBy(p => p.EffectiveDate);
                 if (maxDate != null)
                 {
-                    getUpcommingOperations.Add(maxDate);
+                    getActiveOperations.Add(maxDate);
                 }
             }
-
-            return getUpcommingOperations;
-
+            return getActiveOperations;
         }
 
 
@@ -99,9 +97,7 @@ namespace Workspace.Server.Controllers.Warehouse
                     getUpcommingOperations.Add(minDate);
                 }
             }
-
             return getUpcommingOperations;
-
         }
 
 
@@ -178,7 +174,6 @@ namespace Workspace.Server.Controllers.Warehouse
           OperationList operationActivation = new OperationList();
             operationActivation.IsActive = operationList.IsActive;
 
-
             _context.OperationLists.Add(operationList);
             await _context.SaveChangesAsync();
 
@@ -205,7 +200,6 @@ namespace Workspace.Server.Controllers.Warehouse
 
             return NoContent();
         }
-
         private bool OperationListExists(int id)
         {
             return (_context.OperationLists?.Any(e => e.Id == id)).GetValueOrDefault();
