@@ -4,16 +4,18 @@
 
 <PageTitle>Operation Summary</PageTitle>
 
-<MudGrid Class="mt-10">
+<MudGrid Class="mt-1">
     <MudItem xs="3">
         <MudTextField  Disabled="true" T="string" @bind-Value="@SearchString" Immediate="true" Label="Search operation" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
     </MudItem>
     <MudItem xs="6">
-        <MudSwitch @bind-Checked="@status" @onclick="swapLable" Color="Color.Error" UnCheckedColor="Color.Success" >@lable</MudSwitch>
-    </MudItem>@*
-    <MudItem xs="3"></MudItem>*@
+        <MudSwitch @bind-Checked="@status" @onclick="swapLable" Color="Color.Error" UnCheckedColor="Color.Success" >@lable</MudSwitch>        
+    </MudItem>    
     <MudItem xs="3" Class="d-flex justify-end">
         <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
+    </MudItem>
+    <MudItem xs="3">
+        <MudText Class="indigo-text text-accent-4"><b>@operationMessage</b></MudText>
     </MudItem>
     <MudItem xs="12">
         <MudPaper Elevation="1">
@@ -25,17 +27,20 @@
 @code {
     public bool status = false;
     string? lable { get; set; } = "Toggle to view upcoming operations";
+    string? operationMessage { get; set; } = "Active Operations";
     string? SearchString { get; set; }
 
     void swapLable()
     {
         if (status)
         {
-            lable = "Active Operations (Toggle to view upcoming operations)";
+            lable = "Toggle to view upcoming operations";
+            operationMessage = "Active Operations";
         }
         else
         {
-            lable = "Upcomming (Toggle to view ongoing operations)";
+            lable = "Toggle to view ongoing operations";
+            operationMessage = "Upcomming Operations";
         }
     }
 }
