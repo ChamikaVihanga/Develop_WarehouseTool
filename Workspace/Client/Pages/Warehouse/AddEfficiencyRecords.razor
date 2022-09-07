@@ -45,8 +45,8 @@
                                                 </PickerActions>
                                             </MudDatePicker>
                                         </MudItem>
-                                        <MudItem xs="6">
-                                            <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" />
+                                        <MudItem xs="6">                                            
+                                            <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" Validation="@(new Func<string, IEnumerable<string>>(SapNumberStrength))"/>                                            
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -160,8 +160,7 @@
                     </MudContainer>
                     @*<EmployeeIdentify />*@
                 </MudItem>
-            }          
-
+            }            
             <MudItem xs="12">
                 <h3>Efficiency Summary</h3>
                 <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
@@ -203,6 +202,16 @@
     [Required]
     [StringLength(5, ErrorMessage = "Number length can't be more than 5.")]
     public string EnteredSapNo { get; set; }
+
+    private IEnumerable<string> SapNumberStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield break;
+        }
+        if (pw.Length < 5)
+            yield return "Number must be at least of length 5";
+    }
 
     public int putId { get; set; } = 0;
 

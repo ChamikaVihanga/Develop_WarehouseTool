@@ -200,6 +200,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
             return NoContent();
         }
+
         private bool OperationListExists(int id)
         {
             return (_context.OperationLists?.Any(e => e.Id == id)).GetValueOrDefault();
