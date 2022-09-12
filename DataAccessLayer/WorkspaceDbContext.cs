@@ -36,6 +36,7 @@ namespace DataAccessLayer
         public DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
         public DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
         public DbSet<AuthenticationHttpMethod> AuthenticationHttpMethods { get; set; } = null!;
+        public DbSet<AuthenticationADAssignedGroup> AuthenticationADAssignedGroups { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

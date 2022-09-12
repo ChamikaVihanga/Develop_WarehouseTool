@@ -15,7 +15,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
             _context = context;
         }
 
-        [HttpGet, Route("GetAllRequirements")]
+        [HttpGet, Route("GetAllRequirements"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<List<AuthenticationClaimRequirement>>> GetAllRequirements()
         {
             
@@ -29,6 +29,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
                     .Include(b => b.AuthenticationHttpMethods)
                     .Include(a => a.authenticationClaimValues)
                     .ThenInclude(a => a.AuthenticationClaim)
+                    .Include(b => b.AuthenticationADAssignedGroups)
                     .ToListAsync();
             }
 
@@ -51,6 +52,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
                 {
                     return await _context.AuthenticationClaimRequirements
                     .Where(x => x.RequirementId == id)
+                    .Include(c => c.AuthenticationADAssignedGroups)
                     .Include(a => a.authenticationClaimValues)
                     .ThenInclude(a => a.AuthenticationClaim).FirstOrDefaultAsync();
                 }

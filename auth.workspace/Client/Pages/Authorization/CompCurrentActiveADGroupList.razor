@@ -1,0 +1,47 @@
+﻿@inject HttpClient http
+
+@if (ActiveGroupsModal is not null)
+{
+    <MudTable Items="@ActiveGroupsModal" FixedHeader="@fixed_header" FixedFooter="@fixed_footer" Height="@(fixed_header || fixed_footer ?"400px":"")">
+        <HeaderContent>
+
+            <MudTh>Name</MudTh>
+
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.GroupName</MudTd>
+
+        </RowTemplate>
+        <FooterContent>
+
+            <MudTd>Name</MudTd>
+
+        </FooterContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{50, 100}" />
+        </PagerContent>
+    </MudTable>
+
+}
+
+@code {
+    [Parameter]public List<AuthenticationADAssignedGroup?>? ActiveADGroupList { get; set; }
+    [Parameter]public List<AuthenticationADGroupModal?>? ADGroupsModal { get; set; }
+    List<AuthenticationADGroupModal?>? ActiveGroupsModal = new List<AuthenticationADGroupModal?>();
+    bool fixed_header = true;
+    bool fixed_footer = false;
+
+    bool loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        ADGroupsModal = await http.GetFromJsonAsync<List<AuthenticationADGroupModal>>("api/ActiveDirectoryGroups");
+        loading = false;
+        foreach(var ActiveGroup in ActiveADGroupList){
+            ActiveGroupsModal.Add(ADGroupsModal.Where(a => a.guid == ActiveGroup.ADGroupGuid).FirstOrDefault());
+        }
+    }
+
+
+}

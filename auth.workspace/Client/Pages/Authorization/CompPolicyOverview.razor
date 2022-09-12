@@ -1,5 +1,8 @@
 ﻿@using System.Text.Json
 @inject HttpClient http
+@inject IDialogService DialogService
+
+
 
 <MudGrid>
     <MudItem xs="9">
@@ -21,9 +24,26 @@
 else
 {
     
-    <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" />
+    <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" Margin="Margin.Dense" AdornmentIcon="@Icons.Filled.Search" />
     <MudPaper MinHeight="60vh" MaxHeight="60vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
-        <MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
+
+        <MudTable Dense="true" Height="@(fixed_header || fixed_footer ?"450px":"")" RowsPerPage="9"  Items="@PolicyRequirements" OnRowClick="@OpenRequirementEditor" T="AuthenticationClaimRequirement" Hover="true" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Display Name</MudTh>
+        <MudTh>URI</MudTh>
+      
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.RequirementName</MudTd>
+        <MudTd DataLabel="Nr">@context.Uri</MudTd>
+        
+    </RowTemplate>
+    <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{9, 18}" />
+        </PagerContent>
+</MudTable>
+
+        @*<MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
             @foreach (AuthenticationClaimRequirement? policy in PolicyRequirements)
             {
             <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = null, RequirementId= policy.RequirementId}))" Value='$"{policy.AuthenticationHttpMethods.HttpMethod}: {policy.RequirementName}"' Icon="@Icons.Filled.AccountBox">
@@ -34,13 +54,17 @@ else
         </MudTreeViewItem>
             }
     </MudTreeView>
-    <MudText></MudText>
+    <MudText></MudText>*@
 </MudPaper>
 
 
 }
 
 @code {
+    
+    bool fixed_header = true;
+    bool fixed_footer = true;
+
 
     public bool _NewEndpoint;
     public bool NewEndpoints
@@ -60,10 +84,27 @@ else
     }
 
 
+    private async Task OpenRequirementEditor(TableRowClickEventArgs<AuthenticationClaimRequirement> tableRowClickEventArgs)
+    {
+        var parameter = new DialogParameters();
+
+        parameter.Add("SelectedRequirementId", tableRowClickEventArgs.Item.RequirementId);
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, FullScreen = true, CloseButton = true, };
+        var dialog = DialogService.Show<CompDialogEditRequirements>("End-Point Claim Requirement Editor", parameter, options);
+        var result = await dialog.Result;
+
+        if (result.Cancelled)
+        {
+            
+        }
+
+    }
+
 
     string? _debouncedText;
 
-    [Parameter] public EventCallback<ValueIDRequirementID> ClaimValue { get; set; }
+    [Parameter] public EventCallback ClaimValue { get; set; }
 
 
     [Parameter] public int? SelectedRequirement { get; set; }
@@ -97,6 +138,8 @@ else
 
     }
 
+
+
     async Task SwapChanages()
     {
 
@@ -123,7 +166,7 @@ else
         {
             PolicyRequirementsBackup = Reviewed.ToArray();
         }
-       
+
 
         if (debouncedText.Length >= 0)
         {
@@ -134,10 +177,15 @@ else
             }
             catch
             {
-                
+
             }
         }
 
+    }
+    private void RowClickEvent(TableRowClickEventArgs<AuthenticationClaimRequirement> tableRowClickEventArgs)
+    {
+        ClaimValue.InvokeAsync((new ValueIDRequirementID { valueId = null, RequirementId = tableRowClickEventArgs.Item.RequirementId}));
+      
     }
     public class ValueIDRequirementID
     {
