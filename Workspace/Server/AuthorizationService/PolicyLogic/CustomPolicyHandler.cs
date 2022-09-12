@@ -30,14 +30,16 @@ namespace Workspace.Server.AuthorizationService.PolicyHandler
 
             List<AuthenticationClaimRequirement> claimRequirements = await _customPolicyDataProvider.getClaimRequirement(RequestString, Method);
 
-            if (claimRequirements == null)
+            if (claimRequirements.Count == null)
             {
+                context.Succeed(requirement);
                 return Task.CompletedTask;
             }
             foreach (AuthenticationClaimRequirement claimRequirement in claimRequirements)
             {
-                if (claimRequirement.authenticationClaimValues == null)
+                if (claimRequirement.authenticationClaimValues.Count == 0)
                 {
+                    context.Succeed(requirement);
                     return Task.CompletedTask;
                 }
                 else
@@ -48,16 +50,60 @@ namespace Workspace.Server.AuthorizationService.PolicyHandler
                         {
                             return Task.CompletedTask;
                         }
-                        if (!context.User.HasClaim(c => c.Type == claimValue.AuthenticationClaim.Claim && c.Value == claimValue.Value))
+                        if (context.User.HasClaim(c => c.Type == claimValue.AuthenticationClaim.Claim && c.Value == claimValue.Value))
                         {
+                            context.Succeed(requirement);
                             return Task.CompletedTask;
+                        }
+
+                    }
+                    if (claimRequirement?.AuthenticationADAssignedGroups?.Count > 0)
+                    {
+                        foreach (var adGroup in claimRequirement.AuthenticationADAssignedGroups)
+                        {
+                            if (context.User.HasClaim(c => c.Type == "ActiveDirectoryGroups" && c.Value == adGroup.ADGroupGuid.ToString()))
+                            {
+                                context.Succeed(requirement);
+                                return Task.CompletedTask;
+                            }
                         }
                     }
 
                 }
             }
-            context.Succeed(requirement);
+
+
             return Task.CompletedTask;
         }
+
+        //if (claimRequirements == null)
+        //{
+        //    return Task.CompletedTask;
+        //}
+        //foreach (AuthenticationClaimRequirement claimRequirement in claimRequirements)
+        //{
+        //    if (claimRequirement.authenticationClaimValues == null)
+        //    {
+        //        return Task.CompletedTask;
+        //    }
+        //    else
+        //    {
+        //        foreach (var claimValue in claimRequirement.authenticationClaimValues)
+        //        {
+        //            if (claimValue.AuthenticationClaim == null)
+        //            {
+        //                return Task.CompletedTask;
+        //            }
+        //            if (!context.User.HasClaim(c => c.Type == claimValue.AuthenticationClaim.Claim && c.Value == claimValue.Value))
+        //            {
+        //                return Task.CompletedTask;
+        //            }
+        //        }
+
+        //    }
+        //}
+        //context.Succeed(requirement);
+        //return Task.CompletedTask;
     }
+    
 }
