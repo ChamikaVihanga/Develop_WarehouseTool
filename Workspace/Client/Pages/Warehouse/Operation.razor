@@ -47,12 +47,14 @@
                         </MudItem>
                     </MudGrid>
                 </EditForm>
-                <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Text="date" @ref="_picker" Label="Effective Date">
-                    <PickerActions>
+                @*<MudDatePicker PickerVariant="PickerVariant.Dialog" @ref="_picker" Label="Effective Date">*@ @*@bind-Text="date"*@
+                    @*<PickerActions>
                         <MudButton Variant="Variant.Filled" OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
                     </PickerActions>
-                </MudDatePicker>
+                </MudDatePicker>*@
+
+            <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="date" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
 
                 <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
                     <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
@@ -70,15 +72,13 @@
         </MudItem>
     </MudGrid>
 
-
-
-
 @*<MudCheckBox @bind-Checked="@ReadOnly" Label="@(ReadOnly ? "Activate" : "Deactivate")" />*@
 
 @code {
     //public bool ReadOnly { get; set; } = true;
-
-    public string date { get; set; }
+    DateTime? date;
+    
+    //public string date { get; set; }
     MudDatePicker _picker;
     [Parameter]
     public string id { get; set; }
@@ -95,7 +95,7 @@
 
     private async Task PostData()
     {
-        summeryDTO.EffectiveDate = Convert.ToDateTime(date);
+        summeryDTO.EffectiveDate = (DateTime)date;                 /* <---- If I want to convert to datetime ====> Convert.ToDateTime(date);*/
         summeryDTO.OrganizationUnit = OgUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
         var response = await http.PostAsJsonAsync<OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
         string strResponse = response.Content.ReadAsStringAsync().Result;

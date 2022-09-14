@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,7 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
         // GET: api/OperationLists/Active
-        [HttpGet("Active")]
+        [HttpGet("Active"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<IEnumerable<OperationDetail>>> GetActiveOperationLists()
         {
             if (_context.OperationLists == null)
@@ -67,7 +68,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
 
         // GET: api/OperationLists/Upcoming
-        [HttpGet("Upcoming")]
+        [HttpGet("Upcoming"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<IEnumerable<OperationDetail>>> GetUpcomingOperationLists()
         {
             if (_context.OperationLists == null)
@@ -126,6 +127,21 @@ namespace Workspace.Server.Controllers.Warehouse
         // PUT: api/OperationLists/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        public async Task<ActionResult<List<OperationList>>> EditOperationName(OperationList operationList, int id)
+        {
+            var editOpName = await _context.OperationLists
+                    .Include(a => a.OperationDetails)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+            if(editOpName == null)
+                return NotFound("Not Found");
+
+            editOpName.Name = operationList.Name;  
+            editOpName.Id = id;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Changes have been successfully saved");
+        }
         public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
         {
             if (id != operationList.Id)

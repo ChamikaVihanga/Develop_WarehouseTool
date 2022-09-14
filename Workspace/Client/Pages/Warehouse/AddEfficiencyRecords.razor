@@ -12,7 +12,7 @@
     <MudPaper Elevation="0">
         <MudGrid>
             <MudItem xs="12">
-                <MudText><h3>Efficiency</h3></MudText>
+                <MudText><h3>Achievements</h3></MudText>
             </MudItem>
             <MudItem xs="9">
                 @if (isLoading)
@@ -45,8 +45,8 @@
                                                 </PickerActions>
                                             </MudDatePicker>
                                         </MudItem>
-                                        <MudItem xs="6">                                            
-                                            <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" Validation="@(new Func<string, IEnumerable<string>>(SapNumberStrength))"/>                                            
+                                        <MudItem xs="6">
+                                            <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" Validation="@(new Func<string, IEnumerable<string>>(SapNumberStrength))" />
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -125,8 +125,8 @@
                         </MudItem>
 
                         @*Buttuion hide and show*@
-                        <br />
-                        <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full">
+
+                        <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full mt-5">
                             @if (EnteredSapNo == null || StartTime == null || value1 == null)
                             {
                                 <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true">Submit</MudButton>
@@ -152,17 +152,17 @@
                             <MudCard>
                                 <MudImage Src="@uri" Width="200" Height="200" Class="rounded-lg ma-4" />
                                 <MudCardContent>
-                                    <MudText Class="d-flex align-center justify-center mud-width-full"><b>@vS_Employee.NickName</b></MudText>
-                                    <MudText Class="d-flex align-center justify-center mud-width-full"> @vS_Employee.Position</MudText>
+                                    <MudText Class="d-flex align-center justify-center mud-width-full"><b>@vS_Employee.Salutation.@vS_Employee.NickName</b></MudText>
+                                    <MudText Class="d-flex align-center justify-center mud-width-full">@vS_Employee.Position</MudText>
                                 </MudCardContent>
                             </MudCard>
                         </MudPaper>
                     </MudContainer>
                     @*<EmployeeIdentify />*@
                 </MudItem>
-            }            
+            }
             <MudItem xs="12">
-                <h3>Efficiency Summary</h3>
+                <h3>Achievement Summary</h3>
                 <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                 </MudPaper>
             </MudItem>
