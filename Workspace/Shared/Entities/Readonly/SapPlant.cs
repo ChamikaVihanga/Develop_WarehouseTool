@@ -9,7 +9,8 @@ namespace Workspace.Shared.Entities.Readonly
     public class SapPlant
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public int Code { get; set; }
-        public string Name { get; set; }
+        public string? Code { get; set; }
+        public string? Title { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

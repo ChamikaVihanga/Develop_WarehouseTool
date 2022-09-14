@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    [Migration("20220905123910_SAPDb")]
-    partial class SAPDb
+    [Migration("20220908123903_SapExtraction")]
+    partial class SapExtraction
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

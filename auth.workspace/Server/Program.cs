@@ -110,6 +110,8 @@ builder.Services.AddScoped<ICustomClaimChecker, CustomClaimChecker>();
 #region SAP Read Only tables
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ISapEmployeeExtraction, SapEmployeeExtraction>();
+
 
 #endregion SAP Read Only tables
 

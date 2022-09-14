@@ -21,8 +21,6 @@ namespace admin.workspace.Server.Services.ReadOnly
             };
 
             return response;
-
-
         }
     }
 

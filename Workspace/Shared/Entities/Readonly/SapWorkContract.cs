@@ -9,7 +9,8 @@ namespace Workspace.Shared.Entities.Readonly
     public class SapWorkContract
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public int Level { get; set; }
-        public string Description { get; set; }
+        public int? Level { get; set; }
+        public string? Description { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

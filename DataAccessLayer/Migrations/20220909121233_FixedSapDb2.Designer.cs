@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    [Migration("20220822164100_Init")]
-    partial class Init
+    [Migration("20220909121233_FixedSapDb2")]
+    partial class FixedSapDb2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,21 @@ namespace DataAccessLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("AuthenticationADAssignedGroupAuthenticationClaimRequirement", b =>
+                {
+                    b.Property<int>("AuthenticationADAssignedGroupsid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("authenticationClaimRequirementsRequirementId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthenticationADAssignedGroupsid", "authenticationClaimRequirementsRequirementId");
+
+                    b.HasIndex("authenticationClaimRequirementsRequirementId");
+
+                    b.ToTable("AuthenticationADAssignedGroupAuthenticationClaimRequirement");
+                });
 
             modelBuilder.Entity("AuthenticationClaimGroupAuthenticationClaimValue", b =>
                 {
@@ -67,6 +82,37 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("authenticationClaimValuesClaimValueId");
 
                     b.ToTable("AuthenticationClaimValueAuthenticationUserClaimsHolder");
+                });
+
+            modelBuilder.Entity("ShiftGroupVS_Employees_1", b =>
+                {
+                    b.Property<int>("VS_EmployeesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("shiftGroupsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("VS_EmployeesId", "shiftGroupsId");
+
+                    b.HasIndex("shiftGroupsId");
+
+                    b.ToTable("ShiftGroupVS_Employees_1");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationADAssignedGroup", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+
+                    b.Property<Guid>("ADGroupGuid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("id");
+
+                    b.ToTable("AuthenticationADAssignedGroup");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
@@ -120,9 +166,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<int?>("AuthenticationClaimGroupId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AuthenticationHttpMethodId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("AuthenticationHttpMethodsId")
                         .HasColumnType("int");
 
@@ -146,7 +189,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("AuthenticationClaimGroupId");
 
-                    b.HasIndex("AuthenticationHttpMethodId");
+                    b.HasIndex("AuthenticationHttpMethodsId");
 
                     b.ToTable("AuthenticationClaimRequirements");
                 });
@@ -205,6 +248,252 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("AuthenticationUserClaimsHolders");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapCostCenter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SapCostCenters");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapEmployee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmployeeStatus")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int?>("EpfNo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Initials")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("JoinDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("LogonId")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("MaritalStatus")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("NickName")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("OrganizationalUnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PlantInfoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Position")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int?>("Rfid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Salutaion")
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<int>("SapNo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("WorkContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SapEmployee");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapOrganizationalUnit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("SapCostCenterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SapOrganizationalUnits");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapPlant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SapPlants");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapWorkContract", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Level")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SapWorkContracts");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.Vs_Employee", b =>
+                {
+                    b.Property<string>("SAPNo")
+                        .HasColumnType("varchar(5)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("BirthDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CostCenterID")
+                        .HasColumnType("varchar(6)");
+
+                    b.Property<string>("CostCenterName")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("varchar(4)");
+
+                    b.Property<string>("EPFNo")
+                        .HasColumnType("varchar(6)");
+
+                    b.Property<int?>("EmpLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeStatus")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("varchar(6)");
+
+                    b.Property<string>("Initials")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<DateTime?>("JoinDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MaritalStatus")
+                        .HasColumnType("varchar(7)");
+
+                    b.Property<string>("NickName")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<string>("OrganizationalUnit")
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("OrganizationalUnitID")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RFID")
+                        .HasColumnType("varchar(8)");
+
+                    b.Property<string>("Religion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salutation")
+                        .HasColumnType("varchar(5)");
+
+                    b.Property<string>("SysUserID")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("WorkContract")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("SAPNo");
+
+                    b.ToTable("Vs_Employees", null, t => t.ExcludeFromMigrations());
                 });
 
             modelBuilder.Entity("Workspace.Shared.Entities.ResourceFacilities.ReFaRequest", b =>
@@ -274,6 +563,9 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<int>("OperationListId")
                         .HasColumnType("int");
+
+                    b.Property<string>("OrganizationUnit")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Target")
                         .HasColumnType("int");
@@ -351,7 +643,37 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("OperationRecords");
                 });
 
-            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.ShiftGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GroupTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WorkingShiftId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("WorkingShiftsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkingShiftsId");
+
+                    b.ToTable("ShiftGroups");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees_1", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -381,7 +703,47 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VS_Employees");
+                    b.ToTable("VS_Employees_1");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.WorkingShifts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ShiftDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShiftTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkingShift");
+                });
+
+            modelBuilder.Entity("AuthenticationADAssignedGroupAuthenticationClaimRequirement", b =>
+                {
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationADAssignedGroup", null)
+                        .WithMany()
+                        .HasForeignKey("AuthenticationADAssignedGroupsid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimRequirement", null)
+                        .WithMany()
+                        .HasForeignKey("authenticationClaimRequirementsRequirementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AuthenticationClaimGroupAuthenticationClaimValue", b =>
@@ -429,19 +791,34 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ShiftGroupVS_Employees_1", b =>
+                {
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees_1", null)
+                        .WithMany()
+                        .HasForeignKey("VS_EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.ShiftGroup", null)
+                        .WithMany()
+                        .HasForeignKey("shiftGroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimRequirement", b =>
                 {
                     b.HasOne("Workspace.Shared.AuthData.AuthenticationClaimGroup", "AuthenticationClaimGroup")
                         .WithMany("AuthenticationClaimRequirement")
                         .HasForeignKey("AuthenticationClaimGroupId");
 
-                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethod")
+                    b.HasOne("Workspace.Shared.AuthData.AuthenticationHttpMethod", "AuthenticationHttpMethods")
                         .WithMany("AuthenticationClaimRequirements")
-                        .HasForeignKey("AuthenticationHttpMethodId");
+                        .HasForeignKey("AuthenticationHttpMethodsId");
 
                     b.Navigation("AuthenticationClaimGroup");
 
-                    b.Navigation("AuthenticationHttpMethod");
+                    b.Navigation("AuthenticationHttpMethods");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimValue", b =>
@@ -470,7 +847,7 @@ namespace DataAccessLayer.Migrations
                         .WithMany("OperationRecords")
                         .HasForeignKey("OperationListId");
 
-                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees", "VS_Employees")
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.VS_Employees_1", "VS_Employees")
                         .WithMany("OperationRecords")
                         .HasForeignKey("VS_EmployeesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -479,6 +856,15 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("OperationList");
 
                     b.Navigation("VS_Employees");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.ShiftGroup", b =>
+                {
+                    b.HasOne("Workspace.Shared.Entities.Warehouse.WorkingShifts", "WorkingShifts")
+                        .WithMany("ShiftGroups")
+                        .HasForeignKey("WorkingShiftsId");
+
+                    b.Navigation("WorkingShifts");
                 });
 
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaim", b =>
@@ -503,9 +889,14 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("OperationRecords");
                 });
 
-            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees", b =>
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.VS_Employees_1", b =>
                 {
                     b.Navigation("OperationRecords");
+                });
+
+            modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.WorkingShifts", b =>
+                {
+                    b.Navigation("ShiftGroups");
                 });
 #pragma warning restore 612, 618
         }
