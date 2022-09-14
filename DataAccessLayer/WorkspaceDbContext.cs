@@ -31,6 +31,7 @@ namespace DataAccessLayer
         public DbSet<AuthenticationClaimValue> AuthenticationClaimValues { get; set; } = null!;
         public DbSet<AuthenticationUserClaimsHolder> AuthenticationUserClaimsHolders { get; set; } = null!;
         public DbSet<AuthenticationHttpMethod> AuthenticationHttpMethods { get; set; } = null!;
+        public DbSet<AuthenticationADAssignedGroup> AuthenticationADAssignedGroups { get; set; } = null!;
         #endregion Authentication data access
 
 
@@ -47,7 +48,7 @@ namespace DataAccessLayer
         public DbSet<WorkingShifts> WorkingShift { get; set; } 
 
 
-
+        
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc.Filters;
+using static Workspace.Shared.AuthData.DataTransferObject;
 
 namespace admin.workspace.Server.Authorization.Handlers
 {
@@ -15,6 +16,8 @@ namespace admin.workspace.Server.Authorization.Handlers
         }
         protected async override Task<Task> HandleRequirementAsync(AuthorizationHandlerContext context, CustomClaimRequirement requirement)
         {
+           
+
             HttpContext httpContext = _contextAccessor.HttpContext;
             var RequestString = httpContext.Request.Path.Value.ToString();
             var Method = httpContext.Request.Method.ToString();
@@ -27,18 +30,19 @@ namespace admin.workspace.Server.Authorization.Handlers
             }
 
 
-
-
             List<AuthenticationClaimRequirement> claimRequirements = await _customClaimChecker.getClaimRequirement(RequestString, Method, queryString);
-            
-            if (claimRequirements == null)
+
+        
+            if (claimRequirements.Count == null)
             {
+                context.Succeed(requirement);
                 return Task.CompletedTask;
             }
             foreach (AuthenticationClaimRequirement claimRequirement in claimRequirements)
             {
-                if (claimRequirement.authenticationClaimValues == null)
+                if (claimRequirement.authenticationClaimValues.Count == 0 && claimRequirement.AuthenticationADAssignedGroups.Count == 0)
                 {
+                    context.Succeed(requirement);
                     return Task.CompletedTask;
                 }
                 else
@@ -49,16 +53,37 @@ namespace admin.workspace.Server.Authorization.Handlers
                         {
                             return Task.CompletedTask;
                         }
-                        if (!context.User.HasClaim(c => c.Type == claimValue.AuthenticationClaim.Claim && c.Value == claimValue.Value))
+                        if (context.User.HasClaim(c => c.Type == claimValue.AuthenticationClaim.Claim && c.Value == claimValue.Value))
                         {
+                            context.Succeed(requirement);
                             return Task.CompletedTask;
                         }
+                        
                     }
-
+                    if (claimRequirement?.AuthenticationADAssignedGroups?.Count > 0)
+                    {
+                        foreach (var adGroup in claimRequirement.AuthenticationADAssignedGroups)
+                        {
+                            if(context.User.HasClaim(c => c.Type == "ActiveDirectoryGroups" && c.Value == adGroup.ADGroupGuid.ToString()))
+                            {
+                                context.Succeed(requirement);
+                                return Task.CompletedTask;
+                            }
+                        }
+                    }
+                   
                 }
             }
-            context.Succeed(requirement);
+           
+
             return Task.CompletedTask;
         }
+
+       
+    }
+    public class CheckClaims
+    {
+        public string ClaimName { get; set; }
+        public bool Matched { get; set; } = false;
     }
 }

@@ -31,7 +31,7 @@ namespace admin.workspace.Server.Authorization.DataProviders
 
             }
             var httpMethodId = await _context.AuthenticationHttpMethods.Where(a => a.HttpMethod == Method).ToListAsync();
-            var claims = await _context.AuthenticationClaimRequirements.Where(a => a.Uri == EndPoint && a.AuthenticationHttpMethodsId == httpMethodId.Select(b => b.Id).LastOrDefault()).Include(x => x.authenticationClaimValues).ThenInclude(x => x.AuthenticationClaim).ToListAsync();
+            var claims = await _context.AuthenticationClaimRequirements.Where(a => a.Uri == EndPoint && a.AuthenticationHttpMethodsId == httpMethodId.Select(b => b.Id).LastOrDefault()).Include(x => x.authenticationClaimValues).ThenInclude(x => x.AuthenticationClaim).Include(z => z.AuthenticationADAssignedGroups).ToListAsync();
          
             return claims;
         }

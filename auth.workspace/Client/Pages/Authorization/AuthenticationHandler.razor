@@ -3,11 +3,11 @@
 @inject IDialogService DialogService
 
 <MudGrid>
-    <MudItem xs="12" sm="6">
-        <MudPaper MinHeight="85vh" MaxHeight="85vh" Class="pa-5 ma-2 overflow-y-auto overflow-x-auto" Elevation="2">
-            <CompPolicyOverview SelectedRequirement="SelectedRequiremnet" ClaimValue="getClaimValue" ></CompPolicyOverview>
+    <MudItem xs="12" lg="7" sm="12">
+        <MudPaper MinHeight="85vh" MaxHeight="85vh" Class=" ma-2 overflow-y-auto overflow-x-hidden" Elevation="0">
+            <CompPolicyOverview SelectedRequirement="SelectedRequiremnet"  ></CompPolicyOverview>
             <MudGrid>
-                <MudItem xs="9">
+               @* <MudItem xs="9">
                     <MudPopover Open="@_isOpen" Fixed="true" Class="px-4 pt-4">
                         <div class="d-flex flex-column">
                             <MudGrid>
@@ -59,12 +59,12 @@
                     }
 
 
-                </MudItem>
+                </MudItem>*@
             </MudGrid>
         </MudPaper>
     </MudItem>
-    <MudItem xs="12" sm="6">
-        <MudPaper MinHeight="85vh" MaxHeight="85vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="2"><CompClaimCard OnClicks="getClaimSeletecdValue"></CompClaimCard></MudPaper>
+    <MudItem xs="12" lg="5" sm="12">
+        <MudPaper MinHeight="85vh" MaxHeight="85vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="0"><CompClaimCard OnClicks="getClaimSeletecdValue"></CompClaimCard></MudPaper>
     </MudItem>
 
 </MudGrid>
@@ -109,10 +109,7 @@
     {
         SelectedRequiremnet = value;
     }
-    void getClaimValue(CompPolicyOverview.ValueIDRequirementID value)
-    {
-        ClaimValue = value;
-    }
+   
 
     private async Task OpenRequirementEditor()
     {
