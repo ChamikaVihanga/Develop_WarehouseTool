@@ -59,9 +59,9 @@
                 <ChildContent>
                        @Body
                 </ChildContent>
-                <ErrorContent>
+                <ErrorContent >
                       <h1>@context.Message</h1>
-
+                      
                       <button class="btn btn-primary" @onclick="() => errorBoundary.Recover()">Close</button>
                 </ErrorContent>
             </ErrorBoundary>
