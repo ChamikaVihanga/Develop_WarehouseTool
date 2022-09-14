@@ -26,7 +26,15 @@ builder.Services.AddAuthorizationCore(options =>
     options.AddPolicy("ITOnly", policy => policy.RequireClaim("Department", "IT"));
 });
 
+builder.Services.AddHttpClientInterceptor();
+builder.Services.AddScoped<InterceptorServiceGlobal>();
+builder.Services.AddScoped<GlobalErrorHandler>();
 
+
+builder.Services.AddHttpClient("for InterceptorServiceGlobal", client =>
+{
+    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+});
 builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress =
@@ -39,8 +47,8 @@ builder.Services.AddMudServices();
 builder.Services.AddLoadingBar();
 builder.UseLoadingBar(); // declare construct loading bar UI.
 
-builder.Services.AddHttpClientInterceptor();
-builder.Services.AddScoped<GlobalErrorHandler>();
+
+
 
 builder.Services.AddScoped<IReFaRequestService, ReFaRequestService>();
 builder.Services.AddBlazoredLocalStorage();

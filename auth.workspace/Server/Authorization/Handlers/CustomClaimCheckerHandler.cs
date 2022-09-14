@@ -40,7 +40,7 @@ namespace admin.workspace.Server.Authorization.Handlers
             }
             foreach (AuthenticationClaimRequirement claimRequirement in claimRequirements)
             {
-                if (claimRequirement.authenticationClaimValues.Count == 0)
+                if (claimRequirement.authenticationClaimValues.Count == 0 && claimRequirement.AuthenticationADAssignedGroups.Count == 0)
                 {
                     context.Succeed(requirement);
                     return Task.CompletedTask;

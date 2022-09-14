@@ -1,37 +1,47 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager nav
 
 <div class="page">
-    <div>
-        <NavMenu />
-    </div>
+    <ErrorBoundary @ref="errorBoundary">
+        <ChildContent>
+            <div>
+                <NavMenu />
+            </div>
 
-    <main>
-        <ErrorBoundary @ref="errorBoundary">
-            <ChildContent>
+            <main>
+
+
                 <div class="mt-1 px-4">
                     <MudGrid>
                         <MudItem xs="11"></MudItem>
                         <MudItem xs="1" Class=""><Login_Logout_Toggle /></MudItem>
                     </MudGrid>
-                    
+
                 </div>
 
                 <article class="content px-4">
                     @Body
                 </article>
-            </ChildContent>
-            <ErrorContent>
-                <h1>@context.Message</h1>
 
-                <button class="btn btn-primary" @onclick="() => errorBoundary.Recover()">Close</button>
-            </ErrorContent>
-        </ErrorBoundary>
 
-    </main>
+
+
+
+            </main>
+            <MudThemeProvider />
+            <MudDialogProvider />
+            <MudSnackbarProvider />
+        </ChildContent>
+        <ErrorContent>
+            <h1>@context.Message</h1>
+
+            <button class="btn btn-primary" @onclick="Recover">Close</button>
+        </ErrorContent>
+
+    </ErrorBoundary>
 </div>
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+
+
 
 
 @code {
@@ -40,4 +50,10 @@
     {
         errorBoundary = new ErrorBoundary();
     }
+    void Recover()
+    {
+        errorBoundary.Recover();
+        //nav.NavigateTo("/login");
+    }
+
 }
