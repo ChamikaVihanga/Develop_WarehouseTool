@@ -1,8 +1,17 @@
 ﻿@inherits LayoutComponentBase
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+        <MudDialogProvider />
+        <MudSnackbarProvider />
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
-<MudDialogProvider />
-<MudSnackbarProvider />
+    </ChildContent>
+    <ErrorContent>
+        <Workspace.Client.Pages.ErrorPages.GlobalErrorPage Error="@context.Message" bakErrorContent="RecoverError"></Workspace.Client.Pages.ErrorPages.GlobalErrorPage>
+
+    </ErrorContent>
+
+</ErrorBoundary>
 
 <style>
     .Glass {
@@ -60,9 +69,7 @@
                        @Body
                 </ChildContent>
                 <ErrorContent >
-                      <h1>@context.Message</h1>
-                      
-                      <button class="btn btn-primary" @onclick="() => errorBoundary.Recover()">Close</button>
+                   <Workspace.Client.Pages.ErrorPages.GlobalErrorPage  Error="@context.Message"  bakErrorContent="RecoverError"></Workspace.Client.Pages.ErrorPages.GlobalErrorPage>
                 </ErrorContent>
             </ErrorBoundary>
         </MudContainer>
@@ -70,6 +77,7 @@
 </MudLayout>
 
 @code {
+
     private ErrorBoundary errorBoundary;
 
     protected override void OnInitialized()
@@ -88,6 +96,10 @@
     void ToggleDrawer()
     {
         open = !open;
+    }
+    void RecoverError(bool err)
+    {
+        errorBoundary.Recover();
     }
 
 

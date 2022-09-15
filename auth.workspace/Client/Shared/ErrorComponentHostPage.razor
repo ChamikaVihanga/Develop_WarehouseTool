@@ -1,0 +1,22 @@
+﻿
+@inject IJSRuntime JsRuntime
+
+@code {
+
+    [Parameter]public EventCallback<bool> bakErrorContent { get; set; }
+    [Parameter]public string? Error { get; set; }
+
+
+    protected override async Task OnInitializedAsync(){
+      
+        await JsRuntime.InvokeVoidAsync("alert", $"{Error}");
+      
+        await bakErrorContent.InvokeAsync(true);
+       
+    
+     
+
+    }
+
+   
+}

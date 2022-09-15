@@ -1,0 +1,21 @@
+﻿@page "/ErrorPage/{statusCode}"
+@page "/ErrorPage"
+@inject ISnackbar Snackbar
+
+@*<MudText Color="Color.Error" Align="Align.Center" Typo="Typo.h4">Response status code does not indicate success: @statusCode</MudText>*@
+<MudAlert Elevation="0" Style="font-size:medium"  Severity="Severity.Error">Response status code does not indicate success: @statusCode</MudAlert>
+@code {
+    [Parameter]
+    public string? statusCode { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AddSnackbar();
+    }
+
+    public void AddSnackbar()
+    {
+        Snackbar.Add($"{statusCode}", Severity.Error);
+    }
+
+}

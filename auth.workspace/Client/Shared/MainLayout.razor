@@ -1,55 +1,75 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager nav
 
+
+
+
 <div class="page">
-    <ErrorBoundary @ref="errorBoundary">
-        <ChildContent>
-            <div>
-                <NavMenu />
-            </div>
 
-            <main>
+    <div>
+        <NavMenu />
+    </div>
 
+    <main>
 
-                <div class="mt-1 px-4">
-                    <MudGrid>
-                        <MudItem xs="11"></MudItem>
-                        <MudItem xs="1" Class=""><Login_Logout_Toggle /></MudItem>
-                    </MudGrid>
+        <div class="mt-1 px-4">
+            <MudGrid>
+                <MudItem xs="11"></MudItem>
+                <MudItem xs="1" Class=""><Login_Logout_Toggle /></MudItem>
+            </MudGrid>
 
-                </div>
-
+        </div>
+        <ErrorBoundary @ref="errorBoundary">
+            <ChildContent>
                 <article class="content px-4">
                     @Body
                 </article>
+            </ChildContent>
+            <ErrorContent>
+                <h1>@context.Message</h1>
+
+                <button class="btn btn-primary" @onclick="Recover">Close</button>
+            </ErrorContent>
+        </ErrorBoundary>
 
 
+    </main>
 
+    <ErrorBoundary  @ref="errorBoundary">
+        <ChildContent>
+            
+                <MudThemeProvider />
+                <MudDialogProvider />
+                <MudSnackbarProvider />
+            
 
-
-            </main>
-            <MudThemeProvider />
-            <MudDialogProvider />
-            <MudSnackbarProvider />
         </ChildContent>
         <ErrorContent>
-            <h1>@context.Message</h1>
-
-            <button class="btn btn-primary" @onclick="Recover">Close</button>
+                <ErrorComponentHostPage Error="@context.Message" bakErrorContent="RecoverError"></ErrorComponentHostPage>
         </ErrorContent>
-
+ 
     </ErrorBoundary>
+ 
 </div>
 
 
 
 
 @code {
+    
     private ErrorBoundary errorBoundary;
+   
+
+    void RecoverError(bool err){
+        errorBoundary.Recover();
+    }
+
     protected override void OnInitialized()
     {
         errorBoundary = new ErrorBoundary();
     }
+
+   
     void Recover()
     {
         errorBoundary.Recover();
