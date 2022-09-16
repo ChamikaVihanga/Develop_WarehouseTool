@@ -63,7 +63,7 @@ else
 }
 
 @code {
-    
+
     bool fixed_header = true;
     bool fixed_footer = true;
 
@@ -98,10 +98,14 @@ else
 
         if (result.Cancelled)
         {
-            
+
+            await OnInitializedAsync();
+
         }
 
     }
+
+
 
 
     string? _debouncedText;
@@ -117,13 +121,15 @@ else
     public AuthenticationClaimRequirement[]? PolicyRequirements { get; set; }
     public AuthenticationClaimRequirement[]? PolicyRequirementsBackup { get; set; }
 
-    List<AuthenticationClaimRequirement> NotReviewed = new List<AuthenticationClaimRequirement>();
-    List<AuthenticationClaimRequirement> Reviewed = new List<AuthenticationClaimRequirement>();
+    List<AuthenticationClaimRequirement>? NotReviewed = new List<AuthenticationClaimRequirement>();
+    List<AuthenticationClaimRequirement>? Reviewed = new List<AuthenticationClaimRequirement>();
 
     protected override async Task OnInitializedAsync()
     {
         PolicyRequirements = await http.GetFromJsonAsync<AuthenticationClaimRequirement[]?>("api/AuthenticationPolicyRequirement/getallrequirements");
         PolicyRequirementsBackup = PolicyRequirements;
+        Reviewed.Clear();
+        NotReviewed.Clear();
         foreach (AuthenticationClaimRequirement? authenticationClaimRequirement in PolicyRequirements)
         {
             if (authenticationClaimRequirement.beenReviewed)

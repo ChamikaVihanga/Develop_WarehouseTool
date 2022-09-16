@@ -47,10 +47,7 @@ namespace admin.workspace.Client.Interceptor
             {
 
                 _navigation.NavigateTo($"/ErrorPage/{(int)e.Response.StatusCode} - {e.Response.ReasonPhrase}");
-                Console.WriteLine((int)e.Response.StatusCode);
-                Console.WriteLine(e.Response.ReasonPhrase);
-                Console.WriteLine(e.Response.IsSuccessStatusCode);
-                Console.WriteLine(e.Response);
+
             }
 
         }

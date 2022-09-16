@@ -4,7 +4,7 @@
 
     <DialogContent>
         <MudTextField T="string" @bind-Text="@pathName" OnBlur="Review" Margin="Margin.Dense" Label="Action Name" Variant="Variant.Outlined" Lines="1" />
-        <MudAlert Severity="Severity.Normal" NoIcon="true" Class="mb-2 mt-3">@SelectedAuthRequirement?.Uri</MudAlert>
+            <MudAlert Severity="Severity.Normal" NoIcon="true" Class="mb-2 mt-3">@SelectedAuthRequirement?.Uri<MudIconButton OnClick="RemovePath" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton></MudAlert>
         
     </DialogContent>
     <DialogActions>
@@ -98,12 +98,19 @@
         pathName = SelectedAuthRequirement.RequirementName;
         Description = SelectedAuthRequirement.description;
     }
-    async void RemoveClaimValue(MudChip chip)
+    async void RemoveClaimValue(MudChip? chip)
     {
-        Console.WriteLine(chip.Target);
-        var response = await http.PostAsJsonAsync<DataTransferObject.ClaimValueDTO>("api/AuthenticationPolicyRequirement/DeleteBindValues", new DataTransferObject.ClaimValueDTO { ValueId = Int32.Parse(chip.Target), RequirementId = SelectedRequirementId });
+
+        var response = await http.PostAsJsonAsync<DataTransferObject.ClaimValueDTO>("api/AuthenticationPolicyRequirement/DeleteBindValues", new DataTransferObject.ClaimValueDTO { ValueId = Int32.Parse(chip?.Target), RequirementId = SelectedRequirementId });
         await OnInitializedAsync();
         await InvokeAsync(StateHasChanged);
+    }
+    async void RemovePath()
+    {
+
+        var response = await http.PostAsJsonAsync<DataTransferObject.ClaimValueDTO>("api/AuthenticationPolicyRequirement/DeleteBindValues", new DataTransferObject.ClaimValueDTO {  RequirementId = SelectedRequirementId });
+        Cancel();
+
     }
 
     void setADGroups(){
