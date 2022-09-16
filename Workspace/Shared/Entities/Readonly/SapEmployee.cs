@@ -30,8 +30,9 @@ namespace Workspace.Shared.Entities.Readonly
         [Column(TypeName = "varchar(100)")]
         public string? Position { get; set; }
         public Guid? WorkContractId { get; set; }
-        public Guid? OrganizationalUnitId { get; set; }
-        public Guid? PlantInfoId { get; set; }
+
+        //public Guid? OrganizationalUnitId { get; set; }
+        //public Guid? PlantInfoId { get; set; }
         public DateTime? JoinDate { get; set; }
 
         [Column(TypeName = "varchar(20)")]
@@ -51,6 +52,16 @@ namespace Workspace.Shared.Entities.Readonly
         [Column(TypeName = "varchar(100)")]
         public string? Source { get; set; }
         public bool IsActive { get; set; } = true;
+
+
+        public Guid SapOrganizationalUnitId { get; set; }
+        public SapOrganizationalUnit SapOrganizationalUnit { get; set; }
+
+        public Guid SapPlantId { get; set; }
+        public SapPlant SapPlant { get; set; }
+
+        public Guid SapWorkContractId { get; set; }
+        public SapWorkContract SapWorkContract { get; set; }
 
     }
 }

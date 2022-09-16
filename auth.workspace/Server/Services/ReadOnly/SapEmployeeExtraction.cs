@@ -52,7 +52,8 @@ namespace admin.workspace.Server.Services.ReadOnly
         }
 
 
-        public async Task<ServiceResponse<List<SapCostCenter>>> GetUpdatedSapCostCenters()
+        public async Task<ServiceResponse<List<SapCostCenter>>> GetUpdatedSapCostCenters() // Add foreign key
+
         {
             //List all distinct values of Cost Centers in SAP
             var CostCentersFromSap = await _context.Vs_Employees.Select(x => x.CostCenterID).Distinct().ToListAsync();
@@ -69,7 +70,7 @@ namespace admin.workspace.Server.Services.ReadOnly
                 sapCostCenter.Title = DetailFromSap.CostCenterName;
 
                 //Check the Costcenter ID availability
-                bool exist =  _context.SapCostCenters.Where(x => x.Code == costCenter).Any();
+                bool exist = _context.SapCostCenters.Where(x => x.Code == costCenter).Any();
                 if (!exist)
                 {
                     //Create new if not available
@@ -94,40 +95,48 @@ namespace admin.workspace.Server.Services.ReadOnly
             var OrganizationalUnitsFromSap = await _context.Vs_Employees.Select(x => x.OrganizationalUnitID).Distinct().ToListAsync();
 
 
-            foreach (var organizationalUnit in OrganizationalUnitsFromSap)
+            foreach (var VsEmployeeOrganizationalUnit in OrganizationalUnitsFromSap)
             {
-                // Assign the value
+
+                //Create a SapOrganizationalUnit instant and Assign Organizational Unit
                 SapOrganizationalUnit? sapOrganizationalUnit = new();
-                Vs_Employee DetailFromSap = new();
+                sapOrganizationalUnit.Code = VsEmployeeOrganizationalUnit;
+
+                //Create a Vs_Employee instant
+                //Get data for that row from Vs Employee
+                // Asign data
+                Vs_Employee DetailFromVsEmployee = new();
+                DetailFromVsEmployee = await _context.Vs_Employees.Where(x => x.OrganizationalUnitID == VsEmployeeOrganizationalUnit).FirstOrDefaultAsync();
+                sapOrganizationalUnit.Code = DetailFromVsEmployee.OrganizationalUnitID;
+                sapOrganizationalUnit.Title = DetailFromVsEmployee.OrganizationalUnit;
+
+
+                // get primary key from SapCostcenters
+                // Asign data
+                var CostCenterGuid = await _context.SapCostCenters.Where(x => x.Code == DetailFromVsEmployee.OrganizationalUnitID).FirstOrDefaultAsync();
+                //sapOrganizationalUnit.SapCostCenterId = CostCenterGuid.Id;
+
                 //sapCostCenter.Code = Int32.Parse(costCenter);
-                sapOrganizationalUnit.Code = organizationalUnit;
-                DetailFromSap = await _context.Vs_Employees.Where(x => x.OrganizationalUnitID == organizationalUnit).FirstOrDefaultAsync();
-
-                SapCostCenter foreignKey = new();
+                //sapOrganizationalUnit.Code = organizationalUnit;
+                //SapCostCenter foreignKey = new();
                 //foreignKey = await _context.SapCostCenters.Where(x=>x.Code == organizationalUnit).FirstOrDefault();
-
-                sapOrganizationalUnit.SapCostCenterId = foreignKey.Id;
-
-                sapOrganizationalUnit.Title = DetailFromSap.OrganizationalUnit;
-
-
-
+                //sapOrganizationalUnit.SapCostCenterId = foreignKey.Id;
+                //sapOrganizationalUnit.Title = DetailFromSap.OrganizationalUnit;
                 //sapOrganizationalUnit.SapCostCenterId =
-
                 //Check the Organizational Unit ID availability
-                bool exist = _context.SapOrganizationalUnits.Where(x => x.Code == organizationalUnit).Any();
+                bool exist = _context.SapOrganizationalUnits.Where(x => x.Code == VsEmployeeOrganizationalUnit).Any();
                 if (!exist)
                 {
                     //Create new if not available
                     _context.SapOrganizationalUnits.Add(sapOrganizationalUnit);
                 }
-                else
-                {
-                    SapOrganizationalUnit ExixtingData = new();
-                     ExixtingData = await _context.SapOrganizationalUnits.Where(x => x.Code == organizationalUnit).FirstOrDefaultAsync();
-                    sapOrganizationalUnit.Id = ExixtingData.Id;
-                    _context.Entry(sapOrganizationalUnit).State = EntityState.Modified;
-                }
+                //else
+                //{
+                //    SapOrganizationalUnit ExixtingData = new();
+                //     ExixtingData = await _context.SapOrganizationalUnits.Where(x => x.Code == organizationalUnit).FirstOrDefaultAsync();
+                //    sapOrganizationalUnit.Id = ExixtingData.Id;
+                //    _context.Entry(sapOrganizationalUnit).State = EntityState.Modified;
+                //}
                 await _context.SaveChangesAsync();
 
             }

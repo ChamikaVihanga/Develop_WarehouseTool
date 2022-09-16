@@ -4,6 +4,7 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    partial class WorkspaceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220916163615_Relationship1")]
+    partial class Relationship1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -366,7 +368,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<Guid>("SapPlantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SapWorkContractId")
+                    b.Property<Guid?>("SapWorkContractId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Source")
@@ -896,17 +898,13 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Workspace.Shared.Entities.Readonly.SapWorkContract", "SapWorkContract")
+                    b.HasOne("Workspace.Shared.Entities.Readonly.SapWorkContract", null)
                         .WithMany("SapEmployees")
-                        .HasForeignKey("SapWorkContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SapWorkContractId");
 
                     b.Navigation("SapOrganizationalUnit");
 
                     b.Navigation("SapPlant");
-
-                    b.Navigation("SapWorkContract");
                 });
 
             modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapOrganizationalUnit", b =>

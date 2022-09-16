@@ -12,7 +12,6 @@ namespace admin.workspace.Server.Controllers.ReadOnly
     public class SapEmployeeExtractionsController : ControllerBase
     {
         private ISapEmployeeExtraction _iSapEmployeeExtraction;
-
         private readonly IEnumerable<EndpointDataSource> _endpointSources;
 
         public SapEmployeeExtractionsController(ISapEmployeeExtraction iSapEmployeeExtraction, IEnumerable<EndpointDataSource> endpointSources)
@@ -23,6 +22,15 @@ namespace admin.workspace.Server.Controllers.ReadOnly
 
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<SapEmployee>>> GetAllVsEmployees()
+
+        {
+            var result = await _iSapEmployeeExtraction.GetSapEmployees();
+            return Ok(result);
+
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ServiceResponse<SapEmployee>>> GetAllVsEmployees(int id)
 
         {
             var result = await _iSapEmployeeExtraction.GetSapEmployees();
@@ -58,7 +66,7 @@ namespace admin.workspace.Server.Controllers.ReadOnly
 
 
 
-        [HttpGet("endpoints")]
+        [HttpGet]
         public async Task<ActionResult> ListAllEndpoints()
         {
             var endpoints = _endpointSources

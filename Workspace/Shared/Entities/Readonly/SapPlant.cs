@@ -12,5 +12,6 @@ namespace Workspace.Shared.Entities.Readonly
         public string? Code { get; set; }
         public string? Title { get; set; }
         public bool IsActive { get; set; } = true;
+        public List<SapCostCenter> SapCostCenters { get; set; }
     }
 }

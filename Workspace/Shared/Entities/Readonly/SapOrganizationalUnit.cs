@@ -13,5 +13,8 @@ namespace Workspace.Shared.Entities.Readonly
         public string? Title { get; set; }
         public Guid? SapCostCenterId { get; set; }
         public bool IsActive { get; set; } = true;
+        public SapCostCenter SapCostCenter { get; set; }
+        public List<SapEmployee> SapEmployees { get; set; }
+
     }
 }

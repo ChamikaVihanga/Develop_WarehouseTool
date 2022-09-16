@@ -1,10 +1,11 @@
 ﻿using admin.workspace.Server.Services.ReadOnly;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace admin.workspace.Server.Controllers.ReadOnly
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[Action]")]
     [ApiController]
     public class Vs_EmployeesController : ControllerBase
     {
@@ -21,12 +22,5 @@ namespace admin.workspace.Server.Controllers.ReadOnly
             var result = await _iEmployeeService.GetAllVsEmployees();
             return Ok(result);
         }
-
-
-        private void UpdateCostcenters()
-        {
-
-        }
-
     }
 }

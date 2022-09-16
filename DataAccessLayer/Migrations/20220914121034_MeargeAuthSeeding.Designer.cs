@@ -4,6 +4,7 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(WorkspaceDbContext))]
-    partial class WorkspaceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220914121034_MeargeAuthSeeding")]
+    partial class MeargeAuthSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -287,15 +289,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("SapPlantId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SapPlantId");
 
                     b.ToTable("SapCostCenters");
                 });
@@ -348,6 +345,12 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("NickName")
                         .HasColumnType("varchar(100)");
 
+                    b.Property<Guid?>("OrganizationalUnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PlantInfoId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Position")
                         .HasColumnType("varchar(100)");
 
@@ -360,15 +363,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("SapNo")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("SapOrganizationalUnitId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SapPlantId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SapWorkContractId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Source")
                         .HasColumnType("varchar(100)");
 
@@ -376,12 +370,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SapOrganizationalUnitId");
-
-                    b.HasIndex("SapPlantId");
-
-                    b.HasIndex("SapWorkContractId");
 
                     b.ToTable("SapEmployee");
                 });
@@ -405,8 +393,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SapCostCenterId");
 
                     b.ToTable("SapOrganizationalUnits");
                 });
@@ -871,53 +857,6 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("AuthenticationClaim");
                 });
 
-            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapCostCenter", b =>
-                {
-                    b.HasOne("Workspace.Shared.Entities.Readonly.SapPlant", "SapPlant")
-                        .WithMany("SapCostCenters")
-                        .HasForeignKey("SapPlantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SapPlant");
-                });
-
-            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapEmployee", b =>
-                {
-                    b.HasOne("Workspace.Shared.Entities.Readonly.SapOrganizationalUnit", "SapOrganizationalUnit")
-                        .WithMany("SapEmployees")
-                        .HasForeignKey("SapOrganizationalUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Workspace.Shared.Entities.Readonly.SapPlant", "SapPlant")
-                        .WithMany()
-                        .HasForeignKey("SapPlantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Workspace.Shared.Entities.Readonly.SapWorkContract", "SapWorkContract")
-                        .WithMany("SapEmployees")
-                        .HasForeignKey("SapWorkContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SapOrganizationalUnit");
-
-                    b.Navigation("SapPlant");
-
-                    b.Navigation("SapWorkContract");
-                });
-
-            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapOrganizationalUnit", b =>
-                {
-                    b.HasOne("Workspace.Shared.Entities.Readonly.SapCostCenter", "SapCostCenter")
-                        .WithMany("OrganizationalUnits")
-                        .HasForeignKey("SapCostCenterId");
-
-                    b.Navigation("SapCostCenter");
-                });
-
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationDetail", b =>
                 {
                     b.HasOne("Workspace.Shared.Entities.Warehouse.OperationList", "OperationList")
@@ -963,26 +902,6 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("Workspace.Shared.AuthData.AuthenticationClaimGroup", b =>
                 {
                     b.Navigation("AuthenticationClaimRequirement");
-                });
-
-            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapCostCenter", b =>
-                {
-                    b.Navigation("OrganizationalUnits");
-                });
-
-            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapOrganizationalUnit", b =>
-                {
-                    b.Navigation("SapEmployees");
-                });
-
-            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapPlant", b =>
-                {
-                    b.Navigation("SapCostCenters");
-                });
-
-            modelBuilder.Entity("Workspace.Shared.Entities.Readonly.SapWorkContract", b =>
-                {
-                    b.Navigation("SapEmployees");
                 });
 
             modelBuilder.Entity("Workspace.Shared.Entities.Warehouse.OperationList", b =>

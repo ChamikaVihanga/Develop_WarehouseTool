@@ -12,5 +12,9 @@ namespace Workspace.Shared.Entities.Readonly
         public string? Code { get; set; }
         public string? Title { get; set; }
         public bool IsActive { get; set; } = true;
+
+        public Guid SapPlantId { get; set; }
+        public SapPlant SapPlant { get; set; }
+        public List<SapOrganizationalUnit>? OrganizationalUnits { get; set; }
     }
 }

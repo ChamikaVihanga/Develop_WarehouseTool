@@ -12,5 +12,7 @@ namespace Workspace.Shared.Entities.Readonly
         public int? Level { get; set; }
         public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
+
+        public List<SapEmployee> SapEmployees { get; set; }
     }
 }

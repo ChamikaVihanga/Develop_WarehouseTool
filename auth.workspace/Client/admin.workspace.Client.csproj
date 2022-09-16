@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Document\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 
