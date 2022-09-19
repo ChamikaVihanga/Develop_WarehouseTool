@@ -1,9 +1,10 @@
 ﻿
 @inject IJSRuntime JsRuntime
-
+<MudOverlay Visible="isVisible" DarkBackground="true" Absolute="true"></MudOverlay>
 @code {
 
-    [Parameter]public EventCallback<bool> bakErrorContent { get; set; }
+    private bool isVisible;
+    [Parameter]public EventCallback bakErrorContent { get; set; }
     [Parameter]public string? Error { get; set; }
 
 
@@ -11,7 +12,7 @@
       
         await JsRuntime.InvokeVoidAsync("alert", $"{Error}");
       
-        await bakErrorContent.InvokeAsync(true);
+        await bakErrorContent.InvokeAsync();
        
     
      
