@@ -7,16 +7,16 @@ namespace admin.workspace.Client.Interceptor
 {
     public class InterceptorServiceGlobal : IDisposable
     {
-        private Snackbar _snackbar;
+        private ISnackbar _snackbar;
         private readonly HttpClient HttpClient;
 
         private readonly HttpClientInterceptor HttpClientInterceptor;
 
         private readonly NavigationManager _navigation;
-        public InterceptorServiceGlobal(IHttpClientFactory httpClientFactory, HttpClientInterceptor httpClientInterceptor, NavigationManager navigationManager)
+        public InterceptorServiceGlobal(IHttpClientFactory httpClientFactory, HttpClientInterceptor httpClientInterceptor, NavigationManager navigationManager, ISnackbar snackbar)
         {
             _navigation = navigationManager;
-
+            _snackbar = snackbar;
             this.HttpClient = httpClientFactory.CreateClient("for InterceptorServiceGlobal");
             this.HttpClientInterceptor = httpClientInterceptor;
 
@@ -48,6 +48,14 @@ namespace admin.workspace.Client.Interceptor
 
                 _navigation.NavigateTo($"/ErrorPage/{(int)e.Response.StatusCode} - {e.Response.ReasonPhrase}");
 
+            }
+            if (e.Response.IsSuccessStatusCode)
+            {
+                if (e.Request.Method == HttpMethod.Post || e.Request.Method == HttpMethod.Put || e.Request.Method == HttpMethod.Delete || e.Request.Method == HttpMethod.Patch)
+                {
+                    _snackbar.Add($"Server-response: {e.Response.StatusCode}", Severity.Success);
+
+                }
             }
 
         }
