@@ -53,6 +53,7 @@ namespace Workspace.Server.Controllers.Warehouse
             List<OperationDetail> UpcommingRecords = new List<OperationDetail>();
             UpcommingRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
 
+
             foreach (int a in listIds)
             {
                 List<OperationDetail> UpcommingDetails = UpcommingRecords.Where(b => b.OperationListId == a).ToList();
@@ -64,6 +65,7 @@ namespace Workspace.Server.Controllers.Warehouse
             }
 
             return getUpcommingOperations;
+
 
         }
 
