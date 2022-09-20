@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,7 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
         // GET: api/OperationLists/Active
-        [HttpGet("Active")]
+        [HttpGet("Active"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<IEnumerable<OperationDetail>>> GetActiveOperationLists()
         {
             if (_context.OperationLists == null)
@@ -45,32 +46,30 @@ namespace Workspace.Server.Controllers.Warehouse
 
     
             var opDetail = await _context.OperationDetails.Include(a => a.OperationList).ToListAsync();
-            List<OperationDetail> getUpcommingOperations = new List<OperationDetail>();
+            List<OperationDetail> getActiveOperations = new List<OperationDetail>();
 
             List<int> listIds = new List<int>();
             listIds = opDetail.Select(a => a.Id).Distinct().ToList();
 
-            List<OperationDetail> UpcommingRecords = new List<OperationDetail>();
-            UpcommingRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
+            List<OperationDetail> ActiveRecords = new List<OperationDetail>();
+            ActiveRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
 
 
             foreach (int a in listIds)
             {
-                List<OperationDetail> UpcommingDetails = UpcommingRecords.Where(b => b.OperationListId == a).ToList();
-                OperationDetail? maxDate = UpcommingDetails.MaxBy(p => p.EffectiveDate);
+                List<OperationDetail> ActiveDetails = ActiveRecords.Where(b => b.OperationListId == a).ToList();
+                OperationDetail? maxDate = ActiveDetails.MaxBy(p => p.EffectiveDate);
                 if (maxDate != null)
                 {
-                    getUpcommingOperations.Add(maxDate);
+                    getActiveOperations.Add(maxDate);
                 }
             }
-
-            return getUpcommingOperations;
-
-
+            return getActiveOperations;
         }
 
 
         // GET: api/OperationLists/Upcoming
+        //[HttpGet("Upcoming"), Authorize(Policy = "VSPolicy")]
         [HttpGet("Upcoming")]
         public async Task<ActionResult<IEnumerable<OperationDetail>>> GetUpcomingOperationLists()
         {
@@ -101,15 +100,13 @@ namespace Workspace.Server.Controllers.Warehouse
                     getUpcommingOperations.Add(minDate);
                 }
             }
-
             return getUpcommingOperations;
-
         }
 
 
         //.Include(x => x.OperationDetails)
-        // GET: api/OperationLists/5
-        [HttpGet("{id}")]
+        // GET: api/OperationLists/getOperationName/5
+        [HttpGet, Route("getOperationName")]
         public async Task<ActionResult<OperationList>> GetOperationList(int id)
         {
             if (_context.OperationLists == null)
@@ -131,34 +128,51 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // PUT: api/OperationLists/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
+        [HttpPut, Authorize(Policy = "VSPolicy")]
+        public async Task<ActionResult<List<OperationList>>> EditOperationName(OperationList operationList, int id)
         {
-            if (id != operationList.Id)
-            {
-                return BadRequest();
-            }
+            var editOpName = await _context.OperationLists
+                    .Include(a => a.OperationDetails)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+            if(editOpName == null)
+                return NotFound("Not Found");
 
-            _context.Entry(operationList).State = EntityState.Modified;
+            editOpName.Name = operationList.Name;  
+            editOpName.Id = id;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OperationListExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Changes have been successfully saved");
         }
+
+
+        //public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
+        //{
+        //    if (id != operationList.Id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _context.Entry(operationList).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!OperationListExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
 
         // POST: api/OperationLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -179,7 +193,6 @@ namespace Workspace.Server.Controllers.Warehouse
             }
           OperationList operationActivation = new OperationList();
             operationActivation.IsActive = operationList.IsActive;
-
 
             _context.OperationLists.Add(operationList);
             await _context.SaveChangesAsync();
