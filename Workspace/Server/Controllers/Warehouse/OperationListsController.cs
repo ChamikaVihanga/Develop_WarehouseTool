@@ -54,6 +54,7 @@ namespace Workspace.Server.Controllers.Warehouse
             List<OperationDetail> ActiveRecords = new List<OperationDetail>();
             ActiveRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
 
+
             foreach (int a in listIds)
             {
                 List<OperationDetail> ActiveDetails = ActiveRecords.Where(b => b.OperationListId == a).ToList();
@@ -68,7 +69,8 @@ namespace Workspace.Server.Controllers.Warehouse
 
 
         // GET: api/OperationLists/Upcoming
-        [HttpGet("Upcoming"), Authorize(Policy = "VSPolicy")]
+        //[HttpGet("Upcoming"), Authorize(Policy = "VSPolicy")]
+        [HttpGet("Upcoming")]
         public async Task<ActionResult<IEnumerable<OperationDetail>>> GetUpcomingOperationLists()
         {
             if (_context.OperationLists == null)
@@ -103,8 +105,8 @@ namespace Workspace.Server.Controllers.Warehouse
 
 
         //.Include(x => x.OperationDetails)
-        // GET: api/OperationLists/5
-        [HttpGet("{id}")]
+        // GET: api/OperationLists/getOperationName/5
+        [HttpGet, Route("getOperationName")]
         public async Task<ActionResult<OperationList>> GetOperationList(int id)
         {
             if (_context.OperationLists == null)
@@ -126,7 +128,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // PUT: api/OperationLists/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut, Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<List<OperationList>>> EditOperationName(OperationList operationList, int id)
         {
             var editOpName = await _context.OperationLists
@@ -142,33 +144,35 @@ namespace Workspace.Server.Controllers.Warehouse
 
             return Ok("Changes have been successfully saved");
         }
-        public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
-        {
-            if (id != operationList.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(operationList).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OperationListExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
+        //{
+        //    if (id != operationList.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return NoContent();
-        }
+        //    _context.Entry(operationList).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!OperationListExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
 
         // POST: api/OperationLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

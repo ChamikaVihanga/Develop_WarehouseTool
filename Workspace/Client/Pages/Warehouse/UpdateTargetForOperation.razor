@@ -30,7 +30,7 @@
     </MudItem>
     <MudItem xs="12">
         <MudPaper Elevation="1">
-            <MudTable Items="updateRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@borded">
+            <MudTable Items="updateRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="true" Bordered="@borded">
                 <HeaderContent>
                     <MudTh><b>Create Date</b></MudTh>
                     <MudTh><b>Target</b></MudTh>
@@ -47,7 +47,7 @@
                     <MudTd>@context.CreatedBy</MudTd>
                     <MudTd>
                         <MudTooltip Text="Edit Target" Placement="Placement.Right">
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@((e) => OpenEditDialog())"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@((e) => OpenEditDialog(context.Id))"></MudIconButton>   @*---> get operationDetail id*@
                         </MudTooltip>
                     </MudTd>
                 </RowTemplate>
@@ -73,8 +73,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        operationList = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/{id}");
-        name = operationList.Name;
+        operationList = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/getOperationName?id={id}");
+        name = operationList?.Name;
         updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails/{id}");
     }
 
@@ -97,19 +97,29 @@
     {
         var parameter = new DialogParameters();
         parameter.Add("id", id);
-        parameter.Add("IsOperationNew", true);
-        var createDialog = Dialog.Show<_EditOperationTable>(" Create New Update Form", parameter, maxWidthScreen);
+        parameter.Add("IsOperationNew", true);       
+        var createDialog = Dialog.Show<_EditOperationTable>("Create New Update Form", parameter, maxWidthScreen);
         var responseCreate = await createDialog.Result;
 
-        if(!responseCreate.Cancelled){
+        if(!responseCreate.Cancelled)
+        {
             await OnInitializedAsync();
         }
     }
-    private void OpenEditDialog()
+    private async Task OpenEditDialog(int Detailid)
     {
         var parameter = new DialogParameters();
         parameter.Add("id", id);
-        parameter.Add("datedisable", false);
-        Dialog.Show<_EditOperationTable>("Edit Form", parameter, maxWidthScreen);
+        parameter.Add("datedisable", true);
+        parameter.Add("DetailId", Detailid);
+        parameter.Add("warnnigMessage", true);
+        parameter.Add("selectedDate", true);
+        var editDialog = Dialog.Show<_EditOperationTable>("Edit Form", parameter, maxWidthScreen);
+        var responseEdit = await editDialog.Result;
+
+        if(!responseEdit.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
     }
 }

@@ -29,25 +29,27 @@ else
 
 @code {
     [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; }
-    
+    MudDialogInstance? MudDialog { get; set; }
+
     public OperationList? operationList { get; set; }
 
     OperationList _operationList = new OperationList();
 
+    public string? opName { get; set; }
+
     [Parameter]
     public int id { get; set; }
 
-    void Cancel() => MudDialog.Cancel();
+    void Cancel() => MudDialog?.Cancel();
 
     private async Task Submit()
     {
-        if (!string.IsNullOrWhiteSpace(operationList.Name))
+        if (!string.IsNullOrWhiteSpace(operationList?.Name))
         {
-            var editOperationNameResponse = await Http.PutAsJsonAsync<OperationList?>($"api/OperationLists/{id}", operationList);
+            var editOperationNameResponse = await Http.PutAsJsonAsync<OperationList?>($"api/OperationLists?id={id}", operationList);
             string nameEditResponse = editOperationNameResponse.Content.ReadAsStringAsync().Result;
             showBar(nameEditResponse);
-            MudDialog.Close(DialogResult.Ok(true));
+            MudDialog?.Close(DialogResult.Ok(true));
         }
     }
     void showBar(string getonlystringvalue)
@@ -57,7 +59,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        operationList = await Http.GetFromJsonAsync<OperationList?>($"api/OperationLists/{id}");
+        operationList = await Http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
     }
 }
 

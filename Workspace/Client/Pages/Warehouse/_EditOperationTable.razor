@@ -7,7 +7,7 @@
 {
     <MudDialog>
         <DialogContent>
-            <MudTextField @bind-Value="operationList.Name" Label="Operation Name" ReadOnly="true"></MudTextField>      
+            <MudTextField @bind-Value="operationList.Name" Label="Operation Name" ReadOnly="true"></MudTextField>
             <MudGrid>
                 <MudItem xs="3">
                     <MudTextField @bind-Value="operationEdit.Target" Label="Target"></MudTextField>
@@ -22,17 +22,19 @@
                     </MudSelect>
                 </MudItem>
             </MudGrid>
-            @*<MudDatePicker PickerVariant="PickerVariant.Dialog"  @ref="_picker" Label="Effective Date">*@ @*@bind-Text="newdate"*@
-                @*<PickerActions>
-                    <MudButton Variant="Variant.Filled" OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-                </PickerActions>
-            </MudDatePicker>*@
-
-            <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="newdate" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
-            <br />
-            @*<MudText> Line No: @id</MudText>*@
-            <MudGrid>
+           @* @if (selectedDate)
+            {
+                <MudTextField @bind-Value="operationDetail.EffectiveDate" Label="Effective from this month" ReadOnly="true"></MudTextField>
+            }
+            else
+            {*@
+                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="newdate" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>  @* ReadOnly="@datedisable"*@
+            @*}*@
+            @if (warnnigMessage)
+            {
+                <MudText Class="indigo-text text-accent-4 mt-3"><i>The target of the operation you change, will be effective for the entire month</i></MudText>
+            }
+            <MudGrid Class="mt-2">
                 <MudItem xs="6"></MudItem>
                 <MudItem xs="3" Class="d-flex justify-end">
                     <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="Cancel">Cancel</MudButton>
@@ -40,7 +42,7 @@
                 <MudItem xs="3" Class="d-flex justify-end">
                     @if (operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.TimePeriod == null || newdate == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0)
                     {
-                        <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit" Disabled="@datedisable">Ok</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit" Disabled="true">Ok</MudButton>
                     }
                     else
                     {
@@ -57,52 +59,64 @@ else
 }
 
 @code {
-    DateTime? newdate;
+    MudDatePicker _picker;
+
+    public DateTime? newdate { get; set; }
+
+    [CascadingParameter]
+    MudDialogInstance? MudDialog { get; set; }
 
     [Parameter]
-    public bool datedisable { get; set; } = true;
+    public bool datedisable { get; set; } = false;
+
+    [Parameter]
+    public bool warnnigMessage { get; set; } = false;
+
+    [Parameter]
+    public bool selectedDate { get; set; } = false;
 
     [Parameter]
     public bool IsOperationNew { get; set; }
 
-    MudDatePicker _picker;
-    public DateTime? selectedDate { get; set; }
+    [Parameter]
+    public int id { get; set; }
 
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public int DetailId { get; set; }
 
-    [Parameter] public int id { get; set; }
-
-    void Cancel() => MudDialog.Cancel();
-
-    //private OperationList? List { get; set; }
-
-    //public OperationDetail? operation { get; set; } = new OperationDetail();
+    void Cancel() => MudDialog?.Cancel();
 
     OperationDetail? operationEdit = new OperationDetail();
-    //OperationList? _operationList = new OperationList();
 
     public OperationList? operationList { get; set; }
-
-    //Display primary value --> To line no: 23
-    //private string? fixValue { get; set; }
+    public OperationDetail? operationDetail { get; set; }
 
     private async Task Submit()
     {
+        StateHasChanged();
+
         if (IsOperationNew)
         {
             operationEdit.OperationListId = id;
             operationEdit.EffectiveDate = (DateTime)newdate;
             operationEdit.CreatedBy = "Unknowen User";
             var newUpdateResponse = await http.PostAsJsonAsync<OperationDetail>("api/OperationDetailsAPI/DetailsOnly", operationEdit);
-            MudDialog.Close(DialogResult.Ok(true));
+            MudDialog?.Close(DialogResult.Ok(true));
 
             string streditResponse = newUpdateResponse.Content.ReadAsStringAsync().Result;
             showBar(streditResponse);
-        }else{
-            //var editResponse = await http.PutAsJsonAsync<OperationList>($"api/OperationLists?id={id}", _operationList);
-            showBar("aaaa");
+        }
+        else
+        {
+            operationEdit.Id = DetailId;
+            operationEdit.EffectiveDate = (DateTime)newdate;
+            operationEdit.CreatedBy = "User";
+            var editResponse = await http.PutAsJsonAsync<OperationDetail>($"api/OperationDetailsAPI?id={DetailId}", operationEdit);
+            MudDialog?.Close(DialogResult.Ok(true));
+            showBar("Operation target edited successfully");
         }
     }
+
     void showBar(string stringvalue)
     {
         snackmassagebar.Add($"{stringvalue}", Severity.Success, config => { config.ShowCloseIcon = false; });
@@ -110,6 +124,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        operationList = await http.GetFromJsonAsync<OperationList?>($"api/OperationLists/{id}");
+        operationList = await http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
+        //operationDetail = await http.GetFromJsonAsync<OperationDetail?>($"api/OperationDetailsAPI/{DetailId}");
     }
 }
