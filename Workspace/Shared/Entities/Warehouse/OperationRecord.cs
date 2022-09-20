@@ -11,7 +11,7 @@
 
 
         public int VS_EmployeesId { get; set; }
-        public VS_Employees? VS_Employees { get; set; }
+        public VS_Employees_1? VS_Employees { get; set; }
         //.....
 
         public DateTime StartTime { get; set; }

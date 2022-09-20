@@ -1,12 +1,20 @@
 global using Microsoft.EntityFrameworkCore;
 
+
+global using DataAccessLayer;
+
+global using Workspace.Shared;
+global using Workspace.Shared.Entities.Readonly;
+global using Workspace.Shared.AuthData;
+
+
 global using admin.workspace.Server.Authorization;
 global using Microsoft.AspNetCore.Authorization;
 global using admin.workspace.Server.Authorization.Handlers;
 global using admin.workspace.Server.Authorization.DataProviderInterfaces;
 global using admin.workspace.Server.Authorization.DataProviders;
-global using DataAccessLayer;
-global using Workspace.Shared.AuthData;
+
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -15,6 +23,10 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
 
 using System.Text.Json;
+using admin.workspace.Server.Services.ReadOnly;
+
+
+
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -94,6 +106,15 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthorizationHandler, CustomClaimCheckerHandler>();
 
 builder.Services.AddScoped<ICustomClaimChecker, CustomClaimChecker>();
+
+#region SAP Read Only tables
+
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ISapEmployeeExtraction, SapEmployeeExtraction>();
+
+
+#endregion SAP Read Only tables
+
 
 
 var app = builder.Build();

@@ -212,6 +212,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 operationDetail.TimeSpan = (int)operationSummeryDTO.AllocatedTime;
                 operationDetail.TimePeriod = operationSummeryDTO.TimePeriod;
                 operationDetail.OperationListId = lastRecordID;
+                operationDetail.OrganizationUnit = operationSummeryDTO.OrganizationUnit;
 
                 _context.OperationDetails.Add(operationDetail);
                 await _context.SaveChangesAsync();

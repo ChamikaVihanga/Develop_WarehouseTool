@@ -1,12 +1,11 @@
-﻿
-@inject HttpClient http
+﻿@inject HttpClient http
 <MudPaper Elevation="0">
     @if (manageRecord == null)
     {
         @*<MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
     <MudAlert ContentAlignment="HorizontalAlignment.Center" Severity="Severity.Warning" Variant="Variant.Filled">Enter sap Number and Create Date</MudAlert>*@
         <MudItem xs="12">
-            <MudPaper Elevation="0"  Class="d-flex align-center justify-center mud-width-full">
+            <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                 <MudItem xs="10">
                     <MudPaper Elevation="1">
                         @*<MudCard>*@
@@ -48,10 +47,10 @@
                 <MudTh><b>Start Time</b></MudTh>
                 <MudTh><b>End Time</b></MudTh>
                 <MudTh><b>Achivement</b></MudTh>
-                
+
             </HeaderContent>
             <RowTemplate>
-                <MudTd>@context.VS_Employees.LastName</MudTd>
+                <MudTd>@context.VS_Employees.FullName</MudTd>
                 <MudTd>@context.CreateDate.ToString("d")</MudTd>
                 <MudTd>@context.OperationList.Name</MudTd>
                 <MudTd>@context.StartTime.ToString("T")</MudTd>
@@ -59,17 +58,17 @@
 
                 @if (context.Achivement is null)
                 {
-                <MudTh></MudTh>
-                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+                    <MudTh></MudTh>
+                    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
                 }
                 else
                 {
-                <MudTd>@context.Achivement</MudTd>
+                    <MudTd>@context.Achivement</MudTd>
                 }
 
 
-        </RowTemplate>
-    </MudTable>
+            </RowTemplate>
+        </MudTable>
     }
 </MudPaper>
 
@@ -79,6 +78,36 @@
     private bool bordered = false;
 
     [Parameter]
-    public OperationRecord[]? manageRecord { get; set; }
+    public OperationRecord[]? manageRecord{ get;set; }
+
+    //public OperationRecord[]? _manageRecord;
+    //[Parameter]
+    //public OperationRecord[]? manageRecord
+
+    //{
+    //    get
+    //    {
+    //        return _manageRecord;
+    //    }
+    //    set
+    //    {
+    //        if(_manageRecord != value)
+    //        {
+    //            _manageRecord = value;
+    //            sortRecords();
+    //        }
+    //    }
+    //}
+
+    //void sortRecords()
+    //{
+    //    manageRecord1 = manageRecord?.Where(a => a. CreateDate.Date == DateTime.Today.Date).ToArray();
+    //    InvokeAsync(StateHasChanged);
+      
+    //}
+
+
+
+
 
 }

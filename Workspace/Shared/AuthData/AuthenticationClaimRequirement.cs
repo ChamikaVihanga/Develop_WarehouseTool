@@ -20,6 +20,6 @@ namespace Workspace.Shared.AuthData
         public AuthenticationClaimGroup? AuthenticationClaimGroup { get; set; }
 
         public ICollection<AuthenticationClaimValue>? authenticationClaimValues { get; set; }
-        public ICollection<AuthenticationADAssignedGroup> AuthenticationADAssignedGroups { get; set; }
+        public ICollection<AuthenticationADAssignedGroup>? AuthenticationADAssignedGroups { get; set; }
     }
 }
