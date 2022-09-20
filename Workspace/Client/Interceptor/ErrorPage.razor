@@ -2,13 +2,14 @@
 @page "/ErrorPage"
 @inject ISnackbar Snackbar
 
-<MudAlert Elevation="0" Style="font-size:medium" Severity="Severity.Error">Response status code does not indicate success: @statusCode</MudAlert>
 
+<MudAlert Elevation="0" Style="font-size:medium"  Severity="Severity.Error">Response status code does not indicate success: @statusCode</MudAlert>
 @code {
     [Parameter]
     public string? statusCode { get; set; }
 
-    protected override async Task OnInitializedAsync(){
+    protected override async Task OnInitializedAsync()
+    {
         AddSnackbar();
     }
 

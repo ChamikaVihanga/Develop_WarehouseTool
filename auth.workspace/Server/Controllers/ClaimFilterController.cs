@@ -16,7 +16,7 @@ namespace admin.workspace.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<AuthenticationClaimRequirement>>> Get(string path, string method)
         {
-            var claimRequirement = _context.AuthenticationClaimRequirements.Where(b => b.Uri == path).Count();
+            var claimRequirement = _context.AuthenticationClaimRequirements.Where(b => b.Uri == path && b.AuthenticationHttpMethods.HttpMethod == method).Count();
             if (claimRequirement == 0)
             {
                 AuthenticationClaimRequirement _ClaimRequirement = new AuthenticationClaimRequirement();

@@ -17,7 +17,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
 
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Policy ="VSPolicy")]
         public async Task<ActionResult<AuthenticationUserClaimsHolder>> GetUsers(string? UserName)
         {
             var user = _context.AuthenticationUserClaimsHolders
@@ -33,7 +33,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
 
         }
 
-        [HttpPost, Route("AddDomainUser")]
+        [HttpPost, Route("AddDomainUser"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<string>> AddDomainUser(AuthenticationUserClaimsHolder username)
         {
             try
@@ -50,7 +50,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
 
         }
 
-        [HttpGet, Route("GetUsersList")]
+        [HttpGet, Route("GetUsersList"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<List<AuthenticationUserClaimsHolder>>> GetUsersList()
         {
             try
@@ -66,7 +66,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
 
         
 
-        [HttpPost, Route("AddClaimValuesToUser")]
+        [HttpPost, Route("AddClaimValuesToUser"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<string>> AddClaimValuesToUser(DataTransferObject.ClaimValues Values)
         {
             AuthenticationClaimValue? ClaimValue = _context.AuthenticationClaimValues.Single(p => p.ClaimValueId == Values.ValueId);
@@ -92,7 +92,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
             return Ok();
         }
 
-        [HttpPost, Route("DeleteClaimsFromUsers")]
+        [HttpPost, Route("DeleteClaimsFromUsers"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<string>> DeleteClaimsFromUsers(DataTransferObject.ClaimValues claimValues)
         {
             try

@@ -1,0 +1,23 @@
+﻿
+@inject IJSRuntime JsRuntime
+<MudOverlay Visible="isVisible" DarkBackground="true" Absolute="true"></MudOverlay>
+@code {
+
+    private bool isVisible;
+    [Parameter]public EventCallback bakErrorContent { get; set; }
+    [Parameter]public string? Error { get; set; }
+
+
+    protected override async Task OnInitializedAsync(){
+      
+        await JsRuntime.InvokeVoidAsync("alert", $"{Error}");
+      
+        await bakErrorContent.InvokeAsync();
+       
+    
+     
+
+    }
+
+   
+}
