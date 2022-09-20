@@ -42,7 +42,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 return NotFound();
             }
 
-            var operationRecord = await _context.OperationRecords.Include(a => a.OperationList).Where(b => b.VS_EmployeesId == id).ToListAsync();
+            var operationRecord = await _context.OperationRecords.Include(a => a.OperationList).Where(b => b.SAPNo == id.ToString()).ToListAsync();
             if (operationRecord == null)
             {
                 return NotFound();
@@ -51,8 +51,7 @@ namespace Workspace.Server.Controllers.Warehouse
             return operationRecord;
         }
 
-        // GET: api/OperationRecords/Sap/Date
-        // GET: api/OperationRecords/12045/2022-06-03
+        // GET: api/OperationRecords/Filteer?id=12045&&SelectedDate=2022-06-03
 
         [HttpGet, Route("Filter")]
         public async Task<ActionResult<List<OperationRecord>>> OperationRecordsSapDate(int id, DateTime SelectedDate)
@@ -61,12 +60,24 @@ namespace Workspace.Server.Controllers.Warehouse
             var recordDate = await _context.OperationRecords
                 .Include(a => a.OperationList)
                 .ThenInclude(b => b.OperationDetails)
-                .Include(d => d.VS_Employees)
-                .Where(b => b.VS_EmployeesId == id)
+                .Where(b => b.SAPNo == id.ToString())
                 .ToListAsync();
 
             return recordDate;
         }
+
+        //Get: api/OperationRecords/Efficiency
+
+
+
+/*        [HttpGet("Efficiency")]
+
+        public async Task<ActionResult<List<OperationRecord>>> GetEfficiencyRecords()
+        {
+            return
+        }*/
+
+
 
         // PUT: api/OperationRecords/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

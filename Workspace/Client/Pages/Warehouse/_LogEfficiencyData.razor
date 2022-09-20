@@ -41,7 +41,7 @@
                 @*MudTextField @bind-Value="nullableInt" Placeholder="Search Unite" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>*@
             </ToolBarContent>
             <HeaderContent>
-                <MudTh><b>Name</b></MudTh>
+    
                 <MudTh><b>Date</b></MudTh>
                 <MudTh><b>Operation</b></MudTh>
                 <MudTh><b>Start Time</b></MudTh>
@@ -50,7 +50,7 @@
 
             </HeaderContent>
             <RowTemplate>
-                <MudTd>@context.VS_Employees.FullName</MudTd>
+         
                 <MudTd>@context.CreateDate.ToString("d")</MudTd>
                 <MudTd>@context.OperationList.Name</MudTd>
                 <MudTd>@context.StartTime.ToString("T")</MudTd>

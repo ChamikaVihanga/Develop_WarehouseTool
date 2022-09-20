@@ -10,9 +10,14 @@
         public string CostCenterName { get; set; }
         public string OrganizationalUnitID { get; set; }
         public string OrganizationalUnit { get; set; }
-        public string Position { get; set; }
-        //relation
-        public List<OperationRecord>? OperationRecords { get; set; }
+
+        public string Gender { get; set; }
+
+
+        public string Address { get; set; }
+
+
+
         public List<ShiftGroup>? shiftGroups { get; set; }   
     }
 }
