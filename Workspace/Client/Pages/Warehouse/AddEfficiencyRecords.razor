@@ -256,7 +256,7 @@
         GetOperationList();
     }
 
-    async Task GetPerationList()
+    async Task GetOperationList()
     {
         operationList = await httpClient.GetFromJsonAsync<OperationList[]>("api/OperationLists");
         dropDown = await httpClient.GetFromJsonAsync<List<OperationDetail>?>("/api/OperationLists/Active");
