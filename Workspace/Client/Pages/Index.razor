@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿
 
 
 <PageTitle>Workspace</PageTitle>
@@ -10,15 +10,15 @@
 <SurveyPrompt Title="Workspace solution v1.3.0" />
 
     <AuthorizeView Policy="ITOnly">
-    <Authorized>
-        <Counter StartNo="2"/>
-    </Authorized>
+        <Authorized>
+            <Counter StartNo="2"/>
+        </Authorized>
     <NotAuthorized></NotAuthorized>
     
 </AuthorizeView>
 
 
-
+<ComponentLibrary.Component1/>
 
 
 <MudGrid Class="mt-3">
@@ -52,7 +52,7 @@
 
 </MudGrid>
 
-                    
+
 <MudGrid>
     @for (int i = 0; i < 10; i++)
     {

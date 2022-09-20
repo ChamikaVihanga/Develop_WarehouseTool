@@ -1,0 +1,75 @@
+﻿@inject HttpClient http
+@inject IDialogService DialogService
+
+<MudGrid>
+    <MudItem xs="6"><MudText Typo="Typo.h6">Claims</MudText></MudItem><MudItem xs="6"><MudButton @onclick="ClaimManager" StartIcon="@Icons.Filled.Settings">Claim Manager</MudButton></MudItem>
+</MudGrid>
+
+
+<MudPaper MinHeight="70vh" MaxHeight="70vh" Class="p-3 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
+    <CompClaimList claimValue="getSeletedClaims" AuthenticationClaim="AuthenticationClaim"></CompClaimList>
+</MudPaper>
+
+<MudGrid>
+<MudItem xs="10"></MudItem>
+<MudItem xs="2">
+@if (claimValues?.ValueId is not null || claimValues?.ClaimId is not null)
+{
+    string claimOrValue = $"{claimValues?.claimName} : {claimValues?.Value}";
+    <MudTooltip Text="@claimOrValue" Arrow="true" Placement="Placement.Right">
+    <MudIconButton Color="Color.Error" @onclick="DeleteBindValues" Disabled="false" Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" aria-label="delete"></MudIconButton>
+    </MudTooltip>
+}
+else
+{
+    <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.Delete" aria-label="delete"></MudIconButton>
+}
+</MudItem>
+</MudGrid>
+@code {
+
+    public DataTransferObject.ClaimValues claimValues { get; set; }
+    public AuthenticationClaim[]? AuthenticationClaim { get; set; }
+
+    [Parameter] public EventCallback<string> OnClicks { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await getClaims();
+    }
+    public async Task getClaims()
+    {
+        AuthenticationClaim = await http.GetFromJsonAsync<AuthenticationClaim[]?>("api/AuthenticationClaims");
+    }
+    private async Task ClaimManager()
+    {
+
+        var parameter = new DialogParameters();
+        parameter.Add("Claims", AuthenticationClaim);
+
+        DialogOptions closeOnEscapeKey = new DialogOptions() { CloseOnEscapeKey = true };
+
+        var dialog = DialogService.Show<CompClaimManager>("Claim Manager", parameter, closeOnEscapeKey);
+        var resualt = await dialog.Result;
+
+        if (!resualt.Cancelled)
+        {
+            await getClaims();
+        }
+
+    }
+
+    async Task getSeletedClaims(DataTransferObject.ClaimValues claimValue)
+    {
+        claimValues = claimValue;
+    }
+
+    async Task DeleteBindValues()
+    {
+        var response = await http.PostAsJsonAsync<DataTransferObject.ClaimValues>("api/AuthenticationClaims/DeleteClaimsOrValues",claimValues);
+        await getClaims();
+    }
+
+
+
+}

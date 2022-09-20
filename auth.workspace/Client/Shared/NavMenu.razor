@@ -1,0 +1,48 @@
+﻿@*<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">VS Auth Manager</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Authentication/AuthorizationHandler">
+                <span class="oi oi-account-login" aria-hidden="true"></span> Authorization Handler
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="UserManager">
+                <span class="oi oi-account-login" aria-hidden="true"></span> User Manager
+            </NavLink>
+        </div>
+    </nav>
+</div>*@
+
+<MudPaper Width="250px" Elevation="0" Class="py-3">
+    <MudNavMenu Color="Color.Info">
+        <MudNavLink Icon="@Icons.Filled.Dashboard" Match="NavLinkMatch.Prefix" Href="">Dashboard</MudNavLink>
+        <MudNavLink Href="/UserManager" Icon="@Icons.Filled.AccountTree" Match="NavLinkMatch.Prefix">User Manager</MudNavLink>
+        <MudNavLink Href="/" Disabled="true">Instructions</MudNavLink>
+        <MudNavGroup Title="Settings" Expanded="true" Disabled="true">
+            <MudNavLink Href="/users">Users</MudNavLink>
+            <MudNavLink Href="/security">Security</MudNavLink>
+        </MudNavGroup>
+    </MudNavMenu>
+</MudPaper>
+
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

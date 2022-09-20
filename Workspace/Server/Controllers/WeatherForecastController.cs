@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Workspace.Shared;
+using Workspace.Shared.AuthData;
 
 namespace Workspace.Server.Controllers
 {
@@ -13,17 +15,19 @@ namespace Workspace.Server.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly WorkspaceDbContext _authContext;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, WorkspaceDbContext authDbContext)
         {
             _logger = logger;
+            _authContext = authDbContext;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Policy ="VSPolicy")]
         public IEnumerable<WeatherForecast> Get()
         {
             Thread.Sleep(3000);
-
+            
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
@@ -32,5 +36,7 @@ namespace Workspace.Server.Controllers
             })
             .ToArray();
         }
+
+        
     }
 }

@@ -6,19 +6,36 @@
 
 <AuthorizeView>
     <Authorized>
-   
-        <MudTooltip Text="@context.User.Identity.Name">
-            <MudFab Color="Color.Inherit" DisableElevation="true" Size="Size.Medium" @onclick="Logout" StartIcon="@Icons.Filled.AccountCircle" />
-        </MudTooltip>
-        
-        @*<button @onclick="Refresh" class="btn btn-danger">Refresh</button>*@
+        <MudMenu Icon="@Icons.Filled.AccountCircle" ActivationEvent="@MouseEvent.MouseOver" >
+            <ChildContent>
+                
+                <MudMenuItem Disabled="false" >@context.User.FindFirst("DisplayName").Value.Split(" ").First()</MudMenuItem>
+                <MudMenuItem Disabled="false" >@context.User.Identity.Name.ToString().ToUpper()</MudMenuItem>
+@*                <MudMenuItem>Profile</MudMenuItem>
+                <MudMenuItem>Settings</MudMenuItem>*@
+                <MudMenuItem @onclick="Logout">Sign Out</MudMenuItem>
+            </ChildContent>
+        </MudMenu>
     </Authorized>
     <NotAuthorized>
-        <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Medium" StartIcon="@Icons.Filled.Login" />
+        <MudTooltip Text="Login">
+            <MudFab Color="Color.Primary" DisableElevation="true" @onclick="Login" Size="Size.Small" StartIcon="@Icons.Filled.Login" />
+        </MudTooltip>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
+
+    public bool _isOpen;
+
+    public void ToggleOpen()
+    {
+        if (_isOpen)
+            _isOpen = false;
+        else
+            _isOpen = true;
+    }
+
     void Login()
     {
         NavigationManager.NavigateTo("login");
@@ -28,11 +45,13 @@
     {
         await LocalStorage.RemoveItemAsync("token");
         await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/login");
+
     }
     async Task Refresh()
     {
-      
-        var Token = await http.PostAsync("https://localhost:44322/api/Authentication/refresh-Token",null);
+
+        var Token = await http.PostAsync("https://auth.workspace.vsag.ch/api/Authentication/refresh-Token", null);
         var token = await Token.Content.ReadAsStringAsync();
         Console.WriteLine(token);
         await LocalStorage.RemoveItemAsync("token");

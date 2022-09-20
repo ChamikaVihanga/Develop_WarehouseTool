@@ -10,8 +10,5 @@ namespace Workspace.Server.Services.ResourceFacilityService
         Task<ServiceResponse<ReFaRequest>> CreateReFaRequest(ReFaRequest reFaRequest);
         Task<ServiceResponse<List<ReFaRequest>>> UpdateReFaRequest(ReFaRequest reFaRequest);
         Task<ServiceResponse<List<ReFaRequest>>> DeleteReFaRequestAsync(Guid reFaRequestId);
-
-
-
     }
 }

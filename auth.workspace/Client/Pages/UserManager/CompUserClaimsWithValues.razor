@@ -1,0 +1,106 @@
+﻿@inject IDialogService DialogService
+
+@if (AuthenticationUserClaimsHolder is not null)
+{
+    <MudGrid>
+        <MudItem>
+            <MudPaper MaxHeight="400px" MinHeight="400px" MinWidth="400px" Class="pa-5 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
+                <MudTreeView @bind-SelectedValue="UserSelectedClaimValue" Hover="true">
+                    @if (ClaimIds is not null)
+                    {
+             
+                        foreach (var claim in ClaimIds)
+                        {
+
+                        <MudTreeViewItem @onclick="(() => claimValue.InvokeAsync(new DataTransferObject.ClaimValues(){ ClaimId = claim.ClaimId, claimName=claim.claimName, ValueId= null}))" Value="@($"{claim.claimName}")" Icon="@Icons.Custom.Uncategorized.Folder">
+                            @foreach (AuthenticationClaimValue Value in AuthenticationUserClaimsHolder.authenticationClaimValues)
+                        {
+                            if (Value.AuthenticationClaimId == claim.ClaimId)
+                            {
+                                <MudTreeViewItem @onclick="(() => claimValue.InvokeAsync(new DataTransferObject.ClaimValues(){ ValueId = Value.ClaimValueId, Value=Value.Value, ClaimId = claim.ClaimId, claimName=claim.claimName }))" Value="@($"{Value.Value}")" Icon="@Icons.Custom.FileFormats.FileCode" />
+                            }
+                        }
+                </MudTreeViewItem>
+
+                        }
+
+                    }
+            </MudTreeView>
+        </MudPaper> 
+        <MudFab Color="Color.Primary" Size="Size.Small" @onclick="AddClaimsValuesDialog" StartIcon="@Icons.Material.Filled.Add" />
+    </MudItem>
+</MudGrid>
+}
+else
+{
+    <MudText>Enter username</MudText>
+}
+
+
+@code {
+
+    string? UserSelectedClaimValue;
+
+    List<ClaimsValues>? ClaimIds = new List<ClaimsValues>();
+
+    public AuthenticationUserClaimsHolder? _AuthenticationUserClaimsHolder;
+
+    [Parameter] public EventCallback<DataTransferObject.ClaimValues> claimValue { get; set; }
+
+    [Parameter] public AuthenticationUserClaimsHolder? AuthenticationUserClaimsHolder
+    {
+        get
+        {
+            return _AuthenticationUserClaimsHolder;
+        }
+        set
+        {
+            if (value != _AuthenticationUserClaimsHolder && value is not null)
+            {
+                this._AuthenticationUserClaimsHolder = value;
+
+                SortClaims();
+            }
+            else
+            {
+                this._AuthenticationUserClaimsHolder = value;
+
+
+            }
+
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    async Task SortClaims()
+    {
+        ClaimIds?.Clear();
+        foreach (AuthenticationClaimValue? Value in AuthenticationUserClaimsHolder?.authenticationClaimValues)
+        {
+            if (!ClaimIds.Select(a => a.ClaimId).ToList().Contains(Value.AuthenticationClaimId))
+            {
+                ClaimIds.Add(new ClaimsValues { ClaimId = Value.AuthenticationClaimId, claimName = Value.AuthenticationClaim.Claim });
+            }
+        }
+
+
+    }
+
+    async Task AddClaimsValuesDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Username", AuthenticationUserClaimsHolder.UserName);
+        Console.WriteLine(AuthenticationUserClaimsHolder.UserName);
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        DialogService.Show<CompAddClaimsToUser>("Manage User Claims", parameters, options);
+    }
+
+    private class ClaimsValues
+    {
+        public int? ClaimId { get; set; }
+        public string? claimName { get; set; }
+    }
+}

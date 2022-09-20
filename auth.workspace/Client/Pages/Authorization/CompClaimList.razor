@@ -1,0 +1,32 @@
+﻿
+
+@if (AuthenticationClaim == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <MudTreeView Dense="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
+        @foreach (AuthenticationClaim? claim in AuthenticationClaim)
+        {
+        <MudTreeViewItem TextTypo="Typo.body2" @onclick="(() => claimValue.InvokeAsync(new DataTransferObject.ClaimValues{ ClaimId=claim.ClaimId, claimName=claim.Claim }))" Value='$"{claim.Claim}"' Icon="@Icons.Filled.AccountBox">
+            @foreach (var item in claim.AuthenticationClaimValues)
+            {
+            <MudTreeViewItem TextTypo="Typo.body2" @onclick="(() => claimValue.InvokeAsync(new DataTransferObject.ClaimValues{ ClaimId=claim.ClaimId, ValueId= item.ClaimValueId, Value= item.Value, claimName=claim.Claim }))" IconColor="Color.Default" Value='$"{item.Value}"' Icon="@Icons.Filled.Info" />
+            }
+    </MudTreeViewItem>
+        }
+</MudTreeView>
+
+
+}
+
+@code {
+    public string SelectedValue { get; set; }
+
+    [Parameter] public AuthenticationClaim[]? AuthenticationClaim { get; set; }
+
+    [Parameter] public EventCallback<DataTransferObject.ClaimValues> claimValue { get; set; }
+
+   
+}

@@ -1,0 +1,88 @@
+﻿@page "/warehouse/adminview"
+@inject HttpClient Http
+
+@*<_WarehouseNavBar />*@
+
+<PageTitle>Admin View</PageTitle>
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudGrid>
+            <MudItem xs="4">
+                <MudDatePicker Label="From Date" @bind-Date="date" />
+            </MudItem>
+            <MudItem xs="4">
+                <MudDatePicker Label="To Date" @bind-Date="date" />
+            </MudItem>           
+        </MudGrid>
+        <br />
+
+        <MudItem xs="4">
+            @*<MudDatePicker Label="Fix Month" @bind-Date="_month" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="@DateTime.Today.Day" DateFormat="MMM" />*@
+            <MudTextField T="string" Label="Month" InputType="InputType.Month" />
+        </MudItem>
+    </MudItem>
+    <MudItem xs="3">
+        <MudPaper Elevation="0">
+            @*<MudSelect T="string" Label="Select Date" Variant="Variant.Text" Margin="Margin.Normal">
+                <MudSelectItem Value="@("Daily")" />
+                <MudSelectItem Value="@("Weekly")" />
+                <MudSelectItem Value="@("Monthly")" />
+            </MudSelect>*@
+            <MudTextField @bind-Value="nullableInt" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Variant="Variant.Text"></MudTextField>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12">
+        @if (manageRecords == null)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        }
+        else
+        {
+            <MudPaper Elevation="1">
+                <MudTable Items="manageRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
+                    <HeaderContent>
+                        <MudTh><b>Date</b></MudTh>
+                        <MudTh><b>Operation Name</b></MudTh>
+                        <MudTh><b>Achivement</b></MudTh>
+                        <MudTh><b>Targot</b></MudTh>
+                        <MudTh><b>Efficiency</b></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd></MudTd>
+                        <MudTd>@context.OperationList.Name</MudTd>
+                        <MudTd>@context.Achivement</MudTd>
+                        <MudTd></MudTd>
+                        <MudTh></MudTh>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        }
+    </MudItem>
+
+    <MudItem xs="9">
+    </MudItem>
+    <MudItem xs="3">
+        <MudTextField Label="hhfh" T="string"></MudTextField>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private bool border = true;
+    int? nullableInt;
+
+    //private List<OperationRecord>? list;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    list = await Http.GetFromJsonAsync<List<OperationRecord>>("api/OperationRecords");
+    //}
+
+    DateTime? date = DateTime.Now;
+    DateTime? _month;
+
+    [Parameter]
+    public OperationRecord[]? manageRecords { get; set; }
+
+    public string EnteredSapNo { get; set; }
+}

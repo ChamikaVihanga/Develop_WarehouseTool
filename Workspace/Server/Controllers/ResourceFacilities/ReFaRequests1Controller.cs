@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Workspace.Server.Data;
+using DataAccessLayer;
 using Workspace.Shared.Entities.ResourceFacilities;
 
 namespace Workspace.Server.Controllers.ResourceFacilities

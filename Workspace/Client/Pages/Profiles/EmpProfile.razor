@@ -1,0 +1,95 @@
+﻿@page "/Profiles/employee"
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Employee Profile</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <img src="/images/variosystems/VarioCover.jpeg" class="img-fluid mx-auto d-block" alt="Cover image">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <img src="/images/Employee/NullEmployee.png" class="employeeImage rounded-circle mx-auto d-block border border-5 border-white" alt="Employee Photo">
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col">
+            <div class="text-center">
+                <h2>Kavindu Deshan <span class="badge bg-primary">New</span></h2>
+                <h4>IT</h4>
+                <h5>IT Department</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col">
+            <h3 class="text-center">Timeline</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+
+
+            <MudTimeline TimelineAlign="TimelineAlign.Start" >
+                <MudTimelineItem Color="Color.Info" Size="Size.Small">
+                    <ItemOpposite>
+                        <MudText Color="Color.Info" Typo="Typo.h5">2022</MudText>
+                    </ItemOpposite>
+
+                        <ItemContent>
+                            <MudText Color="Color.Info" Typo="Typo.h6" GutterBottom="true">Atom Towns</MudText>
+                            <MudText>Construction of the town of Pripyat, one of 9 “atom towns” begins, to be inhabited by future employees of the nuclear power plants.</MudText>
+                        </ItemContent>
+
+
+                </MudTimelineItem>
+                <MudTimelineItem Color="Color.Success" Size="Size.Small">
+                    <ItemOpposite>
+                        <MudText Color="Color.Success" Typo="Typo.h5">2022</MudText>
+                    </ItemOpposite>
+                    <ItemContent>
+                        <MudText Color="Color.Success" Typo="Typo.h6" GutterBottom="true">Operational</MudText>
+                        <MudText>The first of the Chernobyl Nuclear Power Plants four reactors is ready to operate followed by number 2 in 1978.</MudText>
+                    </ItemContent>
+                </MudTimelineItem>
+                <MudTimelineItem Color="Color.Error" Size="Size.Small">
+                    <ItemOpposite>
+                        <MudText Color="Color.Error" Typo="Typo.h5">2021, Sep</MudText>
+                    </ItemOpposite>
+                    <ItemContent>
+                        <MudText Color="Color.Error" Typo="Typo.h6" GutterBottom="true">Joined company</MudText>
+                        <MudText>Pripyat officially proclaimed as a city.<br />The Chernobyl Atomic Power Station reaches its first 10 billion kilowatt-hours of electical output.</MudText>
+                    </ItemContent>
+                </MudTimelineItem>
+            </MudTimeline>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+
+}

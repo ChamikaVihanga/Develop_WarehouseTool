@@ -1,0 +1,50 @@
+﻿@using admin.workspace.Client.Pages.Authorization
+@inject HttpClient http
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper MaxHeight="400px" MinHeight="400px" MinWidth="400px" Class="pa-5 ma-2 overflow-y-auto" Elevation="0">
+            <CompClaimList claimValue="getClaimValue" AuthenticationClaim="AuthenticationClaim"></CompClaimList>
+          </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public string? Username { get; set; }
+
+    void Cancel() => MudDialog.Cancel();
+
+    public AuthenticationClaim[]? AuthenticationClaim { get; set; }
+
+
+    public DataTransferObject.ClaimValues? claimValues { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationClaim = await http.GetFromJsonAsync<AuthenticationClaim[]?>("api/AuthenticationClaims");
+    }
+
+    async Task Submit()
+    {
+
+        MudDialog.Close(DialogResult.Ok(true));
+        claimValues.username = Username;
+        Console.WriteLine(Username);
+
+        var response = await http.PostAsJsonAsync("api/AuthenticationUserClaimHolders/AddClaimValuesToUser",claimValues);
+    }
+
+    void getClaimValue(DataTransferObject.ClaimValues? value)
+    {
+        claimValues = value;
+    }
+}
