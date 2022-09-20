@@ -11,27 +11,33 @@
 <br />
 <MudGrid>
     <MudItem xs="3">
-        <MudButton StartIcon = "@Icons.Filled.KeyboardBackspace" Variant="Variant.Outlined" Color="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
+        <MudButton StartIcon="@Icons.Filled.KeyboardBackspace" Variant="Variant.Outlined" Color="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
     </MudItem>
     <MudItem xs="6"></MudItem>
     <MudItem xs="3" Class="d-flex justify-end">
-        <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" OnClick="@((e) => OpenDialog())">Update Target</MudButton>
+        <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" OnClick="@((e) => OpenCreateDialog())">Create new update</MudButton>
     </MudItem>
-    <MudItem xs="3">       
-        <MudTextField T="String" Label="Organization Unit"></MudTextField>       
-    </MudItem>
+    @*<MudItem xs="3">
+    <MudTextField T="String" Label="Organization Unit" ></MudTextField>
+    </MudItem>*@
     <MudItem xs="3">
         <MudTextField T="String" Label="Operation Name" @bind-Value="name" ReadOnly="true"></MudTextField>
     </MudItem>
+    <MudItem xs="3" Class="d-flex justify-start">
+        <MudTooltip Text="Edit Operation Name" Placement="Placement.Right">
+            <MudIconButton Icon="@Icons.Material.Filled.Input" Color="Color.Primary" @onclick="OpenEditOpNameDialog"></MudIconButton>
+        </MudTooltip>
+    </MudItem>
     <MudItem xs="12">
         <MudPaper Elevation="1">
-            <MudTable Items="updateRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@borded">
+            <MudTable Items="updateRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="true" Bordered="@borded">
                 <HeaderContent>
                     <MudTh><b>Create Date</b></MudTh>
                     <MudTh><b>Target</b></MudTh>
                     <MudTh><b>Allocated Time</b></MudTh>
                     <MudTh><b>Effective Date</b></MudTh>
                     <MudTh><b>Created By</b></MudTh>
+                    <MudTh></MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd>@context.CreateDate.ToString("d")</MudTd>
@@ -39,6 +45,11 @@
                     <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
                     <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
                     <MudTd>@context.CreatedBy</MudTd>
+                    <MudTd>
+                        <MudTooltip Text="Edit Target" Placement="Placement.Right">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@((e) => OpenEditDialog(context.Id))"></MudIconButton>   @*---> get operationDetail id*@
+                        </MudTooltip>
+                    </MudTd>
                 </RowTemplate>
             </MudTable>
         </MudPaper>
@@ -48,30 +59,67 @@
 @code {
     private bool borded = true;
 
-    [Parameter]                     // <------ get id as a parameter & pass to componant 
+    [Parameter]                     // <------ get id as a parameter & pass to componant
     public int? id { get; set; }
 
     public string? name { get; set; }     //  <------- Display operation name
+    public string? OU { get; set; }   //  <------- Display operation name
 
     private OperationDetail[]? updateRecords { get; set; }
+    private OperationList? operationList { get; set; }
+
+    DialogOptions noHeaderWithScreen = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true, NoHeader = true };
+    DialogOptions maxWidthScreen = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, CloseButton = true };
 
     protected override async Task OnInitializedAsync()
     {
-        var list = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/{id}");
-        name = list.Name;
+        operationList = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/getOperationName?id={id}");
+        name = operationList?.Name;
         updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails/{id}");
-
     }
 
-    DialogOptions maxWidthScreen = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, CloseButton = true };
-    /// <summary>
-    /// id is a property of class so we can directly put in to the methord as a parameters.  
-    /// </summary>
-    private void OpenDialog()
-    { 
+    private async Task OpenEditOpNameDialog()
+    {       
         var parameter = new DialogParameters();
         parameter.Add("id", id);
-        Dialog.Show<_EditOperationTable>("Update Form",parameter, maxWidthScreen);
-    }
+        var dialog = Dialog.Show<_EditOpListName>("", parameter, noHeaderWithScreen);
+        var response = await dialog.Result;                                             //
+                                                                                        // when open the Dialog from component after close the Dialog if there is a response came as a Result 
+        if(!response.Cancelled){                                                        //  if Result not Cancelled then run the OnInitializedAsync() method.
+            await OnInitializedAsync();                                                 // As a result changes will display on time.
+        }
+    }  
 
+    /// <summary>
+    /// id is a property of class so we can directly put in to the methord as a parameters.
+    /// </summary>
+    private async Task OpenCreateDialog()
+    {
+        var parameter = new DialogParameters();
+        parameter.Add("id", id);
+        parameter.Add("IsOperationNew", true);       
+        var createDialog = Dialog.Show<_EditOperationTable>("Create New Update Form", parameter, maxWidthScreen);
+        var responseCreate = await createDialog.Result;
+
+        if(!responseCreate.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
+    private async Task OpenEditDialog(int Detailid)
+    {
+        var parameter = new DialogParameters();
+        parameter.Add("id", id);
+        parameter.Add("datedisable", true);
+        parameter.Add("DetailId", Detailid);
+        parameter.Add("warnnigMessage", true);
+        parameter.Add("selectedDate", true);
+        var editDialog = Dialog.Show<_EditOperationTable>("Edit Form", parameter, maxWidthScreen);
+        var responseEdit = await editDialog.Result;
+
+        if(!responseEdit.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
+    }
 }

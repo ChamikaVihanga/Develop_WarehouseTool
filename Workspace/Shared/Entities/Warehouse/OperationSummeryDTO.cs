@@ -16,9 +16,10 @@ namespace Workspace.Shared.Entities.Warehouse
         public int? AllocatedTime { get; set; }
         [Required]
         public string? TimePeriod { get; set; }
-        [Required]
-        [DataType(DataType.Date)]
+        
         public DateTime EffectiveDate { get; set; }
+        [Required]
+        public string? OrganizationUnit { get; set; }
         public int? DTOid { get; set; }
     }
 }

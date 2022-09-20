@@ -8,8 +8,13 @@ namespace Workspace.Shared.Entities.Readonly
 {
     public class SapOrganizationalUnit
     {
-        public Guid Id { get; set; }
-        public string Title { get; set; }
-        public Guid SapCostCenterId { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string? Code { get; set; }
+        public string? Title { get; set; }
+        public Guid? SapCostCenterId { get; set; }
+        public bool IsActive { get; set; } = true;
+        public SapCostCenter SapCostCenter { get; set; }
+        public List<SapEmployee> SapEmployees { get; set; }
+
     }
 }

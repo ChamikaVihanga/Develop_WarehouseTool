@@ -22,24 +22,24 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // GET: api/VS_Employees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<VS_Employees>>> GetVS_Employees()
+        public async Task<ActionResult<IEnumerable<VS_Employees_1>>> GetVS_Employees()
         {
-            if (_context.VS_Employees == null)
+            if (_context.VS_Employees_1 == null)
             {
                 return NotFound();
             }
-            return await _context.VS_Employees.ToListAsync();
+            return await _context.VS_Employees_1.ToListAsync();
         }
 
         // GET: api/VS_Employees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<VS_Employees>> GetVS_Employees(int id)
+        public async Task<ActionResult<VS_Employees_1>> GetVS_Employees(int id)
         {
-            if (_context.VS_Employees == null)
+            if (_context.VS_Employees_1 == null)
             {
                 return NotFound();
             }
-            var vS_Employees = await _context.VS_Employees.FindAsync(id);
+            var vS_Employees = await _context.VS_Employees_1.FindAsync(id);
 
             if (vS_Employees == null)
             {
@@ -52,7 +52,7 @@ namespace Workspace.Server.Controllers.Warehouse
         // PUT: api/VS_Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVS_Employees(int id, VS_Employees vS_Employees)
+        public async Task<IActionResult> PutVS_Employees(int id, VS_Employees_1 vS_Employees)
         {
             if (id != vS_Employees.Id)
             {
@@ -83,13 +83,13 @@ namespace Workspace.Server.Controllers.Warehouse
         // POST: api/VS_Employees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<VS_Employees>> PostVS_Employees(VS_Employees vS_Employees)
+        public async Task<ActionResult<VS_Employees_1>> PostVS_Employees(VS_Employees_1 vS_Employees)
         {
-            if (_context.VS_Employees == null)
+            if (_context.VS_Employees_1 == null)
             {
                 return Problem("Entity set 'WorkspaceDbContext.VS_Employees'  is null.");
             }
-            _context.VS_Employees.Add(vS_Employees);
+            _context.VS_Employees_1.Add(vS_Employees);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetVS_Employees", new { id = vS_Employees.Id }, vS_Employees);
@@ -99,17 +99,17 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVS_Employees(int id)
         {
-            if (_context.VS_Employees == null)
+            if (_context.VS_Employees_1 == null)
             {
                 return NotFound();
             }
-            var vS_Employees = await _context.VS_Employees.FindAsync(id);
+            var vS_Employees = await _context.VS_Employees_1.FindAsync(id);
             if (vS_Employees == null)
             {
                 return NotFound();
             }
 
-            _context.VS_Employees.Remove(vS_Employees);
+            _context.VS_Employees_1.Remove(vS_Employees);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -117,7 +117,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
         private bool VS_EmployeesExists(int id)
         {
-            return (_context.VS_Employees?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.VS_Employees_1?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -16,8 +16,8 @@ namespace admin.workspace.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<AuthenticationClaimRequirement>>> Get(string path, string method)
         {
-            var claimRequirementSTEST = _context.AuthenticationClaimRequirements.Where(b => b.Uri == path).Count();
-            if (claimRequirementSTEST == 0)
+            var claimRequirement = _context.AuthenticationClaimRequirements.Where(b => b.Uri == path && b.AuthenticationHttpMethods.HttpMethod == method).Count();
+            if (claimRequirement == 0)
             {
                 AuthenticationClaimRequirement _ClaimRequirement = new AuthenticationClaimRequirement();
                 _ClaimRequirement.Uri = path;
@@ -34,7 +34,9 @@ namespace admin.workspace.Server.Controllers
 
             }
             var httpMethodId = await _context.AuthenticationHttpMethods.Where(a => a.HttpMethod == method).ToListAsync();
-            var claims = await _context.AuthenticationClaimRequirements.Where(a => a.Uri == path && a.AuthenticationHttpMethodsId == httpMethodId.Select(b => b.Id).LastOrDefault()).Include(x => x.authenticationClaimValues).ThenInclude(x => x.AuthenticationClaim).ToListAsync();
+            var claims = await _context.AuthenticationClaimRequirements.Where(a => a.Uri == path && a.AuthenticationHttpMethodsId == httpMethodId.Select(b => b.Id).LastOrDefault()).Include(x => x.authenticationClaimValues).ThenInclude(x => x.AuthenticationClaim).Include(z => z.AuthenticationADAssignedGroups).ToListAsync();
+
+            
 
             return claims;
         }

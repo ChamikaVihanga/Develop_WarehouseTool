@@ -1,8 +1,63 @@
 ﻿@inherits LayoutComponentBase
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+        <MudDialogProvider />
+        <MudSnackbarProvider />
+        <MudLayout>
+            <MudAppBar Color="Color.Transparent" Elevation="0" Dense="true" class="Glass">
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
-<MudDialogProvider />
-<MudSnackbarProvider />
+
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+                <MudText Typo="Typo.h5" Class="ml-3">VS Workspace</MudText>
+
+
+                <Workspace.Client.Pages.Authentication.Components.WelcomeNote></Workspace.Client.Pages.Authentication.Components.WelcomeNote>
+
+                <MudBadge Content="100" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" />
+                </MudBadge>
+
+                <MudToggleIconButton @bind-Toggled="@AlarmOn"
+                                     Icon="@Icons.Filled.NotificationsOff" Color="@Color.Inherit" Title="Off"
+                                     ToggledIcon="@Icons.Filled.Notifications" ToggledColor="@Color.Success" ToggledTitle="On" />
+
+                <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                                     Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
+                                     ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />
+
+
+                @*
+                Login Partial View in Right Top Conner > PartialLogin
+                *@
+                <PartialLogin />
+
+            </MudAppBar>
+
+
+            <MudDrawer @bind-Open="@open" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" ClipMode="DrawerClipMode.Always">
+                <MudDrawerHeader>
+                    @*<MudText Typo="Typo.h6">WorkspaceWeb</MudText>*@
+                </MudDrawerHeader>
+                <SideNavMenu />
+            </MudDrawer>
+
+
+            <MudMainContent>
+                <FeatureNavBar />
+                <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
+                            @Body
+                        
+                </MudContainer>
+            </MudMainContent>
+        </MudLayout>
+    </ChildContent>
+    <ErrorContent>
+        <Workspace.Client.Pages.ErrorPages.GlobalErrorPage Error="@context.Message" bakErrorContent="RecoverError"></Workspace.Client.Pages.ErrorPages.GlobalErrorPage>
+
+    </ErrorContent>
+
+</ErrorBoundary>
 
 <style>
     .Glass {
@@ -13,63 +68,10 @@
 
 
 
-<MudLayout>
-    <MudAppBar Color="Color.Transparent" Elevation="0" Dense="true" class="Glass">
 
-
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
-        <MudText Typo="Typo.h5" Class="ml-3">Workspace</MudText>
-
-
-        <Workspace.Client.Pages.Authentication.Components.WelcomeNote></Workspace.Client.Pages.Authentication.Components.WelcomeNote>
-
-        <MudBadge Content="100" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
-            <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" />
-        </MudBadge>
-
-        <MudToggleIconButton @bind-Toggled="@AlarmOn"
-                             Icon="@Icons.Filled.NotificationsOff" Color="@Color.Inherit" Title="Off"
-                             ToggledIcon="@Icons.Filled.Notifications" ToggledColor="@Color.Success" ToggledTitle="On" />
-
-        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
-                             Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
-                             ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />
-
-
-        @*
-            Login Partial View in Right Top Conner > PartialLogin
-        *@
-        <PartialLogin />
-
-    </MudAppBar>
-
-
-    <MudDrawer @bind-Open="@open" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" ClipMode="DrawerClipMode.Always">
-        <MudDrawerHeader>
-            @*<MudText Typo="Typo.h6">WorkspaceWeb</MudText>*@
-        </MudDrawerHeader>
-        <SideNavMenu />
-    </MudDrawer>
-
-
-    <MudMainContent>
-        <FeatureNavBar />
-        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
-            <ErrorBoundary @ref="errorBoundary">
-                <ChildContent>
-                       @Body
-                </ChildContent>
-                <ErrorContent>
-                      <h1>@context.Message</h1>
-
-                      <button class="btn btn-primary" @onclick="() => errorBoundary.Recover()">Close</button>
-                </ErrorContent>
-            </ErrorBoundary>
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
 
 @code {
+
     private ErrorBoundary errorBoundary;
 
     protected override void OnInitialized()
@@ -88,6 +90,10 @@
     void ToggleDrawer()
     {
         open = !open;
+    }
+    void RecoverError(bool err)
+    {
+        errorBoundary.Recover();
     }
 
 

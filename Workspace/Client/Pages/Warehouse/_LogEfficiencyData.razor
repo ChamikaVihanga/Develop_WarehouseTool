@@ -1,78 +1,28 @@
-﻿
-@inject HttpClient http
-<MudPaper Elevation="0">
-    @if (manageRecord == null)
+﻿@inject HttpClient http
+<MudPaper Elevation="1">
+   @* @if (manageRecord == null)
     {
-        @*<MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-    <MudAlert ContentAlignment="HorizontalAlignment.Center" Severity="Severity.Warning" Variant="Variant.Filled">Enter sap Number and Create Date</MudAlert>*@
-        <MudItem xs="12">
-            <MudPaper Elevation="0"  Class="d-flex align-center justify-center mud-width-full">
-                <MudItem xs="10">
-                    <MudPaper Elevation="1">
-                        @*<MudCard>*@
-                        <MudCardHeader>
-                            <CardHeaderAvatar>
-                                <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="40px" Width="40px" />
-                            </CardHeaderAvatar>
-                            <CardHeaderContent>
-                                <MudSkeleton Animation="Animation.Wave" Width="100%" />
-                                <MudSkeleton Animation="Animation.Wave" Width="100%" />
-                            </CardHeaderContent>
-                        </MudCardHeader>
-                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="250px" />
-                        <MudCardContent>
-                            <MudSkeleton Animation="Animation.Wave" />
-                        </MudCardContent>
-                        <MudCardActions>
-                            <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="30px" Width="30px" Class="ml-2 mb-2" />
-                            <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="30px" Width="30px" Class="ml-3 mb-2" />
-                        </MudCardActions>
-                        @*</MudCard>*@
-                    </MudPaper>
-                </MudItem>
-            </MudPaper>
-        </MudItem>
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
     }
     else
-    {
-        <MudTable Items="manageRecord" Bordered="@bordered" Hover="true">
-            <ToolBarContent>
-                <MudText Typo="Typo.h6">Read-Only</MudText>
-                <MudSpacer />
-                @*MudTextField @bind-Value="nullableInt" Placeholder="Search Unite" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>*@
-            </ToolBarContent>
+    {*@
+        <MudTable Items="manageRecord" Bordered="@bordered" Elevation="0" Hover="true">
+
             <HeaderContent>
-                <MudTh><b>Name</b></MudTh>
                 <MudTh><b>Date</b></MudTh>
                 <MudTh><b>Operation</b></MudTh>
-                <MudTh><b>Start Time</b></MudTh>
-                <MudTh><b>End Time</b></MudTh>
+                <MudTh><b>TimeSpan</b></MudTh>
                 <MudTh><b>Achivement</b></MudTh>
-                
             </HeaderContent>
             <RowTemplate>
-                <MudTd>@context.VS_Employees.LastName</MudTd>
                 <MudTd>@context.CreateDate.ToString("d")</MudTd>
                 <MudTd>@context.OperationList.Name</MudTd>
-                <MudTd>@context.StartTime.ToString("T")</MudTd>
-                <MudTd>@context.EndTime.Value.ToLongTimeString()</MudTd>
-
-                @if (context.Achivement is null)
-                {
-                <MudTh></MudTh>
-                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-                }
-                else
-                {
+                <MudTd>@context.StartTime.ToString("T")  -  @context.EndTime.Value.ToLongTimeString()</MudTd>
                 <MudTd>@context.Achivement</MudTd>
-                }
-
-
-        </RowTemplate>
-    </MudTable>
-    }
+            </RowTemplate>
+        </MudTable>
+    @*}*@
 </MudPaper>
-
 @code {
 
     int? nullableInt;

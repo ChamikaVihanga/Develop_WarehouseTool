@@ -1,43 +1,79 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div>
-        <NavMenu />
-    </div>
 
-    <main>
-        <ErrorBoundary @ref="errorBoundary">
-            <ChildContent>
-                <div class="mt-1 px-4">
-                    <MudGrid>
-                        <MudItem xs="11"></MudItem>
-                        <MudItem xs="1" Class=""><Login_Logout_Toggle /></MudItem>
-                    </MudGrid>
-                    
-                </div>
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+       
+        
+        <MudLayout>
 
-                <article class="content px-4">
+            <MudPaper Elevation="0">
+            <MudToolBar  Dense="true">
+                <MudSpacer />
+                <Login_Logout_Toggle />
+            </MudToolBar>
+            </MudPaper>
+            <MudDrawer Elevation="0" Open="open">
+                <NavMenu />
+            </MudDrawer>
+           
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-1 ph-10">
                     @Body
-                </article>
-            </ChildContent>
-            <ErrorContent>
-                <h1>@context.Message</h1>
+            </MudContainer>
+                        
+            </MudMainContent>
 
-                <button class="btn btn-primary" @onclick="() => errorBoundary.Recover()">Close</button>
-            </ErrorContent>
-        </ErrorBoundary>
+        </MudLayout>
 
-    </main>
-</div>
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+
+
+        <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+        <MudDialogProvider />
+        <MudSnackbarProvider />
+
+    </ChildContent>
+    <ErrorContent>
+        <ErrorComponentHostPage Error="@context.Message" bakErrorContent="RecoverError"></ErrorComponentHostPage>
+    </ErrorContent>
+</ErrorBoundary>
+
+
+
+
+
+
+
+
+
+
+
 
 
 @code {
+
     private ErrorBoundary errorBoundary;
+
+    private MudTheme _theme = new();
+    private bool _isDarkMode;
+
+    void RecoverError()
+    {
+
+        errorBoundary.Recover();
+
+    }
+
     protected override void OnInitialized()
     {
         errorBoundary = new ErrorBoundary();
     }
+
+    bool open = true;
+    void ToggleDrawer()
+    {
+        open = !open;
+    }
+
+
 }

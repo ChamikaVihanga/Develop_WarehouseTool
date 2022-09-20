@@ -35,5 +35,11 @@ namespace Workspace.Shared.AuthData
             public int? ValueId { get; set; }
             public string? Value { get; set; }
         }
+        public class TransferAdGroups
+        {
+            public Guid AdGroupGuid { get; set; }
+            public int EndPointId { get; set; }
+        }
+
     }
 }

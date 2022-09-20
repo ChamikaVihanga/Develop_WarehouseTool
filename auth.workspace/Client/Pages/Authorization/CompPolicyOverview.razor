@@ -1,5 +1,8 @@
 ﻿@using System.Text.Json
 @inject HttpClient http
+@inject IDialogService DialogService
+
+
 
 <MudGrid>
     <MudItem xs="9">
@@ -21,9 +24,28 @@
 else
 {
     
-    <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" />
+    <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="SearchPolicies" @bind-Value="@_debouncedText" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" Margin="Margin.Dense" AdornmentIcon="@Icons.Filled.Search" />
     <MudPaper MinHeight="60vh" MaxHeight="60vh" Class="pa-9 ma-2 overflow-y-auto overflow-x-auto" Elevation="0">
-        <MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
+
+        <MudTable Dense="true" Elevation="0" Height="@(fixed_header || fixed_footer ?"450px":"")" RowsPerPage="15"  Items="@PolicyRequirements" OnRowClick="@OpenRequirementEditor" T="AuthenticationClaimRequirement" Hover="true" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Display Name</MudTh>
+        <MudTh>HTTP Method</MudTh>
+        <MudTh>URI</MudTh>
+      
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.RequirementName</MudTd>
+        <MudTd DataLabel="Nr">@context.AuthenticationHttpMethods.HttpMethod</MudTd>
+        <MudTd DataLabel="Nr">@context.Uri</MudTd>
+        
+    </RowTemplate>
+    <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{9, 18}" />
+        </PagerContent>
+</MudTable>
+
+        @*<MudTreeView Hover="true" ExpandOnClick="true" @bind-SelectedValue="SelectedValue">
             @foreach (AuthenticationClaimRequirement? policy in PolicyRequirements)
             {
             <MudTreeViewItem @onclick="@(() => ClaimValue.InvokeAsync(new ValueIDRequirementID{valueId = null, RequirementId= policy.RequirementId}))" Value='$"{policy.AuthenticationHttpMethods.HttpMethod}: {policy.RequirementName}"' Icon="@Icons.Filled.AccountBox">
@@ -34,13 +56,17 @@ else
         </MudTreeViewItem>
             }
     </MudTreeView>
-    <MudText></MudText>
+    <MudText></MudText>*@
 </MudPaper>
 
 
 }
 
 @code {
+
+    bool fixed_header = true;
+    bool fixed_footer = true;
+
 
     public bool _NewEndpoint;
     public bool NewEndpoints
@@ -60,10 +86,31 @@ else
     }
 
 
+    private async Task OpenRequirementEditor(TableRowClickEventArgs<AuthenticationClaimRequirement> tableRowClickEventArgs)
+    {
+        var parameter = new DialogParameters();
+
+        parameter.Add("SelectedRequirementId", tableRowClickEventArgs.Item.RequirementId);
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, FullScreen = true, CloseButton = true, };
+        var dialog = DialogService.Show<CompDialogEditRequirements>("End-Point Claim Requirement Editor", parameter, options);
+        var result = await dialog.Result;
+
+        if (result.Cancelled)
+        {
+
+            await OnInitializedAsync();
+
+        }
+
+    }
+
+
+
 
     string? _debouncedText;
 
-    [Parameter] public EventCallback<ValueIDRequirementID> ClaimValue { get; set; }
+    [Parameter] public EventCallback ClaimValue { get; set; }
 
 
     [Parameter] public int? SelectedRequirement { get; set; }
@@ -74,13 +121,15 @@ else
     public AuthenticationClaimRequirement[]? PolicyRequirements { get; set; }
     public AuthenticationClaimRequirement[]? PolicyRequirementsBackup { get; set; }
 
-    List<AuthenticationClaimRequirement> NotReviewed = new List<AuthenticationClaimRequirement>();
-    List<AuthenticationClaimRequirement> Reviewed = new List<AuthenticationClaimRequirement>();
+    List<AuthenticationClaimRequirement>? NotReviewed = new List<AuthenticationClaimRequirement>();
+    List<AuthenticationClaimRequirement>? Reviewed = new List<AuthenticationClaimRequirement>();
 
     protected override async Task OnInitializedAsync()
     {
         PolicyRequirements = await http.GetFromJsonAsync<AuthenticationClaimRequirement[]?>("api/AuthenticationPolicyRequirement/getallrequirements");
         PolicyRequirementsBackup = PolicyRequirements;
+        Reviewed.Clear();
+        NotReviewed.Clear();
         foreach (AuthenticationClaimRequirement? authenticationClaimRequirement in PolicyRequirements)
         {
             if (authenticationClaimRequirement.beenReviewed)
@@ -96,6 +145,8 @@ else
 
 
     }
+
+
 
     async Task SwapChanages()
     {
@@ -123,7 +174,7 @@ else
         {
             PolicyRequirementsBackup = Reviewed.ToArray();
         }
-       
+
 
         if (debouncedText.Length >= 0)
         {
@@ -134,10 +185,15 @@ else
             }
             catch
             {
-                
+
             }
         }
 
+    }
+    private void RowClickEvent(TableRowClickEventArgs<AuthenticationClaimRequirement> tableRowClickEventArgs)
+    {
+        ClaimValue.InvokeAsync((new ValueIDRequirementID { valueId = null, RequirementId = tableRowClickEventArgs.Item.RequirementId}));
+      
     }
     public class ValueIDRequirementID
     {

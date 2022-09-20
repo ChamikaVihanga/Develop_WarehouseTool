@@ -1,64 +1,126 @@
 ﻿@page "/warehouse/adminview"
 @inject HttpClient Http
+@inject HttpClient httpClient
 
 <_WarehouseNavBar />
 
 <PageTitle>Admin View</PageTitle>
-
 <MudGrid>
-    <MudItem xs="3">
-        <MudPaper Elevation="0">
-            <MudSelect T="string" Label="Select Date" Variant="Variant.Text" Margin="Margin.Normal">
-                <MudSelectItem Value="@("Daily")" />
-                <MudSelectItem Value="@("Weekly")" />
-                <MudSelectItem Value="@("Monthly")" />
-            </MudSelect>
-            <MudTextField @bind-Value="nullableInt" Label="Enter Employee SAP Number" Variant="Variant.Text" Margin="Margin.Normal"></MudTextField>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="12">
-        @if (list == null)
-        {
-            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-        }
-        else
-        {
-            <MudPaper Elevation="1">
-                <MudTable Items="list" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
-                    <HeaderContent>
-                        <MudTh><b>Date</b></MudTh>
-                        <MudTh><b>Operation Name</b></MudTh>
-                        <MudTh><b>Achivement</b></MudTh>
-                        <MudTh><b>Time Span</b></MudTh>
-                        <MudTh><b>Efficiency</b></MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd></MudTd>
-                        <MudTd>@context.OperationList.Name</MudTd>
-                        <MudTd>@context.Achivement</MudTd>
-                        <MudTd></MudTd>
-                        <MudTh></MudTh>
-                    </RowTemplate>                   
-                </MudTable>
-            </MudPaper>
-        }
+    @*<MudItem xs="12">*@
+        <MudItem>
+            @*<MudIcon Color="Color.Dark" Icon="@Icons.Custom.Uncategorized.Radioactive" Size="Size.Large" />*@
+        <MudAvatar Color="Color.Info" Variant="Variant.Outlined">VS</MudAvatar>
+        </MudItem>
+        <MudItem xs="3">
+            <MudText Typo="Typo.h5" Class="mt-1" Color="Color.Info"><b>Warehouse Efficiency</b></MudText>
+        </MudItem>
+    @*</MudItem>*@
+</MudGrid>
+
+<MudGrid Class="mt-10">
+
+    <MudItem xs="4">
+        @*<MudDatePicker Label="Fix Month" @bind-Date="_month" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="@DateTime.Today.Day" DateFormat="MMM" />*@
+        <MudTextField T="string" Label="Month" InputType="InputType.Month" />
     </MudItem>
 
-    <MudItem xs="9">
-    </MudItem>
-    <MudItem xs="3">
-        <MudTextField Label="hhfh" T="string"></MudTextField>
+    <MudItem xs="12">
+
+        <MudGrid>
+            <MudItem xs="4">
+                <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" For="@(()=>EnteredSapNo)"></MudTextField>
+            </MudItem>
+            <MudSpacer />
+            <MudItem xs="4" Class="d-flex justify-end">
+            @if(vS_employee is not null)
+            {
+                    <MudText Typo="Typo.h6" Class="ml-3"><b>@vS_employee.CostCenterID - @vS_employee.NickName</b></MudText>
+            }
+            else
+            {
+                    <MudText Typo="Typo.h6" Class="ml-3"><b>Employee FullName</b></MudText>
+            }
+            </MudItem>
+           
+        </MudGrid>
+        <br />
     </MudItem>
 </MudGrid>
 
+<MudItem xs="12">
+    @if (manageRecord == null)
+    {
+        @* <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />*@
+    }
+    else
+    {
+        <MudPaper Elevation="1">
+            <MudTable Items="manageRecord" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
+                <HeaderContent>
+                    <MudTh><b>Operation Name</b></MudTh>
+                    <MudTh><b>Date</b></MudTh>
+                    <MudTh><b>Achivement</b></MudTh>
+                    <MudTh><b>Target</b></MudTh>
+                    <MudTh><b>Efficiency</b></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.OperationList.Name</MudTd>
+                    <MudTd>@context.StartTime.Date.ToString("d")</MudTd>                   
+                    <MudTd>@context.Achivement</MudTd>
+                    <MudTd>@context.OperationList.OperationDetails.</MudTd>
+                    <MudTh>@context.Efficiency</MudTh>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    }
+</MudItem>
+
+
 @code {
     private bool border = true;
-    int? nullableInt;
+    bool isLoading = false;
 
-    private OperationRecord[]? list;
+    DateTime? date = DateTime.Now;
+    DateTime? _month;
 
-    protected override async Task OnInitializedAsync()
+    public string EnteredSapNo { get; set; }
+
+    public Vs_Employee? vS_employee { get; set; }
+
+    public OperationDetail? operationDetails { get; set; }
+
+    //OperationRecord operationRecord = new OperationRecord();
+    private OperationRecord[]? manageRecord;
+
+    //public Vs_Employee? vs_employee;
+
+    async Task HandleIntervalElapsed(string debouncedText)
     {
-        list = await Http.GetFromJsonAsync<OperationRecord[]>("api/OperationRecords");
+
+        if (debouncedText.Length > 4)
+        {
+            isLoading = true;
+
+            try
+            {
+                manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}");
+
+                vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
+
+               //operationDetails = await httpClient.GetFromJsonAsync<OperationDetail?>($"api/OperationLists/Active={debouncedText}");
+
+            }
+            catch
+            {
+                isLoading = false;
+
+            }
+            isLoading = false;
+        }
+        else
+        {
+            manageRecord = null;
+        }
+
     }
 }
