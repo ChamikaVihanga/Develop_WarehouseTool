@@ -40,13 +40,11 @@
 
 **Master** - Main Solution
 
-**Release** - Creating temporary when going to realse develop branch features
+**Release** - Creating temporary when going to realse a develop branch features
 
-**Develop** - ??
+**Develop** - Working Sprint ( All developers commites are mearch to here)
 
-**Current_Sprint** - Working Sprint ( All developers commites are mearch to this)
-
-**Sample_Fearture_Name** - Developer should create new branch from base Current_Sprint for Implement new feature
+**Dev_DeveloperName_Fearture_Name** - Developer should create new branch from base Develop branch for Implement new feature
 
 
 ## Implementing a new feature in Workspace
@@ -59,7 +57,7 @@
         - Interface class
         - Implimentation Class	
 	- Program.cs
-		- Add Services
+		- Add Services with Interfaces
 	- Controller Folder
 		- API Endponts
 
@@ -68,6 +66,6 @@
 		- Interface class
 		- Implimentation Class
 	- Program.cs
-		- Add Services
+		- Add Services with Interfaces
 	- Pages Folder
 		- Features
