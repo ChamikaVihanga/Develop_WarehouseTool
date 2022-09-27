@@ -114,6 +114,7 @@
         parameter.Add("DetailId", Detailid);
         parameter.Add("warnnigMessage", true);
         parameter.Add("selectedDate", true);
+        parameter.Add("submitByDate", true);
         var editDialog = Dialog.Show<_EditOperationTable>("Edit Form", parameter, maxWidthScreen);
         var responseEdit = await editDialog.Result;
 

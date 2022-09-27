@@ -232,6 +232,7 @@ namespace Workspace.Server.Controllers.Warehouse
             operationDetail1.EffectiveDate = operationDetail.EffectiveDate;
             operationDetail1.CreateDate = DateTime.Now;
             operationDetail1.CreatedBy = User.Identity.Name;
+            operationDetail1.OrganizationUnit = operationDetail.OrganizationUnit;
             operationDetail1.Id = id;
 
             await _context.SaveChangesAsync();
