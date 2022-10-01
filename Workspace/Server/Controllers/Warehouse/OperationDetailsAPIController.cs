@@ -29,7 +29,24 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return NotFound();
             }
-            return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();
+            return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();            
+        }
+
+        // GET: api/OperationDetailsAPI/ValidateOperationCreateDate
+        [HttpGet("ValidateOperationCreateDate")]
+        public async Task<ActionResult<bool>> ValidateOperationCreateDate(int OperationListId , DateTime SelectedDate)             // in this didn't create a object call OperationDetail and didn't include 
+        {                                                                                                                          //   a OperationList. Because get values from OperatonListId.
+            bool checkOperationEffectiveDate = _context.OperationDetails                                                           //   if we assign to a bool variable extession should be .Any(); 
+                .Where(a => a.OperationListId == OperationListId &&  a.EffectiveDate.Month == SelectedDate.Month)
+                .Any();
+
+
+
+            // make sure the month is not calculate for efficiency
+
+
+
+            return checkOperationEffectiveDate;
         }
 
 

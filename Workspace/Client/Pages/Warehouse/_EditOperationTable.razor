@@ -31,18 +31,15 @@
             }
             else
             {
-                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="newdate" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM">
+                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Enter New Effective Month" @ref="_picker" @bind-Date="newdate" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM">
                     <PickerActions>
-                        <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
                         <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
                         <MudButton Color="Color.Primary" OnClick="checkDate"><b>OK</b></MudButton>
                     </PickerActions>
-                </MudDatePicker>  @* ReadOnly="@datedisable"*@
+                </MudDatePicker>
+                <MudText Class="mt-3" Color="Color.Error">@warningMessageForCreate</MudText>
             }
-            @if (warnnigMessage)
-            {
-                <MudText Class="indigo-text text-accent-4 mt-3"><i>The target of the operation you change, will be effective for the entire month/months</i></MudText>
-            }
+            <MudText Class="BlueGrey-text text-Default mt-3"><b><i>@warningMessage</i></b></MudText>
             <MudGrid Class="mt-2">
                 <MudItem xs="6"></MudItem>
                 <MudItem xs="3" Class="d-flex justify-end">
@@ -51,7 +48,8 @@
                 <MudItem xs="3" Class="d-flex justify-end">
                     @if (submitByDate)
                     {
-                        @if (operationDetail.EffectiveDate == null || operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.TimePeriod == null  || operationEdit.Target == 0 || operationEdit.TimeSpan == 0)
+                        //Operation Detail submit button when Edit
+                        @if (operationDetail.EffectiveDate == null || operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.TimePeriod == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0)
                         {
                             <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit" Disabled="true">Ok</MudButton>
                         }
@@ -62,7 +60,8 @@
                     }
                     else
                     {
-                        @if (operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.TimePeriod == null || newdate == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0)
+                        //Operation Detail submit button when Create
+                        @if (operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.TimePeriod == null || newdate == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0 || isMonthAvailable == true)
                         {
                             <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit" Disabled="true">Ok</MudButton>
                         }
@@ -71,7 +70,6 @@
                             <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit" Disabled="false">Ok</MudButton>
                         }
                     }
-
                 </MudItem>
             </MudGrid>
         </DialogContent>
@@ -118,10 +116,25 @@ else
 
     public OperationList? operationList { get; set; }
     public OperationDetail? operationDetail { get; set; }
+    private bool isMonthAvailable { get; set; } = true;
+
+    public string warningMessage { get; set; }
+    public string warningMessageForCreate { get; set; }
 
     public async Task checkDate()
     {
         _picker.Close();
+
+        isMonthAvailable = await http.GetFromJsonAsync<bool>($"api/OperationDetailsAPI/ValidateOperationCreateDate?OperationListId={id}&SelectedDate={newdate}");
+
+        if (isMonthAvailable)
+        {
+            warningMessageForCreate = "Already assigned to an effective month";
+        }
+        else
+        {
+            warningMessageForCreate = string.Empty;
+        }
     }
 
     private async Task Submit()
@@ -135,13 +148,12 @@ else
             operationEdit.CreatedBy = "Unknowen User";
             var newUpdateResponse = await http.PostAsJsonAsync<OperationDetail>("api/OperationDetailsAPI/DetailsOnly", operationEdit);
             MudDialog?.Close(DialogResult.Ok(true));
-
             string streditResponse = newUpdateResponse.Content.ReadAsStringAsync().Result;
             showBar(streditResponse);
         }
         else
         {
-            operationEdit.Id = DetailId;            
+            operationEdit.Id = DetailId;
             operationEdit.EffectiveDate = operationDetail.EffectiveDate;
             operationEdit.CreatedBy = "User";
             var editResponse = await http.PutAsJsonAsync<OperationDetail>($"api/OperationDetailsAPI?id={DetailId}", operationEdit);
@@ -157,12 +169,23 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if(selectedDate){
+        if (selectedDate)
+        {
             operationList = await http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
             operationDetail = await http.GetFromJsonAsync<OperationDetail?>($"api/OperationDetailsAPI/{DetailId}");
-        }else{
+        }
+        else
+        {
             operationList = await http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
         }
-        
+
+        if (warnnigMessage)
+        {
+            warningMessage = "The target of the operation you change, will be effective for the entire month/months";
+        }
+        else
+        {
+            warningMessage = string.Empty;
+        }
     }
 }
