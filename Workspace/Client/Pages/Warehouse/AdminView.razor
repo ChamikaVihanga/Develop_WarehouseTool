@@ -21,7 +21,8 @@
 
     <MudItem xs="4">
         @*<MudDatePicker Label="Fix Month" @bind-Date="_month" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="@DateTime.Today.Day" DateFormat="MMM" />*@
-        <MudTextField T="string" Label="Month" InputType="InputType.Month" />
+        @*<MudTextField T="string" Label="Month" InputType="InputType.Month" />*@
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
     </MudItem>
 
     <MudItem xs="12">
@@ -67,7 +68,7 @@
                     <MudTd>@context.OperationList.Name</MudTd>
                     <MudTd>@context.StartTime.Date.ToString("d")</MudTd>                   
                     <MudTd>@context.Achivement</MudTd>
-                    <MudTd>@context.OperationList.OperationDetails.</MudTd>
+                    <MudTd>@context</MudTd>
                     <MudTh>@context.Efficiency</MudTh>
                 </RowTemplate>
             </MudTable>
@@ -80,17 +81,23 @@
     private bool border = true;
     bool isLoading = false;
 
-    DateTime? date = DateTime.Now;
+    private MudDateRangePicker _picker;
+    // private DateRange CreateDate = new DateRange();
+
+    DateTime? SelectMonth = DateTime.Now;
     DateTime? _month;
 
     public string EnteredSapNo { get; set; }
+
+    //public string CreateDate { get; set; }
 
     public Vs_Employee? vS_employee { get; set; }
 
     public OperationDetail? operationDetails { get; set; }
 
     //OperationRecord operationRecord = new OperationRecord();
-    private OperationRecord[]? manageRecord;
+    private List<OperationRecord?> manageRecord;
+    OperationDetail operationDetail = new OperationDetail();
 
     //public Vs_Employee? vs_employee;
 
@@ -103,12 +110,11 @@
 
             try
             {
-                manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}");
+                //manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&CreateDate={CreateDate.ToString()}");
 
-                vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
+                //vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
 
-               //operationDetails = await httpClient.GetFromJsonAsync<OperationDetail?>($"api/OperationLists/Active={debouncedText}");
-
+                manageRecord = await httpClient.GetFromJsonAsync<List<OperationRecord?>>($"api/OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth.Value.ToString("MMMM")}");
             }
             catch
             {

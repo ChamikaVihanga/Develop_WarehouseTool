@@ -29,7 +29,8 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return NotFound();
             }
-            return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();
+            return await _context.OperationDetails
+                .Include(x => x.OperationList).ToListAsync();
         }
 
 

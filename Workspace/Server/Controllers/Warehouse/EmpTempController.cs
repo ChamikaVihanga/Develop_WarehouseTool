@@ -30,7 +30,9 @@ namespace Workspace.Server.Controllers.Warehouse
             List<OrganizationUnitDTO> OrgUnitDTOs = new List<OrganizationUnitDTO>();    
             foreach(string OGid in OgIds)
             {
-                OrgUnitDTOs.Add(new OrganizationUnitDTO { OrganizationUnitID = OGid, Name = vs_Employees.Where(a => a.OrganizationalUnitID == OGid).Select(b => b.OrganizationalUnit).FirstOrDefault() });
+                OrgUnitDTOs.Add(new OrganizationUnitDTO { OrganizationUnitID = OGid, Name = vs_Employees
+                    .Where(a => a.OrganizationalUnitID == OGid)
+                    .Select(b => b.OrganizationalUnit).FirstOrDefault() });
             }
             return OrgUnitDTOs;
         }
