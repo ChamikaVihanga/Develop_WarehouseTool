@@ -12,12 +12,13 @@
             <MudButton Size="Size.Small" OnClick="Cancel">Cancel</MudButton>
             @if (!string.IsNullOrWhiteSpace(operationList.Name))
             {
-                 <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="Submit">save</MudButton>
+                IsButtonAvailable = false;
             }
             else
             {
-                <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="Submit" Disabled="true">save</MudButton>
+                IsButtonAvailable = true;
             }
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="Submit" Disabled="IsButtonAvailable">save</MudButton>
         </DialogActions>
     </MudDialog>
 }
@@ -32,6 +33,8 @@ else
     MudDialogInstance? MudDialog { get; set; }
 
     public OperationList? operationList { get; set; }
+
+    bool IsButtonAvailable { get; set; } = false;
 
     //OperationList _operationList = new OperationList();
 

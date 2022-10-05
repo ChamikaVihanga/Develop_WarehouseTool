@@ -20,7 +20,7 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkingShifts>>> GetWorkingShift()
         {
-            if (_context.WorkingShift == null)          //<-----Call from db context (WorkingShift)
+            if (_context.WorkingShift == null)          //<-----Call from db context (WorkingShift)                 IEnumerable = List
             {
                 return NotFound();
             }
