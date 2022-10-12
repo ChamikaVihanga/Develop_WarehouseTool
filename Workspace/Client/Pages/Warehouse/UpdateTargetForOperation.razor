@@ -3,7 +3,6 @@
 @inject IDialogService Dialog
 @inject HttpClient Http
 
-
 <_WarehouseNavBar />
 
 <PageTitle>Update Target</PageTitle>
@@ -23,9 +22,9 @@
     <MudItem xs="3">
         <MudTextField T="String" Label="Operation Name" @bind-Value="name" ReadOnly="true"></MudTextField>
     </MudItem>
-    <MudItem xs="3" Class="d-flex justify-start">
+    <MudItem xs="3" Class="pa-0">
         <MudTooltip Text="Edit Operation Name" Placement="Placement.Right">
-            <MudIconButton Icon="@Icons.Material.Filled.Input" Color="Color.Primary" @onclick="OpenEditOpNameDialog"></MudIconButton>
+            <MudIconButton Class="mt-6 ml-0" Icon="@Icons.Material.Filled.Input" Color="Color.Primary" @onclick="OpenEditOpNameDialog"></MudIconButton>
         </MudTooltip>
     </MudItem>
     <MudItem xs="12">

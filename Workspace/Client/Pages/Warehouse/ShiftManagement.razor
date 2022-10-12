@@ -24,33 +24,30 @@
     </MudItem>
     <MudItem xs="6"></MudItem>
     <MudItem xs="3">
+        <MudSelect @bind-Value="_workingShifts.Id" Label="Working Shifts" Placeholder="Please Select Shift" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary" Clearable>
 
-        <MudSelect @bind-Value="stringValue" Label="Working Shifts" Placeholder="Please Select Shift" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
-
-            @if (workingShifts is not null)
+            @if (getWorkingShifts is not null)
             {
-                @foreach (var shifttime in workingShifts)
+                @foreach (var shifttime in getWorkingShifts)
                 {
-                    <MudSelectItem Value="@shifttime?.ShiftDescription">@shifttime?.ShiftTitle @shifttime?.ShiftDescription</MudSelectItem>
+                    <MudSelectItem Value="@shifttime.Id"> @shifttime.ShiftDescription @Convert.ToDateTime(shifttime.StartTime).ToString("t") - @Convert.ToDateTime(shifttime.EndTime).ToString("t")</MudSelectItem>
                 }
             }
         </MudSelect>
-
     </MudItem>
     <MudItem xs="9"></MudItem>
-    <MudItem xs="3"><h5>Add Employee</h5></MudItem>
+    <MudItem xs="3"><h5>Add Employee</h5></MudItem> 
     <MudItem xs="9"></MudItem>
 </MudGrid>
 <MudGrid>
     <MudItem xs="3">
-        <MudPaper Height="400px" Class="overflow-y-auto overflow-x-hidden mt-10 mud-background-gray pa-4  d-flex flex-column" Elevation="2">
+        <MudPaper Height="400px" Class="overflow-y-auto overflow-x-hidden mt-10 mud-background-gray pa-4  d-flex flex-column" Elevation="2">            
             @if (isOpen)
             {
                 <MudPaper Elevation="25" Class="pa-2 rounded-lg">
 
-                    @*<input type="text" @onkeydown="@enter" placeholder="Enter Emp/SAP NO:" @bind-value="sapNo" maxlength="5" Class="mx-2 mt-n2" />*@
-                    <MudTextField @bind-Value="sapNo" Mask="@(new PatternMask("00000"))" Placeholder="Enter Emp/SAP NO:" DisableUnderLine="true" Margin="Margin.Dense" Class="mx-2 mt-n2"></MudTextField>
-                    @if (sapNo == null || sapNo == 0)
+                    <MudTextField OnKeyUp="triggerEnterButon" @bind-Value="SAPNumber" Mask="@(new PatternMask("00000"))" Placeholder="Enter SAP NO:" DisableUnderLine="true" Margin="Margin.Dense" Class="mx-2 mt-n2"></MudTextField>
+                    @if (SAPNumber == null)
                     {
                         IsSapNoAvailable = true;
                     }
@@ -67,9 +64,12 @@
                 <MudButton OnClick="@(() => isOpen = !isOpen)" StartIcon="@Icons.Filled.Add" IconColor="Color.Error" FullWidth="true" Class="rounded-lg py-2" Style="text-transform:none">Add Employee</MudButton>
             }
 
-            @foreach (int number in SapList)
+            @foreach (string numberOfEmp in SapList)
             {
-                <MudPaper Elevation="25" Class="pa-4 rounded-1g my-1">@number</MudPaper>
+                @if (vs_Employee is not null)
+                {
+                    <MudPaper Elevation="25" Class="pa-4 rounded-1g my-1">@numberOfEmp @vs_Employee.NickName</MudPaper>
+                }               
             }
         </MudPaper>
     </MudItem>
@@ -85,39 +85,43 @@
     </MudItem>
 </MudGrid>
 
-@*Class="d-flex align-center oi-justify-left mud-width-full py-8"*@
-
 @code {
 
     MudDatePicker? _picker;
-    MudDatePicker? _secondpicker;
-
-    private List<WorkingShifts?>? workingShifts;
-    private string stringValue { get; set; }
-
+    MudDatePicker? _secondpicker; 
     DateTime? date = DateTime.Today;
-    List<int?> SapList = new List<int?>();
-    //public List<int> SapList { get; set; }
 
-    public bool isOpen { get; set; } = false;
+    List<string?> SapList = new List<string?>();   
 
-    public int? sapNo { get; set; }
+    public string SAPNumber { get; set; }
+    public string EmpName { get; set; }
+    public Vs_Employee? vs_Employee { get; set; }
+
+    public bool isOpen { get; set; } = false;  
 
     bool IsSapNoAvailable { get; set; } = false;
-
-    private async Task AddEmployee()
-    {
-        SapList.Add(sapNo);
-        sapNo = null;
-    }
+    
+    WorkingShifts _workingShifts = new WorkingShifts();
+    public List<WorkingShifts>? getWorkingShifts { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await GetShifts();
+        getWorkingShifts = await Http.GetFromJsonAsync<List<WorkingShifts>?>("api/WorkingShifts");
     }
 
-    async Task GetShifts()
+    async Task triggerEnterButon(KeyboardEventArgs e)
     {
-        workingShifts = await Http.GetFromJsonAsync<List<WorkingShifts>>("api/WorkingShifts");
+        if (e.Key == "Enter")
+        {
+            await AddEmployee();
+        }
     }
+
+    private async Task AddEmployee()
+    {
+        vs_Employee = await Http.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={SAPNumber}");
+
+        SapList.Add(SAPNumber);        
+        SAPNumber = null;
+    }      
 }

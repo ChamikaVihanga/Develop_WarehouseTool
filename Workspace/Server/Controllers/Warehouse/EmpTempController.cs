@@ -39,6 +39,6 @@ namespace Workspace.Server.Controllers.Warehouse
         public async Task<Vs_Employee> GetEmp(string SAP)
         {
             return await _context.Vs_Employees.Where(a => a.SAPNo == SAP).FirstOrDefaultAsync();
-        }
+        }                      
     }
 }

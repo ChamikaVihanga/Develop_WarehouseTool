@@ -15,6 +15,7 @@ namespace Workspace.Server.Controllers.Warehouse
         {
             _context = context;
         }
+               
 
         // Get: api/WorkingShifts
         [HttpGet]
@@ -25,6 +26,6 @@ namespace Workspace.Server.Controllers.Warehouse
                 return NotFound();
             }
             return Ok(await _context.WorkingShift.ToListAsync());
-        } 
+        }               
     }
 }
