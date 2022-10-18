@@ -46,7 +46,7 @@
             {
                 <MudPaper Elevation="25" Class="pa-2 rounded-lg">
 
-                    <MudTextField OnKeyUp="triggerEnterButon" @bind-Value="SAPNumber" Mask="@(new PatternMask("00000"))" Placeholder="Enter SAP NO:" DisableUnderLine="true" Margin="Margin.Dense" Class="mx-2 mt-n2"></MudTextField>
+                    <MudTextField @bind-Value="SAPNumber" Mask="@(new PatternMask("00000"))" Placeholder="Enter SAP NO:" DisableUnderLine="true" Margin="Margin.Dense" Class="mx-2 mt-n2"></MudTextField>
                     @if (SAPNumber == null)
                     {
                         IsSapNoAvailable = true;
@@ -86,7 +86,7 @@
 </MudGrid>
 
 @code {
-
+    
     MudDatePicker? _picker;
     MudDatePicker? _secondpicker; 
     DateTime? date = DateTime.Today;
@@ -97,7 +97,7 @@
     public string EmpName { get; set; }
     public Vs_Employee? vs_Employee { get; set; }
 
-    public bool isOpen { get; set; } = false;  
+    public bool isOpen { get; set; } = false;      
 
     bool IsSapNoAvailable { get; set; } = false;
     
@@ -123,5 +123,5 @@
 
         SapList.Add(SAPNumber);        
         SAPNumber = null;
-    }      
+    }   
 }

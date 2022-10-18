@@ -108,6 +108,9 @@ else
     public int id { get; set; }
 
     [Parameter]
+    public string orgUnit { get; set; }
+
+    [Parameter]
     public int DetailId { get; set; }
 
     void Cancel() => MudDialog?.Cancel();
@@ -143,9 +146,10 @@ else
 
         if (IsOperationNew)
         {
+            operationEdit.OrganizationUnit = orgUnit;
             operationEdit.OperationListId = id;
             operationEdit.EffectiveDate = (DateTime)newdate;
-            operationEdit.CreatedBy = "Unknowen User";
+            operationEdit.CreatedBy = "Unknowen User";            
             var newUpdateResponse = await http.PostAsJsonAsync<OperationDetail>("api/OperationDetailsAPI/DetailsOnly", operationEdit);
             MudDialog?.Close(DialogResult.Ok(true));
             string streditResponse = newUpdateResponse.Content.ReadAsStringAsync().Result;
@@ -153,6 +157,7 @@ else
         }
         else
         {
+            operationEdit.OrganizationUnit = orgUnit;
             operationEdit.Id = DetailId;
             operationEdit.EffectiveDate = operationDetail.EffectiveDate;
             operationEdit.CreatedBy = "User";

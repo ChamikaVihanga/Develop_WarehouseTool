@@ -16,9 +16,9 @@
     <MudItem xs="3" Class="d-flex justify-end">
         <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" OnClick="@((e) => OpenCreateDialog())">Create new update</MudButton>
     </MudItem>
-    @*<MudItem xs="3">
-    <MudTextField T="String" Label="Organization Unit" ></MudTextField>
-    </MudItem>*@
+    <MudItem xs="3">
+        <MudTextField @bind-Value="organizationName" Label="Organization Unit" ReadOnly="true"></MudTextField>
+    </MudItem>
     <MudItem xs="3">
         <MudTextField T="String" Label="Operation Name" @bind-Value="name" ReadOnly="true"></MudTextField>
     </MudItem>
@@ -30,7 +30,7 @@
     <MudItem xs="12">
         <MudPaper Elevation="1">
             <MudTable Items="updateRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="true" Bordered="@borded">
-                <HeaderContent>
+                <HeaderContent>                    
                     <MudTh><b>Create Date</b></MudTh>
                     <MudTh><b>Target</b></MudTh>
                     <MudTh><b>Allocated Time</b></MudTh>
@@ -38,7 +38,7 @@
                     <MudTh><b>Created By</b></MudTh>
                     <MudTh></MudTh>
                 </HeaderContent>
-                <RowTemplate>
+                <RowTemplate>                    
                     <MudTd>@context.CreateDate.ToString("d")</MudTd>
                     <MudTd>@context.Target</MudTd>
                     <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
@@ -62,10 +62,13 @@
     public int? id { get; set; }
 
     public string? name { get; set; }     //  <------- Display operation name
-    public string? OU { get; set; }   //  <------- Display operation name
+
+    [Parameter]  
+    public string? organizationName { get; set; }   
 
     private OperationDetail[]? updateRecords { get; set; }
     private OperationList? operationList { get; set; }
+    private OperationDetail? _organizationUnit { get; set; }
 
     DialogOptions noHeaderWithScreen = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true, NoHeader = true };
     DialogOptions maxWidthScreen = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, CloseButton = true };
@@ -75,6 +78,9 @@
         operationList = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/getOperationName?id={id}");
         name = operationList?.Name;
         updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails/{id}");
+
+        _organizationUnit = await Http.GetFromJsonAsync<OperationDetail>($"api/OperationDetailsAPI/getOnlyOrgUnit?id={id}");
+        organizationName = _organizationUnit?.OrganizationUnit;
     }
 
     private async Task OpenEditOpNameDialog()
@@ -95,6 +101,7 @@
     private async Task OpenCreateDialog()
     {
         var parameter = new DialogParameters();
+        parameter.Add("orgUnit",organizationName);
         parameter.Add("id", id);
         parameter.Add("IsOperationNew", true);       
         var createDialog = Dialog.Show<_EditOperationTable>("Create New Update Form", parameter, maxWidthScreen);
@@ -108,6 +115,7 @@
     private async Task OpenEditDialog(int Detailid)
     {
         var parameter = new DialogParameters();
+        parameter.Add("orgUnit", organizationName);
         parameter.Add("id", id);
         parameter.Add("datedisable", true);
         parameter.Add("DetailId", Detailid);

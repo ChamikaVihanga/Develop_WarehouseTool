@@ -79,7 +79,15 @@ namespace Workspace.Server.Controllers.Warehouse
 
         }
 
+        [HttpGet("getOnlyOrgUnit")]
+        public async Task<ActionResult<OperationDetail>> GetByNameOrg(int id)
+        {           
+            var getOrgName = await _context.OperationDetails.FindAsync(id);
+            if (getOrgName == null)
+                return BadRequest("Name not found");
 
+            return getOrgName;
+        }
 
 
         // GET: api/OperationDetailsAPI/5
@@ -135,6 +143,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 operationDetail1.Target = operationDetail.Target;
                 operationDetail1.CreatedBy = User.Identity.Name;
                 operationDetail1.OperationListId = operationDetail.OperationListId;
+                operationDetail1.OrganizationUnit = operationDetail.OrganizationUnit;
 
                 _context.OperationDetails.Add(operationDetail1);
                 await _context.SaveChangesAsync();

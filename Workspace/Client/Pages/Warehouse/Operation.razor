@@ -86,10 +86,16 @@
     private async Task PostData()
     {
         summeryDTO.EffectiveDate = (DateTime)date;                 /* <---- If I want to convert to datetime ====> Convert.ToDateTime(date);              (DateTime)date  */
-        summeryDTO.OrganizationUnit = oganizationUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
+        //summeryDTO.OrganizationUnit = oganizationUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
         var response = await http.PostAsJsonAsync<OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
         string strResponse = response.Content.ReadAsStringAsync().Result;
         showBar(strResponse);
+        summeryDTO.OrganizationUnit = null;
+        summeryDTO.OperationName = null;
+        summeryDTO.Target = null;
+        summeryDTO.AllocatedTime = null;
+        summeryDTO.TimePeriod = null;
+        date = null;
     }
     void showBar(string getstringvalue)
     {
