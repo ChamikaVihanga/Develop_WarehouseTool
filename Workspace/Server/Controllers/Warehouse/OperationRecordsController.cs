@@ -68,33 +68,23 @@ namespace Workspace.Server.Controllers.Warehouse
             return recordDate;
         }
 
-        /// <summary>
-        /// 
-        /// employee month
-        /// 
-        /// daily list > emp > eficiency for full month
-        /// daily month eke detail eke target > day eke achivement
-        /// 
-        /// </summary>
         //Get: api/OperationRecords/Efficiency
         [HttpGet("Efficiency")]
-        public async Task<ActionResult<List<OperationRecord>>> GetEfficiencyDetil(string SapNo, DateTime SelectedDateRange)
+        public async Task<ActionResult<List<OperationRecord>>> GetEfficiencyDetil(string SapNo, DateTime SelectMonth)
         {
-            
+            //SelectedDateRange = DateTime.Now;
 
              var efficiencyRecord = await _context.OperationRecords
                 .Include(a => a.OperationList)
                 .ThenInclude(b => b.OperationDetails)
                 .Where(a => a.SAPNo == SapNo)
-                .Where(a=>a.CreateDate.Month == SelectedDateRange.Month)
+                .Where(a=>a.CreateDate.Month == SelectMonth.Month)
                 
                 .ToListAsync();
             return
                 efficiencyRecord;
+        } 
 
-        }
-
-       
 
 
         ///Test GET API    <summary>
