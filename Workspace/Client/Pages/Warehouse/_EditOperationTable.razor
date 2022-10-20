@@ -16,10 +16,7 @@
                     <MudTextField @bind-Value="operationEdit.TimeSpan" Label="Time"></MudTextField>
                 </MudItem>
                 <MudItem xs="6">
-                    <MudSelect @bind-Value="operationEdit.TimePeriod" Label="Select a Time Period">
-                        <MudSelectItem Value="@("Minutes")" />
-                        <MudSelectItem Value="@("Hours")" />
-                    </MudSelect>
+                    <MudTextField @bind-Value="operationEdit.TimePeriod" Label="Time Period" Text="@getTimePeriod" ReadOnly="true"></MudTextField>
                 </MudItem>
             </MudGrid>
             @if (selectedDate)
@@ -31,7 +28,7 @@
             }
             else
             {
-                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Enter New Effective Month" @ref="_picker" @bind-Date="newdate" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM">
+                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Enter New Effective Month" @ref="_picker" @bind-Date="newdate" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM">              @*FixYear="@DateTime.Today.Year" *@
                     <PickerActions>
                         <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
                         <MudButton Color="Color.Primary" OnClick="checkDate"><b>OK</b></MudButton>
@@ -49,7 +46,7 @@
                     @if (submitByDate)
                     {
                         //Operation Detail submit button when Edit
-                        @if (operationDetail.EffectiveDate == null || operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.TimePeriod == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0)
+                        @if (operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0)
                         {
                             <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit" Disabled="true">Ok</MudButton>
                         }
@@ -61,7 +58,7 @@
                     else
                     {
                         //Operation Detail submit button when Create
-                        @if (operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || operationEdit.TimePeriod == null || newdate == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0 || isMonthAvailable == true)
+                        @if (operationList.Name == null || operationEdit.Target == null || operationEdit.TimeSpan == null || newdate == null || operationEdit.Target == 0 || operationEdit.TimeSpan == 0 || isMonthAvailable == true)
                         {
                             <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="Submit" Disabled="true">Ok</MudButton>
                         }
@@ -81,6 +78,8 @@ else
 }
 
 @code {
+    string getTimePeriod = "Minutes";
+
     MudDatePicker? _picker;
 
     public DateTime? newdate { get; set; }
@@ -149,6 +148,7 @@ else
             operationEdit.OrganizationUnit = orgUnit;
             operationEdit.OperationListId = id;
             operationEdit.EffectiveDate = (DateTime)newdate;
+            operationEdit.TimePeriod = "Minutes";
             operationEdit.CreatedBy = "Unknowen User";            
             var newUpdateResponse = await http.PostAsJsonAsync<OperationDetail>("api/OperationDetailsAPI/DetailsOnly", operationEdit);
             MudDialog?.Close(DialogResult.Ok(true));
@@ -160,6 +160,7 @@ else
             operationEdit.OrganizationUnit = orgUnit;
             operationEdit.Id = DetailId;
             operationEdit.EffectiveDate = operationDetail.EffectiveDate;
+            operationEdit.TimePeriod = "Minutes";
             operationEdit.CreatedBy = "User";
             var editResponse = await http.PutAsJsonAsync<OperationDetail>($"api/OperationDetailsAPI?id={DetailId}", operationEdit);
             MudDialog?.Close(DialogResult.Ok(true));
@@ -177,7 +178,7 @@ else
         if (selectedDate)
         {
             operationList = await http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
-            operationDetail = await http.GetFromJsonAsync<OperationDetail?>($"api/OperationDetailsAPI/{DetailId}");
+            operationDetail = await http.GetFromJsonAsync<OperationDetail?>($"api/OperationDetailsAPI/getEffectiveDate?id={DetailId}");
         }
         else
         {

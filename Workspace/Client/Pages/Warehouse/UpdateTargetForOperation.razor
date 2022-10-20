@@ -20,7 +20,7 @@
         <MudTextField @bind-Value="organizationName" Label="Organization Unit" ReadOnly="true"></MudTextField>
     </MudItem>
     <MudItem xs="3">
-        <MudTextField T="String" Label="Operation Name" @bind-Value="name" ReadOnly="true"></MudTextField>
+        <MudTextField @bind-Value="name" Label="Operation Name" ReadOnly="true"></MudTextField>
     </MudItem>
     <MudItem xs="3" Class="pa-0">
         <MudTooltip Text="Edit Operation Name" Placement="Placement.Right">
@@ -64,11 +64,11 @@
     public string? name { get; set; }     //  <------- Display operation name
 
     [Parameter]  
-    public string? organizationName { get; set; }   
+    public string? organizationName { get; set; }    //  <------- Display OrgUnit name
 
     private OperationDetail[]? updateRecords { get; set; }
     private OperationList? operationList { get; set; }
-    private OperationDetail? _organizationUnit { get; set; }
+    private OperationDetail? _getOrganizationUnit { get; set; }
 
     DialogOptions noHeaderWithScreen = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true, NoHeader = true };
     DialogOptions maxWidthScreen = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, CloseButton = true };
@@ -76,11 +76,12 @@
     protected override async Task OnInitializedAsync()
     {
         operationList = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/getOperationName?id={id}");
-        name = operationList?.Name;
-        updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails/{id}");
+        name = operationList?.Name;        
 
-        _organizationUnit = await Http.GetFromJsonAsync<OperationDetail>($"api/OperationDetailsAPI/getOnlyOrgUnit?id={id}");
-        organizationName = _organizationUnit?.OrganizationUnit;
+        _getOrganizationUnit = await Http.GetFromJsonAsync<OperationDetail>($"api/OperationDetailsAPI/getOnlyOrgUnit?id={id}");
+        organizationName = _getOrganizationUnit?.OrganizationUnit;        
+
+        updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails?id={id}");
     }
 
     private async Task OpenEditOpNameDialog()

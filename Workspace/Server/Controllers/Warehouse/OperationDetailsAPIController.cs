@@ -80,18 +80,33 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
         [HttpGet("getOnlyOrgUnit")]
-        public async Task<ActionResult<OperationDetail>> GetByNameOrg(int id)
-        {           
-            var getOrgName = await _context.OperationDetails.FindAsync(id);
-            if (getOrgName == null)
-                return BadRequest("Name not found");
+        public async Task<ActionResult<OperationDetail>> GetOrganizationUnit(int id)
+        {
+            if(_context.OperationDetails == null)
+            {
+                return NotFound();
+            }
 
-            return getOrgName;
+            var getOrgUnit = await _context.OperationDetails.Include(a=>a.OperationList).FirstOrDefaultAsync(b=>b.Id == id);            
+
+            if(getOrgUnit == null)
+            {
+                return NotFound();
+            }
+            return getOrgUnit;
+
+
+            //var getOrgName = await _context.OperationDetails.FindAsync(id);            
+
+            //if (getOrgName == null)
+            //    return BadRequest("Name not found");
+
+            //return getOrgName;
         }
 
 
         // GET: api/OperationDetailsAPI/5
-        [HttpGet("{id}")]
+        [HttpGet("getEffectiveDate")]
         public async Task<ActionResult<OperationDetail>> GetOperationDetail(int id)
         {
             if (_context.OperationDetails == null)
@@ -115,7 +130,7 @@ namespace Workspace.Server.Controllers.Warehouse
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Route("GetListofOpDetails/{id}")]
+        [Route("GetListofOpDetails")]
         [HttpGet]
         public async Task<List<OperationDetail>> getOpList(int id)
         {
