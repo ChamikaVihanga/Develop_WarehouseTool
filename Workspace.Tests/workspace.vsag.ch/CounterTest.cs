@@ -18,7 +18,7 @@ namespace Workspace.Tests.workspace.vsag.ch
             cut.Find("button").Click();
 
             // Assert: first find the <p> element, then verify its content
-            cut.Find("p").MarkupMatches("<p>Current count: 1</p>");
+            cut.Find("p").MarkupMatches("<p role=\"status\">Current count: 1</p>");
         }
     }
 }

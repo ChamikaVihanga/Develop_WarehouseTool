@@ -32,23 +32,20 @@
                         <MudTextField @bind-Value="summeryDTO.Target" Label="Target" For="@(() => summeryDTO.Target)"></MudTextField>
                     </MudItem>
                     <MudItem xs="3">
-                        <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time" For="@(() => summeryDTO.AllocatedTime)"></MudTextField>
+                        <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time" For="@(() => summeryDTO.AllocatedTime)"></MudTextField>                        
                     </MudItem>
                     <MudItem xs="3">
-                        <MudSelect @bind-Value="summeryDTO.TimePeriod" Label="Select a Time Period" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
-                            <MudSelectItem Value="@("Minutes")" />
-                            <MudSelectItem Value="@("Hours")" />
-                        </MudSelect>
+                        <MudTextField @bind-Value="summeryDTO.TimePeriod" Label="Time Period" Text="@getTimePeriod" ReadOnly="true"></MudTextField>                        
                     </MudItem>
                 </MudGrid>
             </EditForm>
 
-            <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="date" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
+            <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="date" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>                   @*FixYear="@DateTime.Today.Year"*@
 
             <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
                 <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
 
-                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target == null || summeryDTO.AllocatedTime == null || summeryDTO.TimePeriod == null || summeryDTO.Target == 0 || summeryDTO.AllocatedTime == 0 || summeryDTO.OrganizationUnit == null)
+                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target == null || summeryDTO.AllocatedTime == null  || summeryDTO.Target == 0 || summeryDTO.AllocatedTime == 0 || summeryDTO.OrganizationUnit == null)
                 {
                     <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="true">Add Task</MudButton>
                 }
@@ -65,10 +62,11 @@
 
 @code {
     //public bool ReadOnly { get; set; } = true;
-    DateTime? date;
-
-    //public string date { get; set; }
+    DateTime? date;    
     MudDatePicker _picker;
+
+    string getTimePeriod = "Minutes";
+
     [Parameter]
     public string id { get; set; }
 
@@ -81,15 +79,21 @@
     protected override async Task OnInitializedAsync()
     {
         oganizationUnits = await http.GetFromJsonAsync<List<OrganizationUnitDTO>?>("api/EmpTemp/333100/units");
-    }
-
+    }    
+    
     private async Task PostData()
     {
         summeryDTO.EffectiveDate = (DateTime)date;                 /* <---- If I want to convert to datetime ====> Convert.ToDateTime(date);              (DateTime)date  */
-        summeryDTO.OrganizationUnit = oganizationUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
+        summeryDTO.TimePeriod = "Minutes";
+        //summeryDTO.OrganizationUnit = oganizationUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
         var response = await http.PostAsJsonAsync<OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
         string strResponse = response.Content.ReadAsStringAsync().Result;
         showBar(strResponse);
+        summeryDTO.OrganizationUnit = null;
+        summeryDTO.OperationName = null;
+        summeryDTO.Target = null;
+        summeryDTO.AllocatedTime = null;        
+        date = null;
     }
     void showBar(string getstringvalue)
     {
