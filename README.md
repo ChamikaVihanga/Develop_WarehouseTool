@@ -1,5 +1,9 @@
 # Workspace Solution...
 
+[![GitHub issues open](https://img.shields.io/github/issues/network-tools/shconfparser.svg?maxAge=2592000)](http://git.workspace.vsag.ch/Dev_Team/Workspace/issues)
+
+
+
 > Current Version 1.3.0
 
 > Project track in [GitV](http://git.workspace.vsag.ch/Dev_Team/Workspace/projects) *[Self-Hosted]*
@@ -10,17 +14,25 @@
 
 ### Technologies
 
-* .Net 6
-* C#
-* ASP.NET Core 6
-* Entity Framework 6
-* Blazor
-* MS SQL Server 2016
-* Visual Studio 2022
+:white_check_mark:
+.Net 6
+:white_check_mark:
+C#
+:white_check_mark:
+ASP.NET Core 6
+:white_check_mark:
+Entity Framework 6
+:white_check_mark:
+Blazor
+:white_check_mark:
+MS SQL Server 2016
+:white_check_mark:
+Visual Studio 2022
+
 
 ### Main Implimentations
-- [x] Blazor Wasm-Hosted
-- [x] Repository Patterns
+- [x] Blazor Wasm-Hosted #30
+- [x] Repository Patterns #31
 - [x] AD Login
 - [ ] Policy Base Athorization
 - [ ] Localization
@@ -48,6 +60,18 @@
 
 
 ## Implementing a new feature in Workspace
+
+<details><summary>CLICK ME</summary>
+<p>
+
+#### We can hide anything, even code!
+
+```ruby
+   puts "Hello World"
+```
+
+</p>
+</details>
 
 1. **Workspace.Shared Project**
     - Add Entities
