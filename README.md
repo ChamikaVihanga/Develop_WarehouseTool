@@ -2,15 +2,16 @@
 
 > Current Version 1.3.0
 
-> Project track in [Jira](https://workspaceapp.atlassian.net/jira/software/projects/WS/boards/2) *[Cloud]*
+> Project track in [GitV](http://git.workspace.vsag.ch/Dev_Team/Workspace/projects) *[Self-Hosted]*
 
-> Project repository in [GitV](http://git.workspace.vsag.ch/Dev_Team/Workspace) *[Local Hosted]*
+> Project repository in [GitV](http://git.workspace.vsag.ch/Dev_Team/Workspace) *[Self-Hosted]*
 
 > Project Documentation in [Notion](https://hiruna.notion.site/VS-Workspace-ab113a9758d14836b37e2d16f4b7dbed) *[Temp]*
 
 ### Technologies
 
-* Net Core 6
+* .Net 6
+* C#
 * ASP.NET Core 6
 * Entity Framework 6
 * Blazor
@@ -32,7 +33,6 @@
 - [x] Workspace Solution : http://workspace.vsag.ch
 - [x] Authenticating Service : https://auth.workspace.vsag.ch
 - [ ] Workspace Admin : https://admin.workspace.vsag.ch/
-- [ ] Background Services : https://Services.workspace.vsag.ch/
 
 -----
 
@@ -69,3 +69,4 @@
 		- Add Services with Interfaces
 	- Pages Folder
 		- Features
+
