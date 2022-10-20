@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using Workspace.Shared.Entities.Warehouse;
 
 namespace Workspace.Server.Controllers.Warehouse
@@ -52,7 +53,6 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
         // GET: api/OperationRecords/Filteer?id=12045&&SelectedDate=2022-06-03
-
         [HttpGet, Route("Filter")]
         public async Task<ActionResult<List<OperationRecord>>> OperationRecordsSapDate(int id, DateTime SelectedDate)
         {
@@ -61,22 +61,52 @@ namespace Workspace.Server.Controllers.Warehouse
                 .Include(a => a.OperationList)
                 .ThenInclude(b => b.OperationDetails)
                 .Where(b => b.SAPNo == id.ToString())
+                .Where(b => b.CreateDate.Date == SelectedDate)
                 .ToListAsync();
 
             return recordDate;
         }
 
         //Get: api/OperationRecords/Efficiency
-
-
-
-/*        [HttpGet("Efficiency")]
-
-        public async Task<ActionResult<List<OperationRecord>>> GetEfficiencyRecords()
+        [HttpGet("Efficiency")]
+        public async Task<ActionResult<List<OperationRecord>>> GetEfficiencyDetil(string SapNo, DateTime SelectMonth)
         {
-            return
-        }*/
+            //SelectedDateRange = DateTime.Now;
 
+             var efficiencyRecord = await _context.OperationRecords
+                .Include(a => a.OperationList)
+                .ThenInclude(b => b.OperationDetails)
+                .Where(a => a.SAPNo == SapNo)
+                .Where(a=>a.CreateDate.Month == SelectMonth.Month)
+                
+                .ToListAsync();
+            return
+                efficiencyRecord;
+        } 
+
+
+
+
+        ///Test GET API    <summary>
+        /// Test GET API   
+        /// </summary>
+        /// <returns></returns>
+
+        //Get: api/OperationRecords/GetTarget
+        /*[HttpGet("GetTarget")]
+        public async Task<ActionResult<List<OperationDetail>>> GetDetailTargrt(int id, int target)
+        {
+            var GetTarget = await _context.OperationRecords
+                .Where(a=>a.SAPNo==id.ToString())
+                .Include(b=>b.OperationList)
+                .ThenInclude(a=>a.OperationDetails)
+                
+
+                .ToListAsync();
+
+            return GetTarget;
+
+        }*/
 
 
         // PUT: api/OperationRecords/5

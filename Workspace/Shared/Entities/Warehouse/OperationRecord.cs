@@ -8,8 +8,8 @@ namespace Workspace.Shared.Entities.Warehouse
 
         //One to many
 
-        public int? OperationListId { get; set; }
-        public OperationList? OperationList { get; set; }
+        public int OperationListId { get; set; }
+        public OperationList OperationList { get; set; }
 
 
 
