@@ -23,8 +23,9 @@
     </nav>
 </div>*@
 
-<MudPaper Width="250px" Elevation="0" Class="py-3">
-    <MudNavMenu Color="Color.Info">
+<MudPaper Width="250px" Elevation="0" Class="py-3" Style="@($"color:{Colors.LightGreen.Accent3}; background:{Colors.BlueGrey.Darken4};")">
+    @*<MudNavMenu Color="Color.Info">*@
+    <MudNavMenu Color="Color.Transparent">
         <MudNavLink Icon="@Icons.Filled.Dashboard" Match="NavLinkMatch.Prefix" Href="">Dashboard</MudNavLink>
         <MudNavLink Href="/UserManager" Icon="@Icons.Filled.AccountTree" Match="NavLinkMatch.Prefix">User Manager</MudNavLink>
         <MudNavLink Href="/" Disabled="true">Instructions</MudNavLink>

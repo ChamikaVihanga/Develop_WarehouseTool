@@ -39,7 +39,9 @@
 
 	<ItemGroup>
 		<Folder Include="Authorization\Timer\" />
+		<Folder Include="Controllers\WorkspaceApp\" />
 		<Folder Include="Properties\" />
+		<Folder Include="Services\WorkspaceApp\" />
 	</ItemGroup>
 
 

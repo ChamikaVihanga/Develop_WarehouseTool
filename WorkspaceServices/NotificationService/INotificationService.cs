@@ -5,6 +5,6 @@ namespace WorkspaceServices.NotificationService
 {
     public interface INotificationService
     {
-        Task<ServiceResponse<List<Notification>>> GetNotificationsAsync();
+        Task<List<Notification>> GetNotificationsAsync();
     }
 }

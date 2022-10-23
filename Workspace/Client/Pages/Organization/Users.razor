@@ -1,0 +1,52 @@
+﻿@page "/user"
+<h3>Users</h3>
+
+<MudTextField @bind-Value="TextValue" Label="Search by any value" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+
+@*https://mudblazor.com/components/chips#filled-chips*@
+
+@*
+    click below and you get a box to select plants / department. Selected things again show inside the mudchip
+*@
+<MudChip Variant="Variant.Text">Plant</MudChip>
+<MudChip Variant="Variant.Text">Department</MudChip>
+
+
+
+<MudGrid Class="mt-3">
+    @for (int i = 0; i < 20; i++)
+    {
+        <MudItem xs="2">
+            <MudPaper Elevation="0">
+
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="40px" Width="40px" />
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudSkeleton Animation="Animation.Wave" Width="40%" />
+                            <MudSkeleton Animation="Animation.Wave" Width="60%" />
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="150px" />
+                    <MudCardContent>
+                        @*<MudSkeleton Animation="Animation.Wave" />*@
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="30px" Width="50px" Class="ml-2 mb-2" />
+                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="30px" Width="50px" Class="ml-3 mb-2" />
+                    </MudCardActions>
+                </MudCard>
+
+            </MudPaper>
+        </MudItem>
+    }
+
+</MudGrid>
+
+
+
+@code {
+    public string TextValue { get; set; }
+}

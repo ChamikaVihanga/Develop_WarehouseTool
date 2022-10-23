@@ -2,9 +2,9 @@
 {
     public interface ISapEmployeeExtraction
     {
-        Task<ServiceResponse<List<SapEmployee>>> GetSapEmployees();
-        Task<ServiceResponse<List<SapPlant>>> GetUpdatedSapPlants();
-        Task<ServiceResponse<List<SapCostCenter>>> GetUpdatedSapCostCenters();
-        Task<ServiceResponse<List<SapOrganizationalUnit>>> GetUpdatedSapOrganizationalUnits();
+        Task<List<SapEmployee>> GetSapEmployees();
+        Task<List<SapPlant>> GetUpdatedSapPlants();
+        Task<List<SapCostCenter>> GetUpdatedSapCostCenters();
+        Task<List<SapOrganizationalUnit>> GetUpdatedSapOrganizationalUnits();
     }
 }

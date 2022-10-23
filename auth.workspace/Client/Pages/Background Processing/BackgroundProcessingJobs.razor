@@ -1,0 +1,33 @@
+﻿@page "/tasks"
+<h3>Background Processing Jobs</h3>
+
+@*https://mudblazor.com/components/expansionpanels*@
+
+
+<MudTreeView T="string">
+    <MudTreeViewItem Value="@("Organizational Unit Management")">
+        <MudTreeViewItem Value="@("Update OUs")" />
+        <MudTreeViewItem Value="@("Validating OUs")" />
+    </MudTreeViewItem>
+    <MudTreeViewItem Value="@("User Management")">
+        <MudTreeViewItem Value="@("Update Users")" />
+        <MudTreeViewItem Value="@("Validating Users")" />
+    </MudTreeViewItem>
+</MudTreeView>
+
+<MudExpansionPanels MultiExpansion="true">
+    <MudExpansionPanel Text="Organizational Units">
+        Update OUs / Validating OUs
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Users">
+        Update Users / Validating Users
+    </MudExpansionPanel>
+    <MudExpansionPanel Text="Helth Check the System">
+        Check the SQl server connections / Domains
+    </MudExpansionPanel>
+
+</MudExpansionPanels>
+
+@code {
+
+}
