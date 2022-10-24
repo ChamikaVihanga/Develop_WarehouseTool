@@ -8,9 +8,11 @@
     <Authorized>
         <MudMenu Icon="@Icons.Filled.AccountCircle" ActivationEvent="@MouseEvent.MouseOver" >
             <ChildContent>
-                <MudMenuItem Disabled="true" Style="background-color:lightsteelblue">@context.User.Identity.Name.ToString().ToUpper()</MudMenuItem>
-                <MudMenuItem>Profile</MudMenuItem>
-                <MudMenuItem>Settings</MudMenuItem>
+                
+                <MudMenuItem Disabled="false" >@context.User.FindFirst("DisplayName").Value.Split(" ").First()</MudMenuItem>
+                <MudMenuItem Disabled="false" >@context.User.Identity.Name.ToString().ToUpper()</MudMenuItem>
+@*                <MudMenuItem>Profile</MudMenuItem>
+                <MudMenuItem>Settings</MudMenuItem>*@
                 <MudMenuItem @onclick="Logout">Sign Out</MudMenuItem>
             </ChildContent>
         </MudMenu>
