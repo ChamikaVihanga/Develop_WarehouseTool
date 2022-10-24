@@ -40,8 +40,10 @@
 
 	<ItemGroup>
 		<Folder Include="Authorization\Timer\" />
+		<Folder Include="Controllers\WorkspaceApp\" />
 		<Folder Include="ApprovalPathDataAccess\" />
 		<Folder Include="Properties\" />
+		<Folder Include="Services\WorkspaceApp\" />
 	</ItemGroup>
 
 

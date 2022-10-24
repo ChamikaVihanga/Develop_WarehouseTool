@@ -19,15 +19,15 @@ namespace Workspace.Client.Services.ResourceFacilityService
         {
             var result = await _http.PostAsJsonAsync("api/ReFaRequest", reFarequest);
             var newReFaRequest = (await result.Content
-                .ReadFromJsonAsync<ServiceResponse<ReFaRequest>>()).Data;
+                .ReadFromJsonAsync<ReFaRequest>());
             return newReFaRequest;
         }
 
         public async Task GetReFaRequests()
         {
-            var result = await _http
-                .GetFromJsonAsync<ServiceResponse<List<ReFaRequest>>>("api/ReFaRequests/");
-            ReFaRequests = result.Data;
+            ReFaRequests = await _http
+                .GetFromJsonAsync<List<ReFaRequest>>("api/ReFaRequests/");
+            
             //CurrentPage = 1;
             //PageCount = 0;
             if (ReFaRequests.Count == 0)

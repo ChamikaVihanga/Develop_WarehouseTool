@@ -17,7 +17,7 @@ namespace admin.workspace.Server.Controllers.ReadOnly
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<Vs_Employee>>> GetAllVsEmployees()
+        public async Task<ActionResult<Vs_Employee>> GetAllVsEmployees()
         {
             var result = await _iEmployeeService.GetAllVsEmployees();
             return Ok(result);

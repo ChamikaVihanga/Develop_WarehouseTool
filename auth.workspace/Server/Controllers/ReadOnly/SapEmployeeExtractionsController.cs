@@ -21,7 +21,7 @@ namespace admin.workspace.Server.Controllers.ReadOnly
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<SapEmployee>>> GetAllVsEmployees()
+        public async Task<ActionResult<SapEmployee>> GetAllVsEmployees()
 
         {
             var result = await _iSapEmployeeExtraction.GetSapEmployees();
@@ -30,7 +30,7 @@ namespace admin.workspace.Server.Controllers.ReadOnly
         }
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<SapEmployee>>> GetAllVsEmployees(int id)
+        public async Task<ActionResult<SapEmployee>> GetAllVsEmployees(int id)
 
         {
             var result = await _iSapEmployeeExtraction.GetSapEmployees();
@@ -40,21 +40,21 @@ namespace admin.workspace.Server.Controllers.ReadOnly
 
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<SapPlant>>> UpdateSapPlants()
+        public async Task<ActionResult<SapPlant>> UpdateSapPlants()
         {
             var result = await _iSapEmployeeExtraction.GetUpdatedSapPlants();
             return Ok(result);
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<SapCostCenter>>> UpdateSapCostCenters()
+        public async Task<ActionResult<SapCostCenter>> UpdateSapCostCenters()
         {
             var result = await _iSapEmployeeExtraction.GetUpdatedSapCostCenters();
             return Ok(result);
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<SapCostCenter>>> SapOrganizationalUnits()
+        public async Task<ActionResult<SapCostCenter>> SapOrganizationalUnits()
         {
             var result = await _iSapEmployeeExtraction.GetUpdatedSapOrganizationalUnits();
             return Ok(result);

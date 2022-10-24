@@ -15,36 +15,33 @@ namespace Workspace.Server.Services.ResourceFacilityService
             //_httpContextAccessor = httpContextAccessor;
         }
 
-        public Task<ServiceResponse<List<ReFaRequest>>> DeleteReFaRequestAsync(Guid reFaRequestId)
+        public Task<List<ReFaRequest>> DeleteReFaRequestAsync(Guid reFaRequestId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResponse<List<ReFaRequest>>> GetReFaRequestAsync(Guid reFaRequestId)
+        public Task<List<ReFaRequest>> GetReFaRequestAsync(Guid reFaRequestId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ServiceResponse<List<ReFaRequest>>> GetReFaRequestsAsync()
+        public async Task<List<ReFaRequest>> GetReFaRequestsAsync()
         {
-            var response = new ServiceResponse<List<ReFaRequest>>
-            {
-                Data = await _context.ReFaRequests.ToListAsync()
-            };
+            var response = await _context.ReFaRequests.ToListAsync();
 
             return response;
         }
 
-        public Task<ServiceResponse<List<ReFaRequest>>> UpdateReFaRequest(ReFaRequest reFaRequest)
+        public Task<List<ReFaRequest>> UpdateReFaRequest(ReFaRequest reFaRequest)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ServiceResponse<ReFaRequest>> CreateReFaRequest(ReFaRequest reFaRequest)
+        public async Task<ReFaRequest> CreateReFaRequest(ReFaRequest reFaRequest)
         {
             _context.ReFaRequests.Add(reFaRequest);
             await _context.SaveChangesAsync();
-            return new ServiceResponse<ReFaRequest> { Data = reFaRequest };
+            return  reFaRequest ;
         }
     }
 }

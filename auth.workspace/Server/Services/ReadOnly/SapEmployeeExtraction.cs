@@ -12,17 +12,14 @@ namespace admin.workspace.Server.Services.ReadOnly
         {
             _context = context;
         }
-        public async Task<ServiceResponse<List<SapEmployee>>> GetSapEmployees()
+        public async Task<List<SapEmployee>> GetSapEmployees()
         {
-            var response = new ServiceResponse<List<SapEmployee>>
-            {
-                Data = await _context.SapEmployee.ToListAsync()
-            };
+            var response = await _context.SapEmployee.ToListAsync();
 
             return response;
         }
 
-        public async Task<ServiceResponse<List<SapPlant>>> GetUpdatedSapPlants()
+        public async Task<List<SapPlant>> GetUpdatedSapPlants()
         {
             var PlantsFromSap = await _context.Vs_Employees.Select(x => x.CountryCode).Distinct().ToListAsync();
 
@@ -43,16 +40,13 @@ namespace admin.workspace.Server.Services.ReadOnly
             await _context.SaveChangesAsync();
 
 
-            var response = new ServiceResponse<List<SapPlant>>
-            {
-                Data = await _context.SapPlants.ToListAsync()
-            };
+            var response = await _context.SapPlants.ToListAsync();
 
             return response;
         }
 
 
-        public async Task<ServiceResponse<List<SapCostCenter>>> GetUpdatedSapCostCenters() // Add foreign key
+        public async Task<List<SapCostCenter>> GetUpdatedSapCostCenters() // Add foreign key
 
         {
             //List all distinct values of Cost Centers in SAP
@@ -81,15 +75,12 @@ namespace admin.workspace.Server.Services.ReadOnly
             }
 
 
-            var response = new ServiceResponse<List<SapCostCenter>>
-            {
-                Data = await _context.SapCostCenters.ToListAsync()
-            };
+            var response = await _context.SapCostCenters.ToListAsync();
 
             return response;
         }
 
-        public async Task<ServiceResponse<List<SapOrganizationalUnit>>> GetUpdatedSapOrganizationalUnits()
+        public async Task<List<SapOrganizationalUnit>> GetUpdatedSapOrganizationalUnits()
         {
             //List all distinct values of Organizational Unit in SAP
             var OrganizationalUnitsFromSap = await _context.Vs_Employees.Select(x => x.OrganizationalUnitID).Distinct().ToListAsync();
@@ -141,11 +132,7 @@ namespace admin.workspace.Server.Services.ReadOnly
 
             }
 
-
-            var response = new ServiceResponse<List<SapOrganizationalUnit>>
-            {
-                Data = await _context.SapOrganizationalUnits.ToListAsync()
-            };
+            var response = await _context.SapOrganizationalUnits.ToListAsync();
 
             return response;
         }
