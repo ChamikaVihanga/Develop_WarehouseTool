@@ -35,12 +35,12 @@
             <MudItem xs="4" Class="d-flex justify-end">
             @if(vS_employee is not null)
             {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b>@vS_employee.CostCenterID - @vS_employee.NickName</b></MudText>
+                    <MudText Typo="Typo.h6" Class="ml-3"><b>@vS_employee.EPFNo - @vS_employee.NickName</b></MudText>
             }
-            else
+           @* else
             {
                     <MudText Typo="Typo.h6" Class="ml-3"><b>Employee FullName</b></MudText>
-            }
+            }*@
             </MudItem>
            
         </MudGrid>

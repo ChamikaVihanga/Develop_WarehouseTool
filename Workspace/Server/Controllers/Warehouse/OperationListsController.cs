@@ -127,7 +127,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // PUT: api/OperationLists/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut]   /*, Authorize(Policy = "VSPolicy")*/
+        [HttpPut , Authorize(Policy = "VSPolicy")]  
         public async Task<ActionResult<List<OperationList>>> EditOperationName(OperationList operationList, int id)
         {
             var editOpName = await _context.OperationLists

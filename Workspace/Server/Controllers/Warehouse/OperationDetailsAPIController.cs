@@ -87,9 +87,10 @@ namespace Workspace.Server.Controllers.Warehouse
                 return NotFound();
             }
 
-            var getOrgUnit = await _context.OperationDetails.Include(a=>a.OperationList).FirstOrDefaultAsync(b=>b.Id == id);            
+            //var getOrgUnit = await _context.OperationDetails.Include(a=>a.OperationList).FirstOrDefaultAsync(b=>b.Id == id);
+            var getOrgUnit = await _context.OperationDetails.Where(a => a.OperationListId == id).FirstOrDefaultAsync();
 
-            if(getOrgUnit == null)
+            if (getOrgUnit == null)
             {
                 return NotFound();
             }
