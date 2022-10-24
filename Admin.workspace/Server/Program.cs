@@ -46,7 +46,7 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 builder.Services.AddDbContext<WorkspaceDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 

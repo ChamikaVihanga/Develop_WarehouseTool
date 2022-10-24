@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
-    <ProjectReference Include="..\Workspace\Shared\Workspace.Shared.csproj" />
+    <ProjectReference Include="..\..\DataAccessLayer\DataAccessLayer.csproj" />
+    <ProjectReference Include="..\..\Workspace\Shared\Workspace.Shared.csproj" />
   </ItemGroup>
 
 </Project>
