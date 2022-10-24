@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Workspace.Shared
 {
     public class WeatherForecast
@@ -5,6 +7,8 @@ namespace Workspace.Shared
         public int id { get; set; }
         public DateTime Date { get; set; }
 
+
+        [JsonIgnore]
         public int TemperatureC { get; set; }
 
         public string? Summary { get; set; }

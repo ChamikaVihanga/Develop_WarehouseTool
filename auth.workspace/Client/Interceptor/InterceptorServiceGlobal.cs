@@ -31,7 +31,6 @@ namespace admin.workspace.Client.Interceptor
 
         private async Task HttpClientInterceptor_BeforeSendAsync(object sender, HttpClientInterceptorEventArgs e)
         {
-
         }
 
         private void HttpClientInterceptor_AfterSend(object sender, HttpClientInterceptorEventArgs e)

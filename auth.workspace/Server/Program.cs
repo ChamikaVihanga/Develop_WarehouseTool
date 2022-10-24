@@ -1,5 +1,5 @@
 global using Microsoft.EntityFrameworkCore;
-
+global using ApprovalPath_Utils;
 
 global using DataAccessLayer;
 
@@ -24,9 +24,10 @@ using System.Security.Claims;
 
 using System.Text.Json;
 using admin.workspace.Server.Services.ReadOnly;
-
-
-
+using ApprovalPath_Utils.Services.ApprovalDocuementService;
+using ApprovalPath_Utils.Services.ApprovalJobManagerService;
+using ApprovalPath_Utils.ApprovalPathService;
+using System.Text.Json.Serialization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -48,9 +49,13 @@ builder.Services.AddDbContext<WorkspaceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
 });
 
+
+//Swapped NewtonJson to System.Text.Json.Serialization namespace
 builder.Services.AddControllersWithViews()
-    .AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    .AddJsonOptions(options =>
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+
+
 );
 builder.Services.AddRazorPages();
 builder.Services.AddSwaggerGen(options => {
@@ -106,6 +111,13 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthorizationHandler, CustomClaimCheckerHandler>();
 
 builder.Services.AddScoped<ICustomClaimChecker, CustomClaimChecker>();
+
+
+
+//Adding approval path services
+builder.Services.AddApprovalPathProvider();
+
+
 
 #region SAP Read Only tables
 

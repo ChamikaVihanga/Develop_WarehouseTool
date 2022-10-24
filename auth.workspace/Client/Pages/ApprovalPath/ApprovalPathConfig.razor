@@ -1,0 +1,22 @@
+﻿@page "/ApprovalPath"
+
+<MudGrid>
+    <MudItem xs="12" sm="12" lg="3"></MudItem>
+    <MudItem xs="12" sm="12" lg="5"></MudItem>
+    <MudItem xs="12" sm="12" lg="4"></MudItem>
+    <admin.workspace.Client.Pages.ApprovalPath.Components.ConfigurationManager></admin.workspace.Client.Pages.ApprovalPath.Components.ConfigurationManager>
+</MudGrid>
+
+
+@code {
+    public string? DocName { get; set; }
+
+    string classes = "form-control";
+
+    void test(KeyboardEventArgs keyboardEventArgs)
+    {
+
+        Console.WriteLine(keyboardEventArgs.Key.ToString());
+        Console.WriteLine(DocName);
+    }
+}

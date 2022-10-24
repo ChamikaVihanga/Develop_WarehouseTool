@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using admin.workspace.Server.ActiveDirectoryAccess;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -36,16 +37,26 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
         [HttpPost, Route("AddDomainUser"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<string>> AddDomainUser(AuthenticationUserClaimsHolder username)
         {
-            try
+            ADAccessProvider aDAccessProvider = new ADAccessProvider();
+            bool result = await aDAccessProvider.checkName(username.UserName);
+            if (result)
             {
-                await _context.AddAsync(username);
-                await _context.SaveChangesAsync();
-                return Ok("User has been added.");
+                try
+                {
+                    await _context.AddAsync(username);
+                    await _context.SaveChangesAsync();
+                    return Ok("User has been added.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);  
+                return BadRequest("Invalid username");
             }
+           
             
 
         }

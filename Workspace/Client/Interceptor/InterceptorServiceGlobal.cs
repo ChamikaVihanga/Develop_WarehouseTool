@@ -56,6 +56,7 @@ namespace Workspace.Client.Interceptor
                     _snackbar.Add($"Server-Response: {e.Response.StatusCode}", Severity.Success);
 
                 }
+
             }
         }
 

@@ -27,6 +27,7 @@ namespace admin.workspace.Server.Controllers.AuthenticationControllers
         [HttpPost, Route("BindADGroupsToEndPoints"), Authorize(Policy = "VSPolicy")]
         public async Task BindAdGroupsWithEndPoints(HashSet<DataTransferObject.TransferAdGroups> transferAdGroups, int endpointId)
         {
+            
             int EndPointId = endpointId;
             var endPoint = await _context.AuthenticationClaimRequirements.Where(a => a.RequirementId == EndPointId).Include(a => a.AuthenticationADAssignedGroups).FirstOrDefaultAsync();
 
