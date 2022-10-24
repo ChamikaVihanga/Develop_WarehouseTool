@@ -79,21 +79,21 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpGet("Efficiency")]
         public async Task<ActionResult<List<OperationRecord>>> GetEfficiencyDetil(string SapNo, DateTime SelectedDateRange)
         {
-            
+            //var effectiveDate
 
-             var efficiencyRecord = await _context.OperationRecords
-                .Include(a => a.OperationList)
-                .ThenInclude(b => b.OperationDetails)
-                .Where(a => a.SAPNo == SapNo)
-                .Where(a=>a.CreateDate.Month == SelectedDateRange.Month)
-                
-                .ToListAsync();
-            return
-                efficiencyRecord;
+            var efficiencyRecord = await _context.OperationRecords
+               .Include(a => a.OperationList.OperationDetails)
+               .Where(a => a.SAPNo == SapNo && a.CreateDate.Month == SelectedDateRange.Month)
+               
+               
+               
+               // Slected date < Latest effective date
+               .ToListAsync(); 
+            return efficiencyRecord;
 
         }
-
        
+
 
 
 
