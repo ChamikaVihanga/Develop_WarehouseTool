@@ -32,6 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\ApprovalPath_Utils\ApprovalPath_Utils.csproj" />
 		<ProjectReference Include="..\..\DataAccessLayer\DataAccessLayer.csproj" />
 		<ProjectReference Include="..\..\Workspace\Shared\Workspace.Shared.csproj" />
 		<ProjectReference Include="..\Client\admin.workspace.Client.csproj" />
@@ -39,7 +40,10 @@
 
 	<ItemGroup>
 		<Folder Include="Authorization\Timer\" />
+		<Folder Include="Controllers\WorkspaceApp\" />
+		<Folder Include="ApprovalPathDataAccess\" />
 		<Folder Include="Properties\" />
+		<Folder Include="Services\WorkspaceApp\" />
 	</ItemGroup>
 
 

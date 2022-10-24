@@ -11,14 +11,11 @@ namespace admin.workspace.Server.Services.ReadOnly
             _context = context;
         }
 
-        public async Task<ServiceResponse<List<Vs_Employee>>> GetAllVsEmployees()
+        public async Task<List<Vs_Employee>> GetAllVsEmployees()
         {
             //throw new NotImplementedException();
 
-            var response = new ServiceResponse<List<Vs_Employee>>
-            {
-                Data = await _context.Vs_Employees.ToListAsync()
-            };
+            var response =await _context.Vs_Employees.ToListAsync();
 
             return response;
         }

@@ -5,7 +5,7 @@ namespace WorkspaceServices.NotificationService
 {
     public class NotificationService : INotificationService
     {
-        public Task<ServiceResponse<List<Notification>>> GetNotificationsAsync()
+        public Task<List<Notification>> GetNotificationsAsync()
         {
             throw new NotImplementedException();
         }

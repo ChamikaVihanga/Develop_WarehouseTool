@@ -27,5 +27,21 @@ namespace admin.workspace.Server.ActiveDirectoryAccess
             }
             return authenticationADGroupModals;
         }
+
+        public async Task<bool> checkName(string username)
+        {
+            using (var user = UserPrincipal.FindByIdentity(_principalContext, IdentityType.SamAccountName, username))
+            {
+                if(user != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+           
+        }
     }
 }

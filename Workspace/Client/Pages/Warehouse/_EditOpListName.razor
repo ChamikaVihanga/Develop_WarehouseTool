@@ -6,18 +6,19 @@
 {
     <MudDialog>
         <DialogContent>
-            <MudTextField @bind-Value="operationList.Name" Label="Edit Operation Name"></MudTextField>
+            <MudTextField OnKeyUp="triggerEnterButton" @bind-Value="operationList.Name" Label="Edit Operation Name"></MudTextField>
         </DialogContent>
         <DialogActions>
             <MudButton Size="Size.Small" OnClick="Cancel">Cancel</MudButton>
             @if (!string.IsNullOrWhiteSpace(operationList.Name))
             {
-                 <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="Submit">save</MudButton>
+                IsButtonAvailable = false;
             }
             else
             {
-                <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="Submit" Disabled="true">save</MudButton>
+                IsButtonAvailable = true;
             }
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="Submit" Disabled="IsButtonAvailable">save</MudButton>
         </DialogActions>
     </MudDialog>
 }
@@ -33,14 +34,27 @@ else
 
     public OperationList? operationList { get; set; }
 
-    OperationList _operationList = new OperationList();
+    bool IsButtonAvailable { get; set; } = false;
 
-    public string? opName { get; set; }
+    //OperationList _operationList = new OperationList();
+
+    //public string? opName { get; set; }
 
     [Parameter]
     public int id { get; set; }
 
     void Cancel() => MudDialog?.Cancel();
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    
+    async Task triggerEnterButton(KeyboardEventArgs keyboardEventArgs)              // code for trigger keyboard enter button
+    {
+        if(keyboardEventArgs.Key == "Enter")
+        {
+            await Submit();
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     private async Task Submit()
     {

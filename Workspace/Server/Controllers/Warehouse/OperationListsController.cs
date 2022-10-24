@@ -113,10 +113,8 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return NotFound();
             }
-            //Get data to _EditOperationTable.razor -----------> not using
-            var operationList = await _context.OperationLists.FindAsync(id);
-                //.Include(x => x.OperationDetails)
-                //.FirstOrDefaultAsync(y => y.ID == id);
+
+            var operationList = await _context.OperationLists.FindAsync(id);               
 
             if (operationList == null)
             {
@@ -124,11 +122,12 @@ namespace Workspace.Server.Controllers.Warehouse
             }
 
             return operationList;
-        }
+        }        
+
 
         // PUT: api/OperationLists/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut, Authorize(Policy = "VSPolicy")]
+        [HttpPut , Authorize(Policy = "VSPolicy")]  
         public async Task<ActionResult<List<OperationList>>> EditOperationName(OperationList operationList, int id)
         {
             var editOpName = await _context.OperationLists
@@ -143,36 +142,7 @@ namespace Workspace.Server.Controllers.Warehouse
             await _context.SaveChangesAsync();
 
             return Ok("Changes have been successfully saved");
-        }
-
-
-        //public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
-        //{
-        //    if (id != operationList.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(operationList).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!OperationListExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
+        }       
 
         // POST: api/OperationLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
