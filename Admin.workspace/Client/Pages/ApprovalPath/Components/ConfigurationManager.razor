@@ -1,0 +1,101 @@
+﻿@inject HttpClient http
+@inject IJSRuntime JS
+
+@if (configs != null)
+{
+    @foreach (var conf in configs)
+    {
+
+        <div class="container m-5">
+            <h3>@conf.DisplayName</h3>
+            <div class="row">
+                @foreach (var destination in conf.ApprovalDestinations.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex))
+                {
+                    <div class="col-lg-3 col-sm-12 mt-2">
+
+                        <h6>Approval Level: @destination.WorkFlowIndex.WorkFlowIndex</h6>
+                        <ul class="list-group">
+                            @foreach (var user in destination.WorkFlowUsers)
+                            {
+                                <li class="list-group-item">@user.Username</li>
+                            }
+                          
+                            <li class="list-group-item ">
+                                <div style="display:none;" id="@(destination.ApprovalDestinationId.ToString() + conf.ApprovalConfigurationId.ToString())">
+                                    <input @onfocusout="() => claerText(val)" @bind-value="val" class="form-control form-control-sm" type="text" placeholder="Username" aria-label="Username">
+                                </div>
+                                <button type="button" @onclick="() => showHideTextBox(destination.ApprovalDestinationId, conf.ApprovalConfigurationId)" id="@(destination.ApprovalDestinationId.ToString() + conf.ApprovalConfigurationId.ToString() + "btn")" class="btn btn-primary btn-sm m-1">Add user</button>
+                                
+
+                            </li>
+                        </ul>
+
+                    </div>
+                }
+                <div class="float-lg-end col-lg-3 col-sm-12 mt-2">
+
+                    <h6>Applicable docuements</h6>
+
+                    <ul class="list-group">
+                        @foreach (var docs in conf.ApprovalDocuments)
+                        {
+                            <li class="list-group-item list-group-item-secondary">@docs.DocumentName</li>
+                        }
+
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+
+    }
+}
+
+
+
+
+
+@code {
+    string? val;
+    string? valBak;
+
+    List<ApprovalConfigurations>? configs = new List<ApprovalConfigurations>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        configs = await http.GetFromJsonAsync<List<ApprovalConfigurations>?>("api/APD_Configuration/GetApprovalConfigurations");
+    }
+
+    async Task AddUser(Guid destinationId, List<WorkFlowUsers> workFlowUsers, WorkFlowIndexes workFlowIndexes)
+    {
+        List<WorkFlowUsers> workFlowUsersNew = new List<WorkFlowUsers>();
+
+    }
+    async Task claerText(string? val2){
+
+        valBak = val2;
+        val = null;
+    }
+
+    async Task showHideTextBox(Guid? destinationId, Guid? confId)
+    {
+        string divId = destinationId.ToString() + confId.ToString();
+        await JS.InvokeAsync<string>("ShoeHideDivById", divId.ToString());
+        string btnId = destinationId.ToString() + confId.ToString() + "btn";
+
+        var result = await JS.InvokeAsync<string>("swapInnerText", "Add user", "Apply", btnId.ToString());
+        if (result == "Apply")
+        {
+          
+            Console.WriteLine(valBak);
+        }
+    }
+
+    async Task AddUserToDestination(Guid? confId, string? newUser, Guid? destinationId){
+        ApprovalConfigurations approvalConfiguration = new ApprovalConfigurations();
+
+
+    }
+
+}

@@ -1,88 +1,179 @@
 ﻿@page "/warehouse/adminview"
 @inject HttpClient Http
+@inject HttpClient httpClient
 
 @*<_WarehouseNavBar />*@
 
 <PageTitle>Admin View</PageTitle>
+<MudGrid>
+    @*<MudItem xs="12">*@
+        <MudItem>
+            @*<MudIcon Color="Color.Dark" Icon="@Icons.Custom.Uncategorized.Radioactive" Size="Size.Large" />*@
+        <MudAvatar Color="Color.Info" Variant="Variant.Outlined">VS</MudAvatar>
+        </MudItem>
+        <MudItem xs="3">
+            <MudText Typo="Typo.h5" Class="mt-1" Color="Color.Info"><b>Warehouse Efficiency</b></MudText>
+        </MudItem>
+    @*</MudItem>*@
+</MudGrid>
+
+<MudGrid Class="mt-10">
+
+    <MudItem xs="4">
+        @*<MudDatePicker Label="Fix Month" @bind-Date="_month" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="@DateTime.Today.Day" DateFormat="MMM" />*@
+        @*<MudTextField T="string" Label="Month" InputType="InputType.Month" />*@
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
+    </MudItem>
+
+    <MudItem xs="12">
+
+        <MudGrid>
+            <MudItem xs="4">
+                <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" For="@(()=>EnteredSapNo)"></MudTextField>
+            </MudItem>
+            <MudSpacer />
+            <MudItem xs="4" Class="d-flex justify-end">
+            @if(vS_employee is not null)
+            {
+                    <MudText Typo="Typo.h6" Class="ml-3"><b>@vS_employee.EPFNo - @vS_employee.NickName</b></MudText>
+            }
+           @* else
+            {
+                    <MudText Typo="Typo.h6" Class="ml-3"><b>Employee FullName</b></MudText>
+            }*@
+            </MudItem>
+           
+        </MudGrid>
+        <br />
+    </MudItem>
+</MudGrid>
+
+<MudItem xs="12">
+    @if (manageRecord == null)
+    {
+        @* <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />*@
+    }
+    else
+    {
+        <MudPaper Elevation="1">
+            <MudTable Items="manageRecord" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
+                <HeaderContent>
+                    <MudTh><b>Operation Name</b></MudTh>
+                    <MudTh><b>Date</b></MudTh>
+                    <MudTh><b>Achivement</b></MudTh>
+                    <MudTh><b>Target</b></MudTh>
+                    <MudTh><b>Efficiency</b></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.OperationList.Name</MudTd>
+                    <MudTd>@context.StartTime.Date.ToString("d")</MudTd>                   
+                    <MudTd>@context.Achivement</MudTd>
+                    <MudTd>@context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()</MudTd>
+                    <MudTh>                        
+                        @calEfficiancy(context.Achivement, context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%
+                    </MudTh>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    }
+</MudItem>
 
 <MudGrid>
     <MudItem xs="12">
         <MudGrid>
             <MudItem xs="4">
-                <MudDatePicker Label="From Date" @bind-Date="date" />
+               
             </MudItem>
-            <MudItem xs="4">
-                <MudDatePicker Label="To Date" @bind-Date="date" />
-            </MudItem>           
+            <MudSpacer />
+            <MudItem xs="4" Class="d-flex justify-end" >
+                @if (vS_employee is not null)
+                {
+                    <MudText Typo="Typo.h6" Class="ml-3"><b> </b></MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6" Class="ml-3"><b>Mothly Efficiency</b></MudText>
+                }
+            </MudItem>
+
         </MudGrid>
         <br />
-
-        <MudItem xs="4">
-            @*<MudDatePicker Label="Fix Month" @bind-Date="_month" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="@DateTime.Today.Day" DateFormat="MMM" />*@
-            <MudTextField T="string" Label="Month" InputType="InputType.Month" />
-        </MudItem>
-    </MudItem>
-    <MudItem xs="3">
-        <MudPaper Elevation="0">
-            @*<MudSelect T="string" Label="Select Date" Variant="Variant.Text" Margin="Margin.Normal">
-                <MudSelectItem Value="@("Daily")" />
-                <MudSelectItem Value="@("Weekly")" />
-                <MudSelectItem Value="@("Monthly")" />
-            </MudSelect>*@
-            <MudTextField @bind-Value="nullableInt" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Variant="Variant.Text"></MudTextField>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="12">
-        @if (manageRecords == null)
-        {
-            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-        }
-        else
-        {
-            <MudPaper Elevation="1">
-                <MudTable Items="manageRecords" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
-                    <HeaderContent>
-                        <MudTh><b>Date</b></MudTh>
-                        <MudTh><b>Operation Name</b></MudTh>
-                        <MudTh><b>Achivement</b></MudTh>
-                        <MudTh><b>Targot</b></MudTh>
-                        <MudTh><b>Efficiency</b></MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd></MudTd>
-                        <MudTd>@context.OperationList.Name</MudTd>
-                        <MudTd>@context.Achivement</MudTd>
-                        <MudTd></MudTd>
-                        <MudTh></MudTh>
-                    </RowTemplate>
-                </MudTable>
-            </MudPaper>
-        }
-    </MudItem>
-
-    <MudItem xs="9">
-    </MudItem>
-    <MudItem xs="3">
-        <MudTextField Label="hhfh" T="string"></MudTextField>
     </MudItem>
 </MudGrid>
 
+
+
 @code {
-    private bool border = true;
-    int? nullableInt;
 
-    //private List<OperationRecord>? list;
+    float calEfficiancy(int? ach, int? target)
+    {
+        try{
+            Console.WriteLine(ach);
+            Console.WriteLine(target);
+            return ((float)ach / (float)target) * 100;
 
-    //protected override async Task OnInitializedAsync()
+        }
+        catch{
+            return 0;
+        }
+    }
+
+    //float mothlyEfficiancy(DateTime month, int? target)
     //{
-    //    list = await Http.GetFromJsonAsync<List<OperationRecord>>("api/OperationRecords");
+        
     //}
 
-    DateTime? date = DateTime.Now;
-    DateTime? _month;
 
-    [Parameter]
-    public OperationRecord[]? manageRecords { get; set; }
+    private bool border = true;
+    bool isLoading = false;
 
+    private MudDateRangePicker _picker;
+    // private DateRange CreateDate = new DateRange();
+
+    DateTime? SelectMonth = DateTime.Now;
+    //DateTime? _month;
+    
     public string EnteredSapNo { get; set; }
+
+    //public string CreateDate { get; set; }
+
+    public Vs_Employee? vS_employee { get; set; }
+
+    public OperationDetail? operationDetails { get; set; }
+
+    //OperationRecord operationRecord = new OperationRecord();
+    private List<OperationRecord?> manageRecord;
+    OperationDetail operationDetail = new OperationDetail();
+
+    //public Vs_Employee? vs_employee;
+
+    async Task HandleIntervalElapsed(string debouncedText)
+    {
+
+        if (debouncedText.Length > 4)
+        {
+            isLoading = true;
+
+            try
+            {                
+                //manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&CreateDate={CreateDate.ToString()}");
+
+                vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
+
+                manageRecord = await httpClient.GetFromJsonAsync<List<OperationRecord?>>($"api/OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
+
+            }
+            catch
+            {
+                isLoading = false;
+
+            }
+            isLoading = false;
+        }
+        else
+        {
+            manageRecord = null;
+        }
+
+    }
 }

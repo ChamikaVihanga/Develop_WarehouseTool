@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,7 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
         // GET: api/OperationLists/Active
-        [HttpGet("Active")]
+        [HttpGet("Active"), Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<IEnumerable<OperationDetail>>> GetActiveOperationLists()
         {
             if (_context.OperationLists == null)
@@ -53,6 +54,7 @@ namespace Workspace.Server.Controllers.Warehouse
             List<OperationDetail> ActiveRecords = new List<OperationDetail>();
             ActiveRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
 
+
             foreach (int a in listIds)
             {
                 List<OperationDetail> ActiveDetails = ActiveRecords.Where(b => b.OperationListId == a).ToList();
@@ -67,6 +69,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
 
         // GET: api/OperationLists/Upcoming
+        //[HttpGet("Upcoming"), Authorize(Policy = "VSPolicy")]
         [HttpGet("Upcoming")]
         public async Task<ActionResult<IEnumerable<OperationDetail>>> GetUpcomingOperationLists()
         {
@@ -102,18 +105,16 @@ namespace Workspace.Server.Controllers.Warehouse
 
 
         //.Include(x => x.OperationDetails)
-        // GET: api/OperationLists/5
-        [HttpGet("{id}")]
+        // GET: api/OperationLists/getOperationName/5
+        [HttpGet, Route("getOperationName")]
         public async Task<ActionResult<OperationList>> GetOperationList(int id)
         {
             if (_context.OperationLists == null)
             {
                 return NotFound();
             }
-            //Get data to _EditOperationTable.razor -----------> not using
-            var operationList = await _context.OperationLists.FindAsync(id);
-                //.Include(x => x.OperationDetails)
-                //.FirstOrDefaultAsync(y => y.ID == id);
+
+            var operationList = await _context.OperationLists.FindAsync(id);               
 
             if (operationList == null)
             {
@@ -121,38 +122,27 @@ namespace Workspace.Server.Controllers.Warehouse
             }
 
             return operationList;
-        }
+        }        
+
 
         // PUT: api/OperationLists/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOperationList(int id, OperationList operationList)
+        [HttpPut , Authorize(Policy = "VSPolicy")]  
+        public async Task<ActionResult<List<OperationList>>> EditOperationName(OperationList operationList, int id)
         {
-            if (id != operationList.Id)
-            {
-                return BadRequest();
-            }
+            var editOpName = await _context.OperationLists
+                    .Include(a => a.OperationDetails)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+            if(editOpName == null)
+                return NotFound("Not Found");
 
-            _context.Entry(operationList).State = EntityState.Modified;
+            editOpName.Name = operationList.Name;  
+            editOpName.Id = id;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OperationListExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+            return Ok("Changes have been successfully saved");
+        }       
 
         // POST: api/OperationLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -200,6 +190,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
             return NoContent();
         }
+
         private bool OperationListExists(int id)
         {
             return (_context.OperationLists?.Any(e => e.Id == id)).GetValueOrDefault();

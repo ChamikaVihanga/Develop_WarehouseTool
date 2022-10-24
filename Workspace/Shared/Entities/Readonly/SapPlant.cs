@@ -8,8 +8,10 @@ namespace Workspace.Shared.Entities.Readonly
 {
     public class SapPlant
     {
-        public Guid Id { get; set; }
-        public int Code { get; set; }
-        public string Name { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string? Code { get; set; }
+        public string? Title { get; set; }
+        public bool IsActive { get; set; } = true;
+        public List<SapCostCenter> SapCostCenters { get; set; }
     }
 }

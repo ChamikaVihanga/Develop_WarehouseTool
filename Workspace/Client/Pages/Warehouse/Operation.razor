@@ -1,85 +1,72 @@
 ﻿@page "/warehouse/operation"
-
+@*@inject InterceptorServiceGlobal Interceptor*@
 @inject HttpClient http
 @inject ISnackbar Snackbar
 @*<_WarehouseNavBar />*@
 
 <PageTitle>Operation</PageTitle>
 
-    <MudGrid>
-        <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
-            <MudItem xs="9">
-                <MudCardHeader>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.h5" Align="Align.Center">Operations</MudText>
-                    </CardHeaderContent>
-                </MudCardHeader>
-                <br />
-                <EditForm Model="summeryDTO">
-                    <DataAnnotationsValidator />
-                    <MudSelect Label="Select a Organizational Unit" @bind-Value="summeryDTO.OrganizationUnit" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
-                    @if (OgUnits is not null) 
-                    { 
-                        @foreach (var Name in OgUnits)
+<MudGrid>
+    <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
+        <MudItem xs="9">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h5" Align="Align.Center">New Operation</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <br />
+            <EditForm Model="summeryDTO">
+                <DataAnnotationsValidator />
+                <MudSelect Label="Select a Organizational Unit" @bind-Value="summeryDTO.OrganizationUnit" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
+                    @if (oganizationUnits is not null)
+                    {
+                        @foreach (var Name in oganizationUnits)
                         {
                             <MudSelectItem Value="@Name.Name"></MudSelectItem>
                         }
                     }
-                    else
-                    {
+                </MudSelect>
+                <MudTextField @bind-Value="summeryDTO.OperationName" Label="Operation Name" For="@(() => summeryDTO.OperationName)"></MudTextField>
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="summeryDTO.Target" Label="Target" For="@(() => summeryDTO.Target)"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time" For="@(() => summeryDTO.AllocatedTime)"></MudTextField>                        
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudTextField @bind-Value="summeryDTO.TimePeriod" Label="Time Period" Text="@getTimePeriod" ReadOnly="true"></MudTextField>                        
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
 
-                    }
-                    
-                    </MudSelect>
-                    <MudTextField @bind-Value="summeryDTO.OperationName" Label="Operation Name" For="@(() => summeryDTO.OperationName)"></MudTextField>
-                    <MudGrid>
-                        <MudItem xs="6">
-                            <MudTextField @bind-Value="summeryDTO.Target" Label="Target" For="@(() => summeryDTO.Target)"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="3">
-                            <MudTextField @bind-Value="summeryDTO.AllocatedTime" Label="Time" For="@(() => summeryDTO.AllocatedTime)"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="3">
-                            <MudSelect @bind-Value="summeryDTO.TimePeriod" Label="Select a Time Period" AnchorOrigin="Origin.BottomCenter" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" AdornmentColor="Color.Primary">
-                                <MudSelectItem Value="@("Minutes")" />
-                                <MudSelectItem Value="@("Hours")" />
-                            </MudSelect>
-                        </MudItem>
-                    </MudGrid>
-                </EditForm>
-                <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Text="date" @ref="_picker" Label="Effective Date">
-                    <PickerActions>
-                        <MudButton Variant="Variant.Filled" OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
-                    </PickerActions>
-                </MudDatePicker>
+            <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="date" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>                   @*FixYear="@DateTime.Today.Year"*@
 
-                <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
-                    <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
+            <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
+                <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
 
-                    @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target == null || summeryDTO.AllocatedTime == null || summeryDTO.TimePeriod == null || summeryDTO.Target == 0 || summeryDTO.AllocatedTime == 0 || summeryDTO.OrganizationUnit == null)
-                    {
-                        <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="true">Add Task</MudButton>
-                    }
-                    else
-                    {
-                        <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="false">Add Task</MudButton>
-                    }
-                </MudItem>
+                @if (summeryDTO.OperationName == null || date == null || summeryDTO.Target == null || summeryDTO.AllocatedTime == null  || summeryDTO.Target == 0 || summeryDTO.AllocatedTime == 0 || summeryDTO.OrganizationUnit == null)
+                {
+                    <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="true">Add Task</MudButton>
+                }
+                else
+                {
+                    <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" IconColor="Color.Secondary" Style="width:150px" OnClick="PostData" Disabled="false">Add Task</MudButton>
+                }
             </MudItem>
         </MudItem>
-    </MudGrid>
-
-
-
+    </MudItem>
+</MudGrid>
 
 @*<MudCheckBox @bind-Checked="@ReadOnly" Label="@(ReadOnly ? "Activate" : "Deactivate")" />*@
 
 @code {
     //public bool ReadOnly { get; set; } = true;
-
-    public string date { get; set; }
+    DateTime? date;    
     MudDatePicker _picker;
+
+    string getTimePeriod = "Minutes";
+
     [Parameter]
     public string id { get; set; }
 
@@ -87,19 +74,26 @@
 
     OperationSummeryDTO summeryDTO = new OperationSummeryDTO();
 
-    public List<OrganizationUnitDTO>? OgUnits { get; set; }
+    public List<OrganizationUnitDTO>? oganizationUnits { get; set; }
 
-    protected override async Task OnInitializedAsync(){
-        OgUnits = await http.GetFromJsonAsync<List<OrganizationUnitDTO>?>("api/EmpTemp/333100/units");
-    }
-
+    protected override async Task OnInitializedAsync()
+    {
+        oganizationUnits = await http.GetFromJsonAsync<List<OrganizationUnitDTO>?>("api/EmpTemp/333100/units");
+    }    
+    
     private async Task PostData()
     {
-        summeryDTO.EffectiveDate = Convert.ToDateTime(date);
-        summeryDTO.OrganizationUnit = OgUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
+        summeryDTO.EffectiveDate = (DateTime)date;                 /* <---- If I want to convert to datetime ====> Convert.ToDateTime(date);              (DateTime)date  */
+        summeryDTO.TimePeriod = "Minutes";
+        //summeryDTO.OrganizationUnit = oganizationUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
         var response = await http.PostAsJsonAsync<OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
         string strResponse = response.Content.ReadAsStringAsync().Result;
         showBar(strResponse);
+        summeryDTO.OrganizationUnit = null;
+        summeryDTO.OperationName = null;
+        summeryDTO.Target = null;
+        summeryDTO.AllocatedTime = null;        
+        date = null;
     }
     void showBar(string getstringvalue)
     {

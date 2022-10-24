@@ -1,46 +1,115 @@
 ﻿@page "/warehouse/listsummary"
 @inject HttpClient http
-@*<_WarehouseNavBar />*@
+@inject ISnackbar Snackbar
+<_WarehouseNavBar />
 
 <PageTitle>Operation Summary</PageTitle>
 
 <MudGrid Class="mt-1">
-    <MudItem xs="3">
-        <MudTextField  Disabled="true" T="string" @bind-Value="@SearchString" Immediate="true" Label="Search operation" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
-    </MudItem>
-    <MudItem xs="6">
-        <MudSwitch @bind-Checked="@status" @onclick="swapLable" Color="Color.Error" UnCheckedColor="Color.Success" >@lable</MudSwitch>        
-    </MudItem>    
-    <MudItem xs="3" Class="d-flex justify-end">
-        <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
-    </MudItem>
-    <MudItem xs="3">
+    <MudItem xs="2">
         <MudText Class="indigo-text text-accent-4"><b>@operationMessage</b></MudText>
     </MudItem>
-    <MudItem xs="12">
-        <MudPaper Elevation="1">
-            <_OperationListTable tableState="@status" searchString="@SearchString" />
-        </MudPaper>
+    <MudItem xs="6">
+        <MudSwitch @bind-Checked="@tableState" @onclick="LoadTableContent" Color="Color.Success" UnCheckedColor="Color.Error">@lable</MudSwitch>
     </MudItem>
+    <MudItem xs="4" Class="d-flex justify-end">
+        <MudButton Color="Color.Info" Variant="Variant.Outlined" Style="width:230px" Link="/Warehouse/Operation">Create New Operation</MudButton>
+    </MudItem>
+    <MudItem xs="6">
+    </MudItem>
+
+    @if (operationDetails is null)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    }
+    else
+    {
+        <MudItem xs="6">
+            <MudPaper Elevation="0" >
+                <MudTextField T="string" OnKeyUp="SerchOnTable" @bind-Value="@NewSearchString" Immediate="true" Label="Search operation" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" />
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Elevation="1">
+                <MudTable Items="operationDetails" Hover="true" SortLabel="Sort By" Elevation="0" Dense="true" Bordered="true" FixedHeader="true" Height="60vh">
+                    <HeaderContent>
+                        @*<MudTh><b>Organization Unit</b></MudTh>*@
+                        <MudTh><b>Operation Name</b></MudTh>
+                        <MudTh><b>Target</b></MudTh>
+                        <MudTh><b>Allocated Time</b></MudTh>
+                        <MudTh><b>Effective Date</b></MudTh>
+                        @*<MudTh><b>Activation</b></MudTh>*@
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        @*<MudTd>@context.OrganizationUnit</MudTd>*@
+                        <MudTd>@context.OperationList?.Name</MudTd>
+                        <MudTd>@context.Target</MudTd>
+                        <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
+                        <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
+                        @* <MudTh>
+                    <input type="checkbox" class="form-check-input" value=@context.OperationList.IsActive />
+                    </MudTh>*@
+                        <MudTh>
+                            <MudTooltip Text="More Info" Placement="Placement.Right">
+                                <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">
+                                    <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" Color="Color.Primary"></MudIconButton>
+                                </a>
+                            </MudTooltip>
+                        </MudTh>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </MudItem>
+    }
 </MudGrid>
 
 @code {
-    public bool status = false;
-    string? lable { get; set; } = "Toggle to view upcoming operations";
+    public bool tableState { get; set; } = false;
+    string? lable { get; set; } = "Toggle to view ongoing operations";
     string? operationMessage { get; set; } = "Active Operations";
-    string? SearchString { get; set; }
+    public string NewSearchString { get; set; }
+    public List<OperationDetail>? operationDetails;
+    public List<OperationDetail>? operationDetails2;
 
-    void swapLable()
+    protected override async Task OnInitializedAsync()
     {
-        if (status)
+        await LoadTableContent();
+    }
+
+    async Task LoadTableContent()
+    {
+        if (tableState == true)
         {
-            lable = "Toggle to view upcoming operations";
-            operationMessage = "Active Operations";
+            lable = "Toggle to view ongoing operations";
+            operationMessage = "Upcoming Operations";
+            await GetUpcommingOperations();
         }
         else
         {
-            lable = "Toggle to view ongoing operations";
-            operationMessage = "Upcomming Operations";
+            lable = "Toggle to view upcoming operations";
+            operationMessage = "Active Operations";
+            await GetActiveOperations();
+        }
+    }
+
+    async Task GetActiveOperations()
+    {
+        operationDetails = await http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Active");
+        operationDetails2 = operationDetails;
+    }
+
+    async Task GetUpcommingOperations()
+    {
+        operationDetails = await http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Upcoming");
+        operationDetails2 = operationDetails;
+    }
+
+    async Task SerchOnTable()
+    {
+        if (NewSearchString.Length >= 0)
+        {
+            operationDetails = operationDetails2?.Where(a => a.OperationList.Name.Contains(NewSearchString, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
     }
 }

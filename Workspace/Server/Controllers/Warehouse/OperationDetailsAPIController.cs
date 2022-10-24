@@ -29,7 +29,24 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return NotFound();
             }
-            return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();
+            return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();            
+        }
+
+        // GET: api/OperationDetailsAPI/ValidateOperationCreateDate
+        [HttpGet("ValidateOperationCreateDate")]
+        public async Task<ActionResult<bool>> ValidateOperationCreateDate(int OperationListId , DateTime SelectedDate)             // in this didn't create a object call OperationDetail and didn't include 
+        {                                                                                                                          //   a OperationList. Because get values from OperatonListId.
+            bool checkOperationEffectiveDate = _context.OperationDetails                                                           //   if we assign to a bool variable extession should be .Any(); 
+                .Where(a => a.OperationListId == OperationListId &&  a.EffectiveDate.Month == SelectedDate.Month)
+                .Any();
+
+
+
+            // make sure the month is not calculate for efficiency
+
+
+
+            return checkOperationEffectiveDate;
         }
 
 
@@ -62,11 +79,35 @@ namespace Workspace.Server.Controllers.Warehouse
 
         }
 
+        [HttpGet("getOnlyOrgUnit")]
+        public async Task<ActionResult<OperationDetail>> GetOrganizationUnit(int id)
+        {
+            if(_context.OperationDetails == null)
+            {
+                return NotFound();
+            }
 
+            //var getOrgUnit = await _context.OperationDetails.Include(a=>a.OperationList).FirstOrDefaultAsync(b=>b.Id == id);
+            var getOrgUnit = await _context.OperationDetails.Where(a => a.OperationListId == id).FirstOrDefaultAsync();
+
+            if (getOrgUnit == null)
+            {
+                return NotFound();
+            }
+            return getOrgUnit;
+
+
+            //var getOrgName = await _context.OperationDetails.FindAsync(id);            
+
+            //if (getOrgName == null)
+            //    return BadRequest("Name not found");
+
+            //return getOrgName;
+        }
 
 
         // GET: api/OperationDetailsAPI/5
-        [HttpGet("{id}")]
+        [HttpGet("getEffectiveDate")]
         public async Task<ActionResult<OperationDetail>> GetOperationDetail(int id)
         {
             if (_context.OperationDetails == null)
@@ -90,11 +131,11 @@ namespace Workspace.Server.Controllers.Warehouse
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Route("GetListofOpDetails/{id}")]
+        [Route("GetListofOpDetails")]
         [HttpGet]
         public async Task<List<OperationDetail>> getOpList(int id)
         {
-            var detailsList = _context.OperationDetails.Where(a => a.OperationListId == id).ToList();
+            var detailsList = await _context.OperationDetails.Where(a => a.OperationListId == id).ToListAsync();
             return detailsList;
         }
 
@@ -104,7 +145,7 @@ namespace Workspace.Server.Controllers.Warehouse
         /// <param name="operationDetail"></param>
         /// <returns></returns>
         //POST: api/OperationDetailsAPI/DetailsOnly
-        [HttpPost, Route("DetailsOnly"), Authorize]
+        [HttpPost, Route("DetailsOnly"), Authorize(Policy = "VSPolicy")]
         public async Task<string> PostDetails(OperationDetail operationDetail)
         {
             try
@@ -118,6 +159,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 operationDetail1.Target = operationDetail.Target;
                 operationDetail1.CreatedBy = User.Identity.Name;
                 operationDetail1.OperationListId = operationDetail.OperationListId;
+                operationDetail1.OrganizationUnit = operationDetail.OrganizationUnit;
 
                 _context.OperationDetails.Add(operationDetail1);
                 await _context.SaveChangesAsync();
@@ -127,11 +169,8 @@ namespace Workspace.Server.Controllers.Warehouse
             catch (Exception e)
             {
                 return e.Message.ToString();
-            }
-            
-            
+            }                       
         }
-
 
         [HttpGet, Route("getOperationList")]
         public async Task<List<OperationList>> getOperationList()
@@ -187,9 +226,7 @@ namespace Workspace.Server.Controllers.Warehouse
         /// <returns></returns>
         [HttpPost, Authorize(Policy ="VSPolicy")]
         public async Task<ActionResult<string>> PostOperationDetail(OperationSummeryDTO operationSummeryDTO)
-        {
-            try
-            {
+        {           
                 if (_context.OperationDetails == null)
                 {
                     return Problem("Entity set 'WorkspaceDbContext.OperationDetails'  is null.");
@@ -218,14 +255,31 @@ namespace Workspace.Server.Controllers.Warehouse
                 await _context.SaveChangesAsync();
 
                 return Ok("Successfully Created");
-                //return CreatedAtAction("GetOperationDetail", new { id = operationDetail.Id }, operationDetail);
-            }
-            catch(Exception e)
-            {
-                return $"Ooops Something went wrong- {e.Message}";
-            }
+                //return CreatedAtAction("GetOperationDetail", new { id = operationDetail.Id }, operationDetail);           
+        }
 
+        [HttpPut, Authorize(Policy = "VSPolicy")]
+        public async Task<ActionResult<List<OperationDetail>>> EditOperationDetails(OperationDetail operationDetail, int id)
+        {
+            var operationDetail1 = await _context.OperationDetails
+                .Include(a => a.OperationList)
+                .FirstOrDefaultAsync(a => a.Id == id);
 
+            if (operationDetail1 == null)
+                return NotFound("Not Found");
+
+            operationDetail1.Target = operationDetail.Target;
+            operationDetail1.TimeSpan = operationDetail.TimeSpan;
+            operationDetail1.TimePeriod = operationDetail.TimePeriod;
+            operationDetail1.EffectiveDate = operationDetail.EffectiveDate;
+            operationDetail1.CreateDate = DateTime.Now;
+            operationDetail1.CreatedBy = User.Identity.Name;
+            operationDetail1.OrganizationUnit = operationDetail.OrganizationUnit;
+            operationDetail1.Id = id;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
 
@@ -252,6 +306,6 @@ namespace Workspace.Server.Controllers.Warehouse
         private bool OperationDetailExists(int id)
         {
             return (_context.OperationDetails?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        }       
     }
 }

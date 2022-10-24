@@ -1,4 +1,6 @@
-﻿namespace Workspace.Shared.Entities.Warehouse
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Workspace.Shared.Entities.Warehouse
 {
     public class OperationRecord
     {
@@ -16,6 +18,8 @@
         //.....
 
         public DateTime StartTime { get; set; }
+
+        
         public DateTime? EndTime { get; set; }
 
         //[Required(ErrorMessage = "")]

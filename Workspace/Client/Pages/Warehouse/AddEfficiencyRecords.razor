@@ -65,24 +65,24 @@
                                 <MudContainer>
                                     <MudGrid>
                                         <MudItem xs="6">
-                                            @*<MudTimePicker @ref="_pickerS" PickerVariant="PickerVariant.Dialog" Label="Start Time" AmPm="true" @bind-Time="@StartTime" Variant="Variant.Outlined">
-                                        <PickerActions>
-                                        <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerS.Clear())">Clear</MudButton>
-                                        <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
-                                        <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
-                                        </PickerActions>
-                                        </MudTimePicker>*@
-                                            <MudTextField @bind-Value="@StartTime" Label="Start Time" InputType="InputType.Time" Variant="Variant.Outlined" />
+                                            <MudTimePicker @ref="_pickerS" PickerVariant="PickerVariant.Dialog" Label="Start Time" @bind-Time="@StartTime" Variant="Variant.Outlined">
+                                                <PickerActions>
+                                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerS.Clear())">Clear</MudButton>
+                                                    <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
+                                                    <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
+                                                </PickerActions>
+                                            </MudTimePicker>
+                                            @*<MudTextField @bind-Value="@StartTime" Label="Start Time" InputType="InputType.Time" Variant="Variant.Outlined" />*@
                                         </MudItem>
                                         <MudItem xs="6">
-                                            @*<MudTimePicker @ref="_pickerE" PickerClosed="PickEndDate" PickerVariant="PickerVariant.Dialog" Label="End Time" AmPm="true" @bind-Time="@EndTime" Variant="Variant.Outlined">
-                                        <PickerActions>
-                                        <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerE.Clear())">Clear</MudButton>
-                                        <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
-                                        <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
-                                        </PickerActions>
-                                        </MudTimePicker>*@
-                                            <MudTextField @bind-Value="@EndTime" Label="End Time" InputType="InputType.Time" Variant="Variant.Outlined" />
+                                            <MudTimePicker @ref="_pickerE" PickerVariant="PickerVariant.Dialog" Label="End Time" @bind-Time="@EndTime" Variant="Variant.Outlined">
+                                                <PickerActions>
+                                                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _pickerE.Clear())">Clear</MudButton>
+                                                    <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
+                                                    <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
+                                                </PickerActions>
+                                            </MudTimePicker>
+                                            @*<MudTextField @bind-Value="@EndTime" Label="End Time" InputType="InputType.Time" Variant="Variant.Outlined"/>*@
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -133,7 +133,7 @@
                             @if (EnteredSapNo == null || StartTime == null || value1 == null)
                             {
                                 <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true">Submit</MudButton>
-                                <MudAlert Severity="Severity.Error" Class="ml-auto">You must enter sap number, Start Time & Operation Name</MudAlert>
+                                <MudAlert Severity="Severity.Info" Class="ml-auto">You must enter sap number, Start Time & Operation Name</MudAlert>
                             }
                             else
                             {
@@ -155,15 +155,34 @@
                             <MudCard>
                                 <MudImage Src="@uri" Width="200" Height="200" Class="rounded-lg ma-4" />
                                 <MudCardContent>
-                                    <MudText Class="d-flex align-center justify-center mud-width-full"><b>@vS_Employee.NickName</b></MudText>
-                                    <MudText Class="d-flex align-center justify-center mud-width-full"> @vS_Employee.Position</MudText>
+                                    <MudText Class="d-flex align-center justify-center mud-width-full"> <b>@vS_Employee.NickName</b> </MudText>
+                                    <MudText Class="d-flex align-center justify-center mud-width-full">  @vS_Employee.Position</MudText>
                                 </MudCardContent>
                             </MudCard>
                         </MudPaper>
                     </MudContainer>
-                    @*<EmployeeIdentify />*@
                 </MudItem>
-            }          
+            }
+            else
+            {
+                <MudItem xs="3">
+                    <MudContainer>
+                        <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full py-8">
+                            <MudCard>
+
+                                <MudImage Src="https://media.istockphoto.com/vectors/user-icon-flat-isolated-on-white-background-user-symbol-vector-vector-id1300845620?k=20&m=1300845620&s=612x612&w=0&h=f4XTZDAv7NPuZbG0habSpU0sNgECM0X7nbKzTUta3n8=" Width="200" Height="200" Class="rounded-lg ma-4" />
+                                <MudCardContent>
+                                    <MudText Class="d-flex align-center justify-center mud-width-full"> <b>Name</b> </MudText>
+                                    <MudText Class="d-flex align-center justify-center mud-width-full">Position</MudText>
+                                </MudCardContent>
+                            </MudCard>
+                        </MudPaper>
+                    </MudContainer>
+                </MudItem>
+            }
+
+
+
 
             <MudItem xs="12">
                 <h3>Achievement Summary</h3>
@@ -171,6 +190,7 @@
                 </MudPaper>
             </MudItem>
         </MudGrid>
+
 
         @*Data view table*@
         <_LogEfficiencyData manageRecord="@manageRecord" />
@@ -194,6 +214,7 @@
     /// </summary>
     MudDatePicker _picker;
 
+
     //Time Picker
     MudTimePicker _pickerS;
     MudTimePicker? _pickerE;
@@ -204,10 +225,16 @@
     /// Data validation & Employe property
     /// </summary>
     [Required]
-    [StringLength(5, ErrorMessage = "Number length can't be more than 5.")]
+    [StringLength(5, ErrorMessage = "Name length can't be more than 5.")]
     public string EnteredSapNo { get; set; }
 
+    //public DateTime Date { get; set; }
+
+
+
     public int putId { get; set; } = 0;
+
+
 
     private OperationList[]? operationList;
     private string? value1;
@@ -219,8 +246,12 @@
 
     public Vs_Employee? vS_Employee { get; set; }
 
+
+
+
     OperationRecord operationRecord = new OperationRecord();
     private VS_Employees_1[]? vsEmployees;
+
 
     void PickEndDate()
     {
@@ -240,79 +271,115 @@
                 InvokeAsync(StateHasChanged);
             }
         }
+
     }
 
     protected override async Task OnInitializedAsync()
     {
         //operationList = await httpClient.GetFromJsonAsync<OperationList[]>("api/OperationLists");
-        GetPerationList();
+        GetOperationList();
     }
 
-    async Task GetPerationList()
+
+
+    async Task GetOperationList()
     {
         operationList = await httpClient.GetFromJsonAsync<OperationList[]>("api/OperationLists");
         dropDown = await httpClient.GetFromJsonAsync<List<OperationDetail>?>("/api/OperationLists/Active");
     }
+
+
 
     /// <summary>
     /// Date and time convert to String add database
     /// befor clear text box
     /// </summary>
     /// <returns></returns>
+
     protected async Task PostData()
     {
+
+
         operationRecord.CreateDate = Convert.ToDateTime(SelectedDate);
         operationRecord.EndDate = Convert.ToDateTime(EndDate);
 
-        //operationRecord.StartTime = Convert.ToDateTime(StartTime);
-        if (StartTime is not null && SelectedDate is not null)
+        if (EndTime > StartTime  || EndTime is null)
         {
-            operationRecord.StartTime = SelectedDate.Value.Date + (TimeSpan)StartTime;
-        }
-        if (EndTime is not null)
-        {
-            if (EndDate is not null)
+
+            //operationRecord.StartTime = Convert.ToDateTime(StartTime);
+            if (StartTime is not null && SelectedDate is not null)
             {
-                operationRecord.EndTime = EndDate.Value.Date + EndTime;
+                operationRecord.StartTime = SelectedDate.Value.Date + (TimeSpan)StartTime;
+            }
+            if (EndTime is not null)
+            {
+                if (EndDate is not null)
+                {
+                    operationRecord.EndTime = EndDate.Value.Date + EndTime;
+
+                }
+                else
+                {
+                    operationRecord.EndTime = DateTime.Today + EndTime;
+                }
+
+            }
+            int id = operationList.Where(a => a.Name == value1).Select(b => b.Id).Last();
+            operationRecord.OperationListId = id;
+            operationRecord.SAPNo = EnteredSapNo;
+            Console.WriteLine(putId);
+            if (putId != 0)
+            {
+                operationRecord.Id = putId;
+                var response = await httpClient.PutAsJsonAsync<OperationRecord>($"api/OperationRecords?id={putId}", operationRecord);
+                _LogEfficiencyData get = new _LogEfficiencyData();
+                string Val = await response.Content.ReadAsStringAsync();
+                AddCloseAfterNavSnackbar(Val);
+
             }
             else
             {
-                operationRecord.EndTime = DateTime.Today + EndTime;
+                Console.WriteLine(operationRecord.EndTime);
+                var response = await httpClient.PostAsJsonAsync<OperationRecord>("api/OperationRecords", operationRecord);
+                _LogEfficiencyData get = new _LogEfficiencyData();
+                string Val = await response.Content.ReadAsStringAsync();
+                AddCloseAfterNavSnackbar(Val);
             }
+            vS_Employee = null;
+            SelectedDate = DateTime.Today;
+            EnteredSapNo = null;
+            StartTime = DateTime.Now.TimeOfDay;
+            value1 = null;
+            operationRecord.Achivement = null;
+            manageRecord = null;
+            EndTime = null;
+            EndDate = null;
+            isEndDateRequired = false;
+            StartTime = null;
+            InvokeAsync(StateHasChanged);
+
+
         }
 
-        int id = operationList.Where(a => a.Name == value1).Select(b => b.Id).Last();
-        operationRecord.OperationListId = id;
-        operationRecord.SAPNo = EnteredSapNo;
-        Console.WriteLine(putId);
-        if (putId != 0)
-        {
-            operationRecord.Id = putId;
-            var response = await httpClient.PutAsJsonAsync<OperationRecord>($"api/OperationRecords?id={putId}", operationRecord);
-            _LogEfficiencyData get = new _LogEfficiencyData();
-            string Val = await response.Content.ReadAsStringAsync();
-            AddCloseAfterNavSnackbar(Val);
-        }
+
         else
         {
-            Console.WriteLine(operationRecord.EndTime);
-            var response = await httpClient.PostAsJsonAsync<OperationRecord>("api/OperationRecords", operationRecord);
-            _LogEfficiencyData get = new _LogEfficiencyData();
-            string Val = await response.Content.ReadAsStringAsync();
-            AddCloseAfterNavSnackbar(Val);
+            AddDateAfterNavSnackbar("You can't enter End Time like this");
         }
-        SelectedDate = DateTime.Today;
-        EnteredSapNo = null;
-        StartTime = DateTime.Now.TimeOfDay;
 
-        value1 = null;
-        operationRecord.Achivement = null;
-        manageRecord = null;
-        EndTime = null;
-        EndDate = null;
-        isEndDateRequired = false;
-        InvokeAsync(StateHasChanged);
+
+
+
     }
+
+    public void AddDateAfterNavSnackbar(string VAl)
+    {
+        Snackbar.Add($"{VAl}", Severity.Error, (check) =>
+        {
+            check.CloseAfterNavigation = true;
+        });
+    }
+
 
     public void AddCloseAfterNavSnackbar(string Val)
     {
@@ -321,6 +388,7 @@
             options.CloseAfterNavigation = true;
         });
     }
+
 
     private async Task<IEnumerable<string>> Search1(string value)
     {
@@ -333,8 +401,10 @@
         return dropDown.Select(y => y.OperationList.Name.ToString()).Where(a => a.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 
+
     async Task HandleIntervalElapsed(string debouncedText)
     {
+        vS_Employee = null;
         // SelectedDate = DateTime.Today;
         manageRecord = null;
         putId = 0;
@@ -354,6 +424,7 @@
                 manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
 
                 vS_Employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
+
             }
             catch
             {
@@ -373,6 +444,7 @@
                     value1 = operationRecord.OperationList.Name;
                     putId = operationRecord.Id;
 
+
                     manageRecord = manageRecord.Where(x => x.Id != operationRecord.Id).ToArray();
                 }
             }
@@ -381,5 +453,6 @@
         {
             manageRecord = null;
         }
+
     }
 }

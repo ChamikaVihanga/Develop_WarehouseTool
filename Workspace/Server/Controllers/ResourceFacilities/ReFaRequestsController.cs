@@ -17,21 +17,21 @@ namespace Workspace.Server.Controllers.ResourceFacilities
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<ReFaRequest>>>> GetReFaRequests()
+        public async Task<ActionResult<List<ReFaRequest>>> GetReFaRequests()
         {
             var result = await _iReFaRequestService.GetReFaRequestsAsync();
             return Ok(result);
         }
 
         [HttpGet("{reFaRequestId}")]
-        public async Task<ActionResult<ServiceResponse<ReFaRequest>>> GetReFaRequest(Guid reFaRequestId)
+        public async Task<ActionResult<ReFaRequest>> GetReFaRequest(Guid reFaRequestId)
         {
             var result = await _iReFaRequestService.GetReFaRequestAsync(reFaRequestId);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<ReFaRequest>>> CreateReFaRequest(ReFaRequest reFaRequest)
+        public async Task<ActionResult<ReFaRequest>> CreateReFaRequest(ReFaRequest reFaRequest)
         {
             var result = await _iReFaRequestService.CreateReFaRequest(reFaRequest);
             return Ok(result);

@@ -1,0 +1,79 @@
+﻿@inject HttpClient Http
+@inject ISnackbar Snackbar
+@using Workspace.Shared.Entities.Warehouse
+
+@if (operationList?.Name is not null)
+{
+    <MudDialog>
+        <DialogContent>
+            <MudTextField OnKeyUp="triggerEnterButton" @bind-Value="operationList.Name" Label="Edit Operation Name"></MudTextField>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Size="Size.Small" OnClick="Cancel">Cancel</MudButton>
+            @if (!string.IsNullOrWhiteSpace(operationList.Name))
+            {
+                IsButtonAvailable = false;
+            }
+            else
+            {
+                IsButtonAvailable = true;
+            }
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="Submit" Disabled="IsButtonAvailable">save</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+else
+{
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+}
+
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance? MudDialog { get; set; }
+
+    public OperationList? operationList { get; set; }
+
+    bool IsButtonAvailable { get; set; } = false;
+
+    //OperationList _operationList = new OperationList();
+
+    //public string? opName { get; set; }
+
+    [Parameter]
+    public int id { get; set; }
+
+    void Cancel() => MudDialog?.Cancel();
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    
+    async Task triggerEnterButton(KeyboardEventArgs keyboardEventArgs)              // code for trigger keyboard enter button
+    {
+        if(keyboardEventArgs.Key == "Enter")
+        {
+            await Submit();
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    private async Task Submit()
+    {
+        if (!string.IsNullOrWhiteSpace(operationList?.Name))
+        {
+            var editOperationNameResponse = await Http.PutAsJsonAsync<OperationList?>($"api/OperationLists?id={id}", operationList);
+            string nameEditResponse = editOperationNameResponse.Content.ReadAsStringAsync().Result;
+            showBar(nameEditResponse);
+            MudDialog?.Close(DialogResult.Ok(true));
+        }
+    }
+    void showBar(string getonlystringvalue)
+    {
+        Snackbar.Add($"{getonlystringvalue}", Severity.Success, config => { config.ShowCloseIcon = false; });
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        operationList = await Http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
+    }
+}
+

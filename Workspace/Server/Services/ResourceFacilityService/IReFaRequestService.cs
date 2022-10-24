@@ -5,10 +5,10 @@ namespace Workspace.Server.Services.ResourceFacilityService
 {
     public interface IReFaRequestService
     {
-        Task<ServiceResponse<List<ReFaRequest>>> GetReFaRequestsAsync();
-        Task<ServiceResponse<List<ReFaRequest>>> GetReFaRequestAsync(Guid reFaRequestId);
-        Task<ServiceResponse<ReFaRequest>> CreateReFaRequest(ReFaRequest reFaRequest);
-        Task<ServiceResponse<List<ReFaRequest>>> UpdateReFaRequest(ReFaRequest reFaRequest);
-        Task<ServiceResponse<List<ReFaRequest>>> DeleteReFaRequestAsync(Guid reFaRequestId);
+        Task<List<ReFaRequest>> GetReFaRequestsAsync();
+        Task<List<ReFaRequest>> GetReFaRequestAsync(Guid reFaRequestId);
+        Task<ReFaRequest> CreateReFaRequest(ReFaRequest reFaRequest);
+        Task<List<ReFaRequest>> UpdateReFaRequest(ReFaRequest reFaRequest);
+        Task<List<ReFaRequest>> DeleteReFaRequestAsync(Guid reFaRequestId);
     }
 }

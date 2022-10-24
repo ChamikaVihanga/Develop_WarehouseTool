@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Workspace Default Ignore Files / Paths
+/DataAccessLayer/Migrations/

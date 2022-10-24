@@ -1,17 +1,23 @@
-global using DataAccessLayer;
 global using Microsoft.EntityFrameworkCore;
-global using Workspace.Server.Services.LoginService;
+
 global using Workspace.Server.Services.ResourceFacilityService;
+global using Workspace.Server.Services.LoginService;
+
+global using DataAccessLayer;
+
 global using Workspace.Shared;
+global using Workspace.Shared.Entities.Readonly;
 
-
+using Microsoft.AspNetCore.ResponseCompression;
+using Workspace.Server.Extensions;
+using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using Workspace.Server.AuthorizationService.Policies;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
-using Workspace.Server.AuthorizationService.Policies;
+using Microsoft.AspNetCore.Authorization;
 using Workspace.Server.AuthorizationService.PolicyHandler;
+using Workspace.Server.AuthorizationService.CustomPolicyDataProvider;
 using Workspace.Server.Services.ClaimProviderService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,7 +67,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value)),
             ValidateIssuer = false,
             ValidateAudience = false,
-
+            ValidateLifetime = false,   
+           
+            
         };
     });
 
@@ -84,6 +92,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthorizationHandler, CustomPolicyHandler>();
 
 builder.Services.AddScoped<ICustomPolicyDataProvider, CustomPolicyDataProvider>();
+
+
 
 // Register the Swagger services
 builder.Services.AddEndpointsApiExplorer();
