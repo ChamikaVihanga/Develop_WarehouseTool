@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\ApprovalPath\Components\Partial\" />
-    <Folder Include="Pages\ApprovalPath\JSLib\" />
     <Folder Include="Pages\ComponentLib\" />
     <Folder Include="Pages\Document\" />
     <Folder Include="Properties\" />

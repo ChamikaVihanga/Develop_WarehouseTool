@@ -1,0 +1,156 @@
+﻿@page "/ApprovalPathConf"
+@inject IJSRuntime JS
+@inject HttpClient http
+
+<h3>ConfigureDefinitionValues</h3>
+
+
+
+
+@if (definitionValue is not null)
+{
+    <div class="row">
+        <div class="col-lg-10 col-sm-10 mt-2"></div>
+        <div class="col-lg-2 col-sm-2 mt-2">
+            <button type="button" class="btn btn-success  m-1">Save Changes</button>
+
+        </div>
+    </div>
+
+    foreach (var conf in approvalConfigurations.OrderBy(a => a.ApprovalDocuments.FirstOrDefault().ApprovalDocumentId))
+    {
+        foreach (var doc in conf.ApprovalDocuments)
+        {
+            <h5>@doc.DocumentName</h5>
+            <div class="row">
+                @foreach (var destination in conf.ApprovalDestinations.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex))
+                {
+                    <div class="col-lg-3 col-sm-12 mt-2">
+
+                        <h6>Approval Level: @destination.WorkFlowIndex.WorkFlowIndex</h6>
+                        <ul class="list-group">
+                            @foreach (var user in destination.WorkFlowUsers)
+                            {
+                                <li class="list-group-item">@user.Username</li>
+                            }
+
+                            <li class="list-group-item ">
+                                <div style="display:none;" id="@(destination.ApprovalDestinationId.ToString() + conf.ApprovalConfigurationId.ToString() + doc.ApprovalDocumentId.ToString())">
+                                    <input @onfocusout="() => clearText(val)" @bind-value="val" class="form-control form-control-sm" type="text" placeholder="Username" aria-label="Username">
+                                </div>
+                                <button type="button" @onclick="() => showHideTextBox(destination.ApprovalDestinationId, conf.ApprovalConfigurationId, doc.ApprovalDocumentId, conf)" id="@(destination.ApprovalDestinationId.ToString() + conf.ApprovalConfigurationId.ToString() + doc.ApprovalDocumentId.ToString() + "btn")" class="btn btn-primary btn-sm m-1">Add user</button>
+
+                            </li>
+                        </ul>
+
+                    </div>
+                }
+            </div>
+        }
+    }
+}
+
+@code {
+    string? val;
+    string? valBak;
+
+    public DefinitionValues? definitionValue { get; set; }
+
+    List<ApprovalConfigurations> approvalConfigurations = new List<ApprovalConfigurations>();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        definitionValue = await http.GetFromJsonAsync<DefinitionValues>("api/APD_DefinitionValue/GetApprovalDefinitions?id=c3fd054f-095c-49fb-977c-66230908c0a4");
+
+        foreach (var config in definitionValue.ApprovalConfigurations)
+        {
+            foreach (var document in config.ApprovalDocuments)
+            {
+                approvalConfigurations.Add(new ApprovalConfigurations()
+                    {
+                        ApprovalConfigurationId = Guid.NewGuid(),
+                        ApprovalDestinations = config.ApprovalDestinations,
+                        ApprovalDocuments = new List<ApprovalDocuments>() {
+                        new ApprovalDocuments() { ApprovalDocumentId = document.ApprovalDocumentId, DocumentName = document.DocumentName
+                        }
+                    }
+                    });
+            }
+        }
+        //await http.PostAsJsonAsync<List<ApprovalConfigurations>>("", approvalConfigurations);
+    }
+    async Task clearText(string? val2)
+    {
+
+        valBak = val2;
+        val = null;
+    }
+
+    async Task showHideTextBox(Guid? destinationId, Guid? confId, Guid? Docid, ApprovalConfigurations? conf)
+    {
+        string divId = destinationId.ToString() + confId.ToString() + Docid.ToString();
+        await JS.InvokeAsync<string>("ShoeHideDivById", divId.ToString());
+        string btnId = destinationId.ToString() + confId.ToString() + Docid.ToString() + "btn";
+
+        var result = await JS.InvokeAsync<string>("swapInnerText", "Add user", "Apply", btnId.ToString());
+        if (result == "Apply")
+        {
+
+            Console.WriteLine(valBak);
+            await AddUserToDestination(destinationId, conf, Docid, valBak);
+            valBak = null;
+        }
+    }
+
+    async Task AddUserToDestination(Guid? destinationId, ApprovalConfigurations? conf, Guid? Docid, string NewUser)
+    {
+        if(NewUser is not null){
+            List<WorkFlowUsers>? workFlowUsers = new List<WorkFlowUsers>();
+
+
+
+            foreach (WorkFlowUsers? user in conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().WorkFlowUsers)
+            {
+                workFlowUsers.Add(user);
+            }
+            if (!conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().WorkFlowUsers.Select(a => a.Username).Contains(NewUser)){
+                workFlowUsers.Add(new WorkFlowUsers() { UserId = Guid.NewGuid(), Username = NewUser });
+            }
+            
+
+            //conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().WorkFlowUsers.Add(new WorkFlowUsers() { UserId = Guid.NewGuid(), Username = valBak });
+
+            ApprovalDestinations newApprovalDestination = new ApprovalDestinations()
+                {
+                    ApprovalDestinationId = Guid.NewGuid(),
+                    WorkFlowUsers = workFlowUsers,
+                    WorkFlowIndex = conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().WorkFlowIndex,
+
+                };
+
+            List<ApprovalDestinations> approvalDestinations = new List<ApprovalDestinations>();
+            foreach (var apd in conf.ApprovalDestinations)
+            {
+                if (apd.ApprovalDestinationId != destinationId)
+                {
+                    approvalDestinations.Add(apd);
+                }
+            }
+            approvalDestinations.Add(newApprovalDestination);
+
+            ApprovalConfigurations? confSet = new ApprovalConfigurations() { ApprovalConfigurationId = Guid.NewGuid(), ApprovalDestinations = approvalDestinations, ApprovalDocuments = conf.ApprovalDocuments };
+
+            approvalConfigurations.Remove(conf);
+
+            approvalConfigurations.Add(confSet);
+
+            await InvokeAsync(StateHasChanged);
+            //await http.PostAsJsonAsync<List<ApprovalConfigurations>>("", approvalConfigurations);  014df261-e1fe-4f3b-8e00-72ef1700f278
+        }
+       
+        
+    }
+
+}

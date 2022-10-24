@@ -34,7 +34,7 @@ namespace ApprovalPath_Utils.Services.ApprovalDocuementService
 
         public async Task<List<ApprovalDocuments>> ApprovalDocuments()
         {
-            return await _context.apd_approvalDocuments.ToListAsync();
+            return await _context.apd_approvalDocuments.Include(a => a.PriorityIndexes).ThenInclude(a => a.ApprovalDefinition).ToListAsync();
         }
     }
 }
