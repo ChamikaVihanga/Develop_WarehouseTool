@@ -6,10 +6,10 @@
         <Found Context="routeData">
 
             @*Workspace main layout*@
-            @*<RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />*@
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
 
             @*Workspace Single page layout to pre release apps in workspace*@
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(SingleToolLayout)" />
+            @*<RouteView RouteData="@routeData" DefaultLayout="@typeof(SingleToolLayout)" />*@
 
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
@@ -17,10 +17,10 @@
             <PageTitle>Not found</PageTitle>
 
             @*Workspace main layout*@
-           @* <LayoutView Layout="@typeof(MainLayout)">*@
+            <LayoutView Layout="@typeof(MainLayout)">
 
             @*Workspace Single page layout to pre release apps in workspace*@
-            <LayoutView Layout="@typeof(SingleToolLayout)">
+            @*<LayoutView Layout="@typeof(SingleToolLayout)">*@
 
                 <p role="alert">Sorry, there's nothing at this address.</p>
             </LayoutView>
