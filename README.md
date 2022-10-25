@@ -1,10 +1,45 @@
 # Workspace Solution...
 
+## Must Follow these steps - VERY IMPORTANT
+
+
+1. Clone Git Repo to New Location ( Rename the Old project location )
+2. Switch to your Branch
+3. Update Your connection string
+4. Run these commands
+```shell
+	git rm --cached Workspace/Server/appsettings.json
+	git rm --cached Workspace/Server/appsettings.Development.json
+	git rm --cached Admin.workspace/Server/appsettings.json
+	git rm --cached Admin.workspace/Server/appsettings.Development.json
+	git rm --cached DataAccessLayer/Migrations/
+```
+
+
+<details><summary>Must Follow these steps - VERY IMPORTANT</summary>
+<p>
+
+1. Clone Git Repo to New Location ( Rename the Old project location )
+2. Switch to your Branch
+3. Update Your connection string
+4. Run these commands
+```shell
+	git rm --cached Workspace/Server/appsettings.json
+	git rm --cached Workspace/Server/appsettings.Development.json
+	git rm --cached Admin.workspace/Server/appsettings.json
+	git rm --cached Admin.workspace/Server/appsettings.Development.json
+	git rm --cached DataAccessLayer/Migrations/
+```
+
+</p>
+</details>
+
+
 [![GitHub issues open](https://img.shields.io/github/issues/network-tools/shconfparser.svg?maxAge=2592000)](http://git.workspace.vsag.ch/Dev_Team/Workspace/issues)
 
 
 
-> Current Version 1.3.0
+> Current Version 1.5.0
 
 > Project track in [GitV](http://git.workspace.vsag.ch/Dev_Team/Workspace/projects) *[Self-Hosted]*
 
@@ -61,17 +96,7 @@ Visual Studio 2022
 
 ## Implementing a new feature in Workspace
 
-<details><summary>CLICK ME</summary>
-<p>
 
-#### We can hide anything, even code!
-
-```ruby
-   puts "Hello World"
-```
-
-</p>
-</details>
 
 1. **Workspace.Shared Project**
     - Add Entities
