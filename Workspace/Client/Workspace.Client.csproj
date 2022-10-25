@@ -47,6 +47,27 @@
 	  <Folder Include="Pages\Authentication\PermissionRequestAndErrorHandler\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Include="Pages\Warehouse\AddEfficiencyRecords.razor" />
+	  <None Include="Pages\Warehouse\AdminView.razor" />
+	  <None Include="Pages\Warehouse\Archived\DialogSummary.razor" />
+	  <None Include="Pages\Warehouse\Archived\Efficiency.razor" />
+	  <None Include="Pages\Warehouse\Archived\EfficiencySummary.razor" />
+	  <None Include="Pages\Warehouse\Archived\OperationListView.razor" />
+	  <None Include="Pages\Warehouse\Archived\_LogTable.razor" />
+	  <None Include="Pages\Warehouse\Archived\_OperationListTable.razor" />
+	  <None Include="Pages\Warehouse\Index.razor" />
+	  <None Include="Pages\Warehouse\Operation.razor" />
+	  <None Include="Pages\Warehouse\OperationDetailsView.razor" />
+	  <None Include="Pages\Warehouse\OperationListSummary.razor" />
+	  <None Include="Pages\Warehouse\ShiftManagement.razor" />
+	  <None Include="Pages\Warehouse\UpdateTargetForOperation.razor" />
+	  <None Include="Pages\Warehouse\_EditOperationTable.razor" />
+	  <None Include="Pages\Warehouse\_EditOpListName.razor" />
+	  <None Include="Pages\Warehouse\_LogEfficiencyData.razor" />
+	  <None Include="Pages\Warehouse\_WarehouseNavBar.razor" />
+	</ItemGroup>
+
 
 
 </Project>
