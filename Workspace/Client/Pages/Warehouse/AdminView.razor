@@ -1,48 +1,42 @@
 ﻿@page "/warehouse/adminview"
+@using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
 @inject HttpClient httpClient
 
 <_WarehouseNavBar />
 
 <PageTitle>Admin View</PageTitle>
-<MudGrid>
-    @*<MudItem xs="12">*@
-        <MudItem>
-            @*<MudIcon Color="Color.Dark" Icon="@Icons.Custom.Uncategorized.Radioactive" Size="Size.Large" />*@
+<MudGrid>    
+    <MudItem>
         <MudAvatar Color="Color.Info" Variant="Variant.Outlined">VS</MudAvatar>
-        </MudItem>
-        <MudItem xs="3">
-            <MudText Typo="Typo.h5" Class="mt-1" Color="Color.Info"><b>Warehouse Efficiency</b></MudText>
-        </MudItem>
-    @*</MudItem>*@
+    </MudItem>
+    <MudItem xs="3">
+        <MudText Typo="Typo.h5" Class="mt-1" Color="Color.Info"><b>Warehouse Efficiency</b></MudText>
+    </MudItem>    
 </MudGrid>
 
 <MudGrid Class="mt-10">
-
-    <MudItem xs="4">
-        @*<MudDatePicker Label="Fix Month" @bind-Date="_month" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="@DateTime.Today.Day" DateFormat="MMM" />*@
-        @*<MudTextField T="string" Label="Month" InputType="InputType.Month" />*@
-        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
+    <MudItem xs="3">
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
     </MudItem>
 
     <MudItem xs="12">
-
         <MudGrid>
-            <MudItem xs="4">
-                <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" For="@(()=>EnteredSapNo)"></MudTextField>
+            <MudItem xs="3">
+                <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)"></MudTextField>
             </MudItem>
-            <MudSpacer />
-            <MudItem xs="4" Class="d-flex justify-end">
-            @if(vS_employee is not null)
-            {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b>@vS_employee.EPFNo - @vS_employee.NickName</b></MudText>
-            }
-           @* else
-            {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b>Employee FullName</b></MudText>
-            }*@
+            @*<MudSpacer />*@
+            <MudItem xs="9">
+                <MudGrid>
+                    @if (vS_employee is not null)
+                    {                        
+                        <MudSpacer/>                        
+                        <MudItem xs="6" Class="d-inline-flex justify-end">
+                            <MudText Typo="Typo.subtitle1" Class="ml-3" Color="Color.Dark"><span>EPFNo : <b>@vS_employee.EPFNo</b></span><span class="pa-6">Name : <b>@vS_employee.NickName</b></span></MudText>
+                        </MudItem>                      
+                    }
+                </MudGrid>
             </MudItem>
-           
         </MudGrid>
         <br />
     </MudItem>
@@ -66,10 +60,10 @@
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd>@context.OperationList.Name</MudTd>
-                    <MudTd>@context.StartTime.Date.ToString("d")</MudTd>                   
+                    <MudTd>@context.StartTime.Date.ToString("d")</MudTd>
                     <MudTd>@context.Achivement</MudTd>
                     <MudTd>@context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()</MudTd>
-                    <MudTh>                        
+                    <MudTh>
                         @calEfficiancy(context.Achivement, context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%
                     </MudTh>
                 </RowTemplate>
@@ -78,74 +72,38 @@
     }
 </MudItem>
 
-<MudGrid>
-    <MudItem xs="12">
-        <MudGrid>
-            <MudItem xs="4">
-               
-            </MudItem>
-            <MudSpacer />
-            <MudItem xs="4" Class="d-flex justify-end" >
-                @if (vS_employee is not null)
-                {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b> </b></MudText>
-                }
-                else
-                {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b>Mothly Efficiency</b></MudText>
-                }
-            </MudItem>
-
-        </MudGrid>
-        <br />
-    </MudItem>
-</MudGrid>
-
-
-
 @code {
 
     float calEfficiancy(int? ach, int? target)
     {
-        try{
-            Console.WriteLine(ach);
-            Console.WriteLine(target);
+        try
+        {           
             return ((float)ach / (float)target) * 100;
-
         }
-        catch{
+        catch
+        {
             return 0;
         }
     }
-
-    //float mothlyEfficiancy(DateTime month, int? target)
-    //{
-        
-    //}
-
 
     private bool border = true;
     bool isLoading = false;
 
     private MudDateRangePicker _picker;
-    // private DateRange CreateDate = new DateRange();
 
     DateTime? SelectMonth = DateTime.Now;
-    //DateTime? _month;
-    
-    public string EnteredSapNo { get; set; }
+    DateTime? _month;
 
-    //public string CreateDate { get; set; }
+    [Required]
+    [StringLength(5, ErrorMessage = "Number length can't be more than 5")]
+    public string EnteredSapNo { get; set; }
 
     public Vs_Employee? vS_employee { get; set; }
 
     public OperationDetail? operationDetails { get; set; }
 
-    //OperationRecord operationRecord = new OperationRecord();
     private List<OperationRecord?> manageRecord;
     OperationDetail operationDetail = new OperationDetail();
-
-    //public Vs_Employee? vs_employee;
 
     async Task HandleIntervalElapsed(string debouncedText)
     {
@@ -155,13 +113,10 @@
             isLoading = true;
 
             try
-            {                
-                //manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&CreateDate={CreateDate.ToString()}");
-
+            {
                 vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
 
                 manageRecord = await httpClient.GetFromJsonAsync<List<OperationRecord?>>($"api/OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
-
             }
             catch
             {
@@ -173,6 +128,8 @@
         else
         {
             manageRecord = null;
+            vS_employee.EPFNo = null;
+            vS_employee.NickName = null;
         }
 
     }
