@@ -1,41 +1,14 @@
 # Workspace Solution...
 
 ## Must Follow these steps - VERY IMPORTANT
-
-
 1. Clone Git Repo to New Location ( Rename the Old project location )
 2. Switch to your Branch
 3. Update Your connection string
-4. Run these commands
-```shell
-	git rm --cached Workspace/Server/appsettings.json
-	git rm --cached Workspace/Server/appsettings.Development.json
-	git rm --cached Admin.workspace/Server/appsettings.json
-	git rm --cached Admin.workspace/Server/appsettings.Development.json
-	git rm --cached DataAccessLayer/Migrations/
-```
+4. Only push to your branch
 
-
-<details><summary>Must Follow these steps - VERY IMPORTANT</summary>
-<p>
-
-1. Clone Git Repo to New Location ( Rename the Old project location )
-2. Switch to your Branch
-3. Update Your connection string
-4. Run these commands
-```shell
-	git rm --cached Workspace/Server/appsettings.json
-	git rm --cached Workspace/Server/appsettings.Development.json
-	git rm --cached Admin.workspace/Server/appsettings.json
-	git rm --cached Admin.workspace/Server/appsettings.Development.json
-	git rm --cached DataAccessLayer/Migrations/
-```
-
-</p>
-</details>
-
-
+<!-- 
 [![GitHub issues open](https://img.shields.io/github/issues/network-tools/shconfparser.svg?maxAge=2592000)](http://git.workspace.vsag.ch/Dev_Team/Workspace/issues)
+-->
 
 
 
@@ -46,6 +19,7 @@
 > Project repository in [GitV](http://git.workspace.vsag.ch/Dev_Team/Workspace) *[Self-Hosted]*
 
 > Project Documentation in [Notion](https://hiruna.notion.site/VS-Workspace-ab113a9758d14836b37e2d16f4b7dbed) *[Temp]*
+
 
 ### Technologies
 
@@ -96,7 +70,16 @@ Visual Studio 2022
 
 ## Implementing a new feature in Workspace
 
+<details><summary>Test</summary>
+<p>
+Test
 
+```CSharp
+	Console.WriteLine("Hello World!");
+```
+
+</p>
+</details>
 
 1. **Workspace.Shared Project**
     - Add Entities
