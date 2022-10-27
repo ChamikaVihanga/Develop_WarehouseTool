@@ -23,11 +23,10 @@
 
 
 <MudGrid Class="mt-3">
-    @for (int i = 0; i < 4; i++)
+    @for (int i = 0; i < 9; i++)
     {
-        <MudItem xs="6" >
+        <MudItem xs="4" >
             <MudPaper Elevation="0">
-
                 <MudCard>
                     <MudCardHeader>
                         <CardHeaderAvatar>
@@ -38,7 +37,7 @@
                             <MudSkeleton Animation="Animation.Wave" Width="100%" />
                         </CardHeaderContent>
                     </MudCardHeader>
-                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="250px" />
+                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="150px" />
                     <MudCardContent>
                         <MudSkeleton Animation="Animation.Wave" />
                     </MudCardContent>
@@ -47,20 +46,6 @@
                         <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="30px" Width="30px" Class="ml-3 mb-2" />
                     </MudCardActions>
                 </MudCard>
-            </MudPaper>
-        </MudItem>
-    }
-
-</MudGrid>
-
-
-<MudGrid>
-    @for (int i = 0; i < 10; i++)
-    {
-        <MudItem xs="12" Justify="Justify.Center">
-            <MudPaper Class="d-flex flex-column align-center justify-center mud-width-full py-0">
-
-
             </MudPaper>
         </MudItem>
     }

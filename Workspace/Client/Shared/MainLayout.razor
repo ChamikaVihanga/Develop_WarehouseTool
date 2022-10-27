@@ -1,17 +1,16 @@
 ﻿@inherits LayoutComponentBase
+
+
 <ErrorBoundary @ref="errorBoundary">
     <ChildContent>
         <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
         <MudDialogProvider />
         <MudSnackbarProvider />
+
         <MudLayout>
-            <MudAppBar Color="Color.Transparent" Elevation="0" Dense="true" class="Glass">
-
-
+            <MudAppBar Color="Color.Transparent" Elevation="0" Dense="false" class="Glass">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
                 <MudText Typo="Typo.h5" Class="ml-3">VS Workspace</MudText>
-
-
                 <Workspace.Client.Pages.Authentication.Components.WelcomeNote></Workspace.Client.Pages.Authentication.Components.WelcomeNote>
 
                 <MudBadge Content="100" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
@@ -25,36 +24,33 @@
                 <MudToggleIconButton @bind-Toggled="@_isDarkMode"
                                      Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
                                      ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />
-
-
                 @*
                 Login Partial View in Right Top Conner > PartialLogin
                 *@
                 <PartialLogin />
-
             </MudAppBar>
 
-
-            <MudDrawer @bind-Open="@open" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" ClipMode="DrawerClipMode.Always">
+            <MudDrawer @bind-Open="@open" Elevation="0" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" ClipMode="DrawerClipMode.Always" Color="Color.Transparent">
                 <MudDrawerHeader>
                     @*<MudText Typo="Typo.h6">WorkspaceWeb</MudText>*@
                 </MudDrawerHeader>
                 <SideNavMenu />
             </MudDrawer>
 
-
             <MudMainContent>
-                <FeatureNavBar />
-                <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
-                            @Body
-                        
-                </MudContainer>
+                <div class="bg-white  rounded-5"  style="min-height:95vh">
+                    <FeatureNavBar />
+                    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
+                        @Body
+                    </MudContainer>
+                </div>
             </MudMainContent>
         </MudLayout>
     </ChildContent>
+
+
     <ErrorContent>
         <Workspace.Client.Pages.ErrorPages.GlobalErrorPage Error="@context.Message" bakErrorContent="RecoverError"></Workspace.Client.Pages.ErrorPages.GlobalErrorPage>
-
     </ErrorContent>
 
 </ErrorBoundary>
@@ -72,7 +68,7 @@
 
 @code {
 
-    private ErrorBoundary errorBoundary;
+    private ErrorBoundary? errorBoundary;
 
     protected override void OnInitialized()
     {
