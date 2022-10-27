@@ -21,9 +21,9 @@
                                      Icon="@Icons.Filled.NotificationsOff" Color="@Color.Inherit" Title="Off"
                                      ToggledIcon="@Icons.Filled.Notifications" ToggledColor="@Color.Success" ToggledTitle="On" />
 
-                <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+@*                <MudToggleIconButton @bind-Toggled="@_isDarkMode"
                                      Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
-                                     ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />
+                                     ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />*@
                 @*
                 Login Partial View in Right Top Conner > PartialLogin
                 *@
@@ -38,7 +38,7 @@
             </MudDrawer>
 
             <MudMainContent>
-                <div class="bg-white  rounded-5"  style="min-height:95vh">
+                <div class="bg-white rounded-5 shadow-sm mx-3" style="min-height:95vh">
                     <FeatureNavBar />
                     <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
                         @Body
