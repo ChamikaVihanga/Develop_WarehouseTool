@@ -14,6 +14,14 @@ namespace DataAccessLayer
     {
         public WorkspaceDbContext(DbContextOptions<WorkspaceDbContext> options) : base(options)
         {
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder
+                .UseSqlServer("Server=WSLK-IT01.VSAG.CH;Database=Workspace-Dev-Hiruna;User Id=sa;password=12QWaszx;Trusted_Connection=False;MultipleActiveResultSets=true");
         }
 
 

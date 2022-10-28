@@ -28,8 +28,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // DB Connection 
-builder.Services.AddDbContext<WorkspaceDbContext>(options =>
-   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<WorkspaceDbContext>(options =>
+//   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<WorkspaceDbContext>();
 
 //DB connection for authorization requirements
 //builder.Services.AddDbContext<AuthDbContext>(options =>
