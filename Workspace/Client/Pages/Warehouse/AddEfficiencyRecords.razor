@@ -67,8 +67,7 @@
                                                     <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>
-                                            @*<MudTextField @bind-Value="@StartTime" Label="Start Time" InputType="InputType.Time" Variant="Variant.Outlined" />*@
+                                            </MudTimePicker>                                            
                                         </MudItem>
                                         <MudItem xs="6">
                                             <MudTimePicker @ref="_pickerE" PickerVariant="PickerVariant.Dialog" Label="End Time" @bind-Time="@EndTime" Variant="Variant.Outlined">
@@ -77,8 +76,7 @@
                                                     <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>
-                                            @*<MudTextField @bind-Value="@EndTime" Label="End Time" InputType="InputType.Time" Variant="Variant.Outlined"/>*@
+                                            </MudTimePicker>                                            
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -175,14 +173,12 @@
                     </MudContainer>
                 </MudItem>
             }
-
             <MudItem xs="12">
                 <h3>Efficiency Summary</h3>
                 <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                 </MudPaper>
             </MudItem>
         </MudGrid>
-
 
         @*Data view table*@
         <_LogEfficiencyData manageRecord="@manageRecord" />
@@ -204,11 +200,10 @@
     /// <summary>
     /// Form Date Picker
     /// </summary>
-    MudDatePicker _picker;
-
+    MudDatePicker? _picker;
 
     //Time Picker
-    MudTimePicker _pickerS;
+    MudTimePicker? _pickerS;
     MudTimePicker? _pickerE;
     DateTime? SelectedDate = DateTime.Now;
     DateTime? EndDate = DateTime.Now;
@@ -222,11 +217,7 @@
 
     //public DateTime Date { get; set; }
 
-
-
     public int putId { get; set; } = 0;
-
-
 
     private OperationList[]? operationList;
     private string? value1;
@@ -238,12 +229,8 @@
 
     public Vs_Employee? vS_Employee { get; set; }
 
-
-
-
     OperationRecord operationRecord = new OperationRecord();
     private VS_Employees_1[]? vsEmployees;
-
 
     void PickEndDate()
     {
@@ -263,7 +250,6 @@
                 InvokeAsync(StateHasChanged);
             }
         }
-
     }
 
     protected override async Task OnInitializedAsync()
@@ -272,15 +258,11 @@
         GetOperationList();
     }
 
-
-
     async Task GetOperationList()
     {
         operationList = await httpClient.GetFromJsonAsync<OperationList[]>("api/OperationLists");
         dropDown = await httpClient.GetFromJsonAsync<List<OperationDetail>?>("/api/OperationLists/Active");
     }
-
-
 
     /// <summary>
     /// Date and time convert to String add database
@@ -290,14 +272,11 @@
 
     protected async Task PostData()
     {
-
-
         operationRecord.CreateDate = Convert.ToDateTime(SelectedDate);
         operationRecord.EndDate = Convert.ToDateTime(EndDate);
 
         if (EndTime > StartTime  || EndTime is null)
         {
-
             //operationRecord.StartTime = Convert.ToDateTime(StartTime);
             if (StartTime is not null && SelectedDate is not null)
             {
@@ -308,13 +287,11 @@
                 if (EndDate is not null)
                 {
                     operationRecord.EndTime = EndDate.Value.Date + EndTime;
-
                 }
                 else
                 {
                     operationRecord.EndTime = DateTime.Today + EndTime;
                 }
-
             }
             int id = operationList.Where(a => a.Name == value1).Select(b => b.Id).Last();
             operationRecord.OperationListId = id;
@@ -327,7 +304,6 @@
                 _LogEfficiencyData get = new _LogEfficiencyData();
                 string Val = await response.Content.ReadAsStringAsync();
                 AddCloseAfterNavSnackbar(Val);
-
             }
             else
             {
@@ -349,19 +325,11 @@
             isEndDateRequired = false;
             StartTime = null;
             InvokeAsync(StateHasChanged);
-
-
         }
-
-
         else
         {
             AddDateAfterNavSnackbar("You can't enter End Time like this");
         }
-
-
-
-
     }
 
     public void AddDateAfterNavSnackbar(string VAl)
@@ -372,7 +340,6 @@
         });
     }
 
-
     public void AddCloseAfterNavSnackbar(string Val)
     {
         Snackbar.Add($"{Val}", Severity.Success, (options) =>
@@ -380,7 +347,6 @@
             options.CloseAfterNavigation = true;
         });
     }
-
 
     private async Task<IEnumerable<string>> Search1(string value)
     {
@@ -392,7 +358,6 @@
             return dropDown.Select(x => x.OperationList.Name);
         return dropDown.Select(y => y.OperationList.Name.ToString()).Where(a => a.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
-
 
     async Task HandleIntervalElapsed(string debouncedText)
     {
@@ -416,15 +381,12 @@
                 manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
 
                 vS_Employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
-
             }
             catch
             {
                 isLoading = false;
-
             }
             isLoading = false;
-
 
             foreach (OperationRecord operationRecord in manageRecord)
             {
@@ -435,8 +397,6 @@
                     StartDateTime = operationRecord.StartTime;
                     value1 = operationRecord.OperationList.Name;
                     putId = operationRecord.Id;
-
-
                     manageRecord = manageRecord.Where(x => x.Id != operationRecord.Id).ToArray();
                 }
             }
@@ -445,6 +405,5 @@
         {
             manageRecord = null;
         }
-
     }
 }

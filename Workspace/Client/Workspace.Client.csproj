@@ -58,7 +58,7 @@
 	  <None Include="Pages\Warehouse\Archived\_OperationListTable.razor" />
 	  <None Include="Pages\Warehouse\Index.razor" />
 	  <None Include="Pages\Warehouse\Operation.razor" />
-	  <None Include="Pages\Warehouse\OperationDetailsView.razor" />
+	  <None Include="Pages\Warehouse\Archived\OperationDetailsView.razor" />
 	  <None Include="Pages\Warehouse\OperationListSummary.razor" />
 	  <None Include="Pages\Warehouse\ShiftManagement.razor" />
 	  <None Include="Pages\Warehouse\UpdateTargetForOperation.razor" />

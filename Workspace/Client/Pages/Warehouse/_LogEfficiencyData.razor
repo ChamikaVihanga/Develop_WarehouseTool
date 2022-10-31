@@ -1,13 +1,6 @@
-﻿@inject HttpClient http
-<MudPaper Elevation="1">
-   @* @if (manageRecord == null)
-    {
-        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
-    }
-    else
-    {*@
+﻿
+<MudPaper Elevation="1">   
         <MudTable Items="manageRecord" Bordered="@bordered" Elevation="0" Hover="true">
-
             <HeaderContent>
                 <MudTh><b>Date</b></MudTh>
                 <MudTh><b>Operation</b></MudTh>
@@ -20,15 +13,13 @@
                 <MudTd>@context.StartTime.ToString("T")  -  @context.EndTime.Value.ToLongTimeString()</MudTd>
                 <MudTd>@context.Achivement</MudTd>
             </RowTemplate>
-        </MudTable>
-    @*}*@
+        </MudTable>   
 </MudPaper>
-@code {
 
+@code {
     int? nullableInt;
     private bool bordered = false;
 
     [Parameter]
     public OperationRecord[]? manageRecord { get; set; }
-
 }

@@ -27,11 +27,8 @@
 </MudGrid>
 
 <MudItem xs="12" Class="mt-6">
-    @if (manageRecord == null)
-    {
-        @* <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />*@
-    }
-    else
+   
+    @if (manageRecord != null)
     {
         <MudPaper Elevation="1">
             <MudTable Items="manageRecord" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
@@ -59,7 +56,6 @@
 </MudItem>
 
 @code {
-
 
     //float calEfficiancy(int? ach, int? target)
     //{

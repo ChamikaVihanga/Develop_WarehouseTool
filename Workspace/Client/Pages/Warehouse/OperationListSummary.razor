@@ -32,8 +32,7 @@
         <MudItem xs="12">
             <MudPaper Elevation="1">
                 <MudTable Items="operationDetails" Hover="true" SortLabel="Sort By" Elevation="0" Dense="true" Bordered="true" FixedHeader="true" Height="60vh">
-                    <HeaderContent>
-                        @*<MudTh><b>Organization Unit</b></MudTh>*@
+                    <HeaderContent>                        
                         <MudTh><b>Operation Name</b></MudTh>
                         <MudTh><b>Target</b></MudTh>
                         <MudTh><b>Allocated Time</b></MudTh>
@@ -41,8 +40,7 @@
                         @*<MudTh><b>Activation</b></MudTh>*@
                         <MudTh></MudTh>
                     </HeaderContent>
-                    <RowTemplate>
-                        @*<MudTd>@context.OrganizationUnit</MudTd>*@
+                    <RowTemplate>                        
                         <MudTd>@context.OperationList?.Name</MudTd>
                         <MudTd>@context.Target</MudTd>
                         <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
