@@ -10,5 +10,6 @@ namespace ApprovalPath_Utils.Services.DefinitionValueService
     public interface IDefinitionValueService
     {
         Task<DefinitionValues> GetApprovalDefinitions(Guid? id);
+        Task<DefinitionValues> SetConfiguration(Guid? id, List<ApprovalConfigurations> approvalConfigurations);
     }
 }
