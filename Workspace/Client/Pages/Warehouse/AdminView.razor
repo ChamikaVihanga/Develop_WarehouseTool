@@ -4,45 +4,29 @@
 @inject HttpClient httpClient
 
 <_WarehouseNavBar />
-
 <PageTitle>Admin View</PageTitle>
-<MudGrid>    
-    <MudItem>
-        <MudAvatar Color="Color.Info" Variant="Variant.Outlined">VS</MudAvatar>
-    </MudItem>
-    <MudItem xs="3">
-        <MudText Typo="Typo.h5" Class="mt-1" Color="Color.Info"><b>Warehouse Efficiency</b></MudText>
-    </MudItem>    
-</MudGrid>
 
-<MudGrid Class="mt-10">
+<MudGrid Class="mt-5">
     <MudItem xs="3">
-        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Selected Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
     </MudItem>
 
-    <MudItem xs="12">
-        <MudGrid>
-            <MudItem xs="3">
-                <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)"></MudTextField>
-            </MudItem>
-            @*<MudSpacer />*@
-            <MudItem xs="9">
-                <MudGrid>
-                    @if (vS_employee is not null)
-                    {                        
-                        <MudSpacer/>                        
-                        <MudItem xs="6" Class="d-inline-flex justify-end">
-                            <MudText Typo="Typo.subtitle1" Class="ml-3" Color="Color.Dark"><span>EPFNo : <b>@vS_employee.EPFNo</b></span><span class="pa-6">Name : <b>@vS_employee.NickName</b></span></MudText>
-                        </MudItem>                      
-                    }
-                </MudGrid>
-            </MudItem>
-        </MudGrid>
-        <br />
+    <MudItem xs="3">
+        <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)"></MudTextField>
+    </MudItem>   
+
+    <MudItem xs="6">
+        @if (ShowEmployeeDetails)
+        {
+            <MudText Typo="Typo.subtitle1" Align="Align.End" >
+                <span>EPFNo : <b>@vS_employee.EPFNo</b></span>
+                <span class="ps-5">   Name : <b>@vS_employee.NickName</b></span>
+            </MudText>
+        }
     </MudItem>
 </MudGrid>
 
-<MudItem xs="12">
+<MudItem xs="12" Class="mt-6">
     @if (manageRecord == null)
     {
         @* <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />*@
@@ -62,10 +46,12 @@
                     <MudTd>@context.OperationList.Name</MudTd>
                     <MudTd>@context.StartTime.Date.ToString("d")</MudTd>
                     <MudTd>@context.Achivement</MudTd>
-                    <MudTd>@context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()</MudTd>
-                    <MudTh>
-                        @calEfficiancy(context.Achivement, context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%
-                    </MudTh>
+                    <MudTd>@context.OperationList.OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()</MudTd>
+                    @*<MudTd>@context.OperationList.OperationDetails.Select(a => a.Target).FirstOrDefault()</MudTd>*@
+                    <MudTd>
+                        @(((float)@context.Achivement / (float)@context.OperationList.OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()) * 100) %
+                        @*@calEfficiancy(context.Achivement, context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%*@
+                    </MudTd>
                 </RowTemplate>
             </MudTable>
         </MudPaper>
@@ -74,63 +60,58 @@
 
 @code {
 
-    float calEfficiancy(int? ach, int? target)
-    {
-        try
-        {           
-            return ((float)ach / (float)target) * 100;
-        }
-        catch
-        {
-            return 0;
-        }
-    }
+
+    //float calEfficiancy(int? ach, int? target)
+    //{
+    //    try
+    //    {
+    //        return ((float)ach / (float)target) * 100;
+    //    }
+    //    catch
+    //    {
+    //        return 0;
+    //    }
+    //}
 
     private bool border = true;
     bool isLoading = false;
-
-    private MudDateRangePicker _picker;
-
     DateTime? SelectMonth = DateTime.Now;
     DateTime? _month;
 
     [Required]
-    [StringLength(5, ErrorMessage = "Number length can't be more than 5")]
+    [StringLength(5, ErrorMessage = "Number lenght can't be more than 5")]
     public string EnteredSapNo { get; set; }
 
     public Vs_Employee? vS_employee { get; set; }
-
     public OperationDetail? operationDetails { get; set; }
+    public List<OperationRecord?> manageRecord { get; set; }
 
-    private List<OperationRecord?> manageRecord;
     OperationDetail operationDetail = new OperationDetail();
 
+    bool ShowEmployeeDetails { get; set; } = false;  
+    
     async Task HandleIntervalElapsed(string debouncedText)
     {
-
         if (debouncedText.Length > 4)
         {
             isLoading = true;
-
             try
             {
                 vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
-
                 manageRecord = await httpClient.GetFromJsonAsync<List<OperationRecord?>>($"api/OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
+                
+                ShowEmployeeDetails = true;
             }
             catch
             {
                 isLoading = false;
-
             }
             isLoading = false;
         }
         else
         {
-            manageRecord = null;
-            vS_employee.EPFNo = null;
-            vS_employee.NickName = null;
+            ShowEmployeeDetails = false;
+            manageRecord = null;            
         }
-
     }
 }

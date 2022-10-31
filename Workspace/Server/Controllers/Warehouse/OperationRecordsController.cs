@@ -71,16 +71,16 @@ namespace Workspace.Server.Controllers.Warehouse
         //Get: api/OperationRecords/Efficiency
         [HttpGet("Efficiency")]
         public async Task<ActionResult<List<OperationRecord>>> GetEfficiencyDetil(string SapNo, DateTime SelectMonth)
-        {
-            //SelectedDateRange = DateTime.Now;
+        {           
 
-             var efficiencyRecord = await _context.OperationRecords
-                .Include(a => a.OperationList)
-                .ThenInclude(b => b.OperationDetails)
-                .Where(a => a.SAPNo == SapNo)
-                .Where(a=>a.CreateDate.Month == SelectMonth.Month)
-                
-                .ToListAsync();
+            var efficiencyRecord = await _context.OperationRecords
+               .Include(a => a.OperationList)
+               .ThenInclude(b => b.OperationDetails)
+               .Where(a => a.SAPNo == SapNo)
+               .Where(a => a.CreateDate.Month == SelectMonth.Month)
+               .ToListAsync();
+
+
             return
                 efficiencyRecord;
         } 
