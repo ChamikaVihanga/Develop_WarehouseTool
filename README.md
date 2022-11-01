@@ -20,6 +20,7 @@
 
 > Project Documentation in [Notion](https://hiruna.notion.site/VS-Workspace-ab113a9758d14836b37e2d16f4b7dbed) *[Temp]*
 
+-----
 
 ### Technologies
 
@@ -60,12 +61,9 @@ Visual Studio 2022
 ## Repo Branches
 
 **Master** - Main Solution
-
 **Release** - Creating temporary when going to realse a develop branch features
-
 **Develop** - Working Sprint ( All developers commites are mearch to here)
-
-**Dev_DeveloperName_Fearture_Name** - Developer should create new branch from base Develop branch for Implement new feature
+**Dev_DeveloperName** - Developer has separate branch and only admin should branches to Develop and master branches
 
 
 ## Implementing a new feature in Workspace
