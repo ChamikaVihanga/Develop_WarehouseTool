@@ -9,8 +9,6 @@
 
         //one to many
         public int WorkingShiftId { get; set; }
-        public WorkingShifts? WorkingShifts { get; set; }
-
-        public List<VS_Employees_1>? VS_Employees { get; set; }
+        public WorkingShifts? WorkingShifts { get; set; }        
     }
 }

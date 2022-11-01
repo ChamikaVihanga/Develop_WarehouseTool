@@ -40,7 +40,7 @@
                 </MudGrid>
             </EditForm>
 
-            <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="date" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>                   @*FixYear="@DateTime.Today.Year"*@
+            <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @ref="_picker" @bind-Date="date" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>                  
 
             <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full py-8">
                 <MudButton Class="mx-6 my-4" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" IconColor="Color.Info" Style="width:150px" Link="/Warehouse/listsummary">Back</MudButton>
@@ -63,7 +63,7 @@
 @code {
     //public bool ReadOnly { get; set; } = true;
     DateTime? date;    
-    MudDatePicker _picker;
+    MudDatePicker? _picker;
 
     string getTimePeriod = "Minutes";
 
@@ -85,7 +85,6 @@
     {
         summeryDTO.EffectiveDate = (DateTime)date;                 /* <---- If I want to convert to datetime ====> Convert.ToDateTime(date);              (DateTime)date  */
         summeryDTO.TimePeriod = "Minutes";
-        //summeryDTO.OrganizationUnit = oganizationUnits.Where(a => a.Name == summeryDTO.OrganizationUnit).Select(b => b.OrganizationUnitID).FirstOrDefault();
         var response = await http.PostAsJsonAsync<OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
         string strResponse = response.Content.ReadAsStringAsync().Result;
         showBar(strResponse);
