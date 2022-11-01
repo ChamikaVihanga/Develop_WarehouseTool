@@ -82,19 +82,24 @@ Test
 </details>
 
 1. **Workspace.Shared Project**
+	- All namespaces should : Workspace.Shared.Entities
     - Add Entities
+
 
 2. **In Server Project**
     - Services Folder
+		- All namespaces should : Workspace.server.services
         - Interface class
         - Implimentation Class	
 	- Program.cs
 		- Add Services with Interfaces
 	- Controller Folder
+		- All namespaces should : Workspace.Server.Controllers
 		- API Endponts
 
 2. **In Client Project**
 	- Services Folder
+		- All namespaces should : Workspace.client.services
 		- Interface class
 		- Implimentation Class
 	- Program.cs
