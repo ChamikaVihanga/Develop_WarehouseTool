@@ -11,7 +11,6 @@ namespace ApprovalPath_Utils.Services.ApprovalDestinationPathsService
     {
         Task<List<ApprovalDestinations>> GetDestinations();
 
-        Task<WorkFlowUsers> createUser(string? username);
         Task<ApprovalDestinations> createDestination(ApprovalDestinations? approvalDestination);
 
 

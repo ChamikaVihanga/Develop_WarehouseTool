@@ -1,34 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ApprovalPath_Utils.Services.ApprovalPriorityIndexService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Workspace.Shared.Entities.ApprovalDynamicPaths;
 
 namespace admin.workspace.Server.Controllers.ApprovalPath_Dynamic
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[Action]")]
     [ApiController]
     public class APD_PriorityIndexesController : ControllerBase
-    {
-        private readonly WorkspaceDbContext _context;
+    { 
+        private readonly IApprovalPriorityIndexService _approvalPriorityIndexService;
 
-        public APD_PriorityIndexesController(WorkspaceDbContext context)
+        public APD_PriorityIndexesController(IApprovalPriorityIndexService approvalPriorityIndexService)
         {
-            _context = context;
+     
+            _approvalPriorityIndexService = approvalPriorityIndexService;
         }
 
         [HttpGet]
-        public async Task<List<PriorityIndexes>> Get(Guid? guid)
+        public async Task<List<PriorityIndexes>> GetByDocId(Guid? guid)
         {
-            return await _context.apd_priorityIndexes.Where(a => a.ApprovalDocumentId == guid)
-                .Include(a => a.ApprovalDefinition)
-                .ThenInclude(a => a.DefinitionValues)
-                .ThenInclude(a => a.ApprovalConfigurations)
-                .ThenInclude(a => a.ApprovalDestinations)
-                .ThenInclude(a => a.WorkFlowUsers)
-                .Include(a => a.ApprovalDefinition)
-                .ThenInclude(a => a.DefinitionValues)
-                .ThenInclude(a => a.ApprovalConfigurations)
-                .ThenInclude(a => a.ApprovalDocuments)
-                .ToListAsync();
+            return await _approvalPriorityIndexService.GetByDocument(guid);
         }
     }
 }

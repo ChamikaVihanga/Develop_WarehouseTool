@@ -1,54 +1,150 @@
 ﻿@page "/ApprovalPathConf"
+
 @inject IJSRuntime JS
 @inject HttpClient http
 
-<h3>ConfigureDefinitionValues</h3>
 
 
-
-
-@if (definitionValue is not null)
+<div class="m-5">
+@if (definitionValue is not null && approvalConfigurations is not null)
 {
     <div class="row">
-        <div class="col-lg-10 col-sm-10 mt-2"></div>
+        <div class="col-lg-10 col-sm-10 mt-2">
+                <admin.workspace.Client.Pages.ApprovalPath.Components.Modals.AddDocumentModal NewConfEvent="addNewConfig"></admin.workspace.Client.Pages.ApprovalPath.Components.Modals.AddDocumentModal>
+
+        </div>
         <div class="col-lg-2 col-sm-2 mt-2">
-            <button type="button" class="btn btn-success  m-1">Save Changes</button>
+            <button type="button" @onclick="() => SendConf()" class=" btn btn-success m-1">Save Changes</button>
 
         </div>
     </div>
 
     foreach (var conf in approvalConfigurations.OrderBy(a => a.ApprovalDocuments.FirstOrDefault().ApprovalDocumentId))
     {
-        foreach (var doc in conf.ApprovalDocuments)
+        foreach (var doc in conf?.ApprovalDocuments)
         {
-            <h5>@doc.DocumentName</h5>
+            <div class="mt-5">
+                <h5>@doc.DocumentName</h5>
+
+            </div>
             <div class="row">
                 @foreach (var destination in conf.ApprovalDestinations.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex))
                 {
                     <div class="col-lg-3 col-sm-12 mt-2">
 
-                        <h6>Approval Level: @destination.WorkFlowIndex.WorkFlowIndex</h6>
+                        @{
+                            string WFIndex;
+                            if (destination.WorkFlowIndex.WorkFlowIndex == 1){
+                                WFIndex = "Final approval";
+                            }
+                            else{
+                                WFIndex = destination.WorkFlowIndex.WorkFlowIndex.ToString();
+                            }
+                        }
+
+                        <h6>Approval Level: @WFIndex</h6>
                         <ul class="list-group">
-                            @foreach (var user in destination.WorkFlowUsers)
+                            @foreach (WorkFlowUsers? user in destination?.WorkFlowUsers)
                             {
-                                <li class="list-group-item">@user.Username</li>
+                                <li class="list-group-item">
+                                    <div class="row">
+
+
+
+                                        <div class="col-2">
+                                            @if(destination.ApprovalUserNotification?.WorkFlowUsers != null){
+                                                @if (destination.ApprovalUserNotification.WorkFlowUsers.Select(a => a.Username).Contains(user.Username))
+                                                {
+                                                    <button @onclick="() => SetNotification(conf, destination.ApprovalDestinationId, user, false)">
+                                                        <svg width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
+                                                        </svg>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button @onclick="() => SetNotification(conf, destination.ApprovalDestinationId, user, true)">
+                                                        <svg width="16" height="16" fill="currentColor" class="bi bi-bell-slash" viewBox="0 0 16 16">
+                                                            <path d="M5.164 14H15c-.299-.199-.557-.553-.78-1-.9-1.8-1.22-5.12-1.22-6 0-.264-.02-.523-.06-.776l-.938.938c.02.708.157 2.154.457 3.58.161.767.377 1.566.663 2.258H6.164l-1 1zm5.581-9.91a3.986 3.986 0 0 0-1.948-1.01L8 2.917l-.797.161A4.002 4.002 0 0 0 4 7c0 .628-.134 2.197-.459 3.742-.05.238-.105.479-.166.718l-1.653 1.653c.02-.037.04-.074.059-.113C2.679 11.2 3 7.88 3 7c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0c.942.19 1.788.645 2.457 1.284l-.707.707zM10 15a2 2 0 1 1-4 0h4zm-9.375.625a.53.53 0 0 0 .75.75l14.75-14.75a.53.53 0 0 0-.75-.75L.625 15.625z" />
+                                                        </svg>
+                                                    </button>
+                                                }
+                                            }else{
+                                                <button @onclick="() => SetNotification(conf, destination.ApprovalDestinationId, user, true)">
+                                                    <svg width="16" height="16" fill="currentColor" class="bi bi-bell-slash" viewBox="0 0 16 16">
+                                                        <path d="M5.164 14H15c-.299-.199-.557-.553-.78-1-.9-1.8-1.22-5.12-1.22-6 0-.264-.02-.523-.06-.776l-.938.938c.02.708.157 2.154.457 3.58.161.767.377 1.566.663 2.258H6.164l-1 1zm5.581-9.91a3.986 3.986 0 0 0-1.948-1.01L8 2.917l-.797.161A4.002 4.002 0 0 0 4 7c0 .628-.134 2.197-.459 3.742-.05.238-.105.479-.166.718l-1.653 1.653c.02-.037.04-.074.059-.113C2.679 11.2 3 7.88 3 7c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0c.942.19 1.788.645 2.457 1.284l-.707.707zM10 15a2 2 0 1 1-4 0h4zm-9.375.625a.53.53 0 0 0 .75.75l14.75-14.75a.53.53 0 0 0-.75-.75L.625 15.625z" />
+                                                    </svg>
+                                                </button>
+                                            }
+                                            
+                                           
+                                        </div>
+
+
+
+                                        <div class="col-8">
+                                            @user.Username
+                                        </div>
+                                        <div class="col-2 d-flex justify-content-end">
+                                            <button type="button" class="btn-close btn-danger btn-sm" aria-label="Close" @onclick="() => RemoveUser(destination.ApprovalDestinationId, conf, user.Username)"></button>
+                                        </div>
+                                    </div>
+                                    
+                                    </li>
                             }
 
                             <li class="list-group-item ">
                                 <div style="display:none;" id="@(destination.ApprovalDestinationId.ToString() + conf.ApprovalConfigurationId.ToString() + doc.ApprovalDocumentId.ToString())">
                                     <input @onfocusout="() => clearText(val)" @bind-value="val" class="form-control form-control-sm" type="text" placeholder="Username" aria-label="Username">
                                 </div>
-                                <button type="button" @onclick="() => showHideTextBox(destination.ApprovalDestinationId, conf.ApprovalConfigurationId, doc.ApprovalDocumentId, conf)" id="@(destination.ApprovalDestinationId.ToString() + conf.ApprovalConfigurationId.ToString() + doc.ApprovalDocumentId.ToString() + "btn")" class="btn btn-primary btn-sm m-1">Add user</button>
+                                <button type="button"
+                                    @onclick="() => showHideTextBox(destination.ApprovalDestinationId, conf.ApprovalConfigurationId, doc.ApprovalDocumentId, conf)" 
+                                    id="@(destination.ApprovalDestinationId.ToString() + conf.ApprovalConfigurationId.ToString() + doc.ApprovalDocumentId.ToString() + "btn")" 
+                                    class="btn btn-primary btn-sm m-1">
+                                    Add user
+                                </button>
 
                             </li>
                         </ul>
+                        
 
                     </div>
                 }
+                <div class="col-lg-3 col-sm-12 mt-2">
+                    <ul>
+
+
+                        @{
+                            
+                            int no = 0;
+                            if (conf.ApprovalDestinations?.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex).LastOrDefault()?.WorkFlowIndex?.WorkFlowIndex is not null)
+                            {
+                                no = (int)conf.ApprovalDestinations?.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex).LastOrDefault()?.WorkFlowIndex?.WorkFlowIndex;
+                                no++;
+
+                            }
+                            else{
+                                no++;
+                            }
+                            
+                        }
+
+
+                        <h6>Upcoming Level: @(no )</h6>
+                        <li class="list-group-item">
+                            <button type="button" @onclick="() => createDestination(conf)" class="btn btn-light btn-sm m-1">
+                                Add new level of approval
+                            </button>
+                        </li>
+                    </ul>
+                    </div>
+               
             </div>
         }
     }
 }
+
+</div>
 
 @code {
     string? val;
@@ -56,22 +152,31 @@
 
     public DefinitionValues? definitionValue { get; set; }
 
-    List<ApprovalConfigurations> approvalConfigurations = new List<ApprovalConfigurations>();
+    List<ApprovalConfigurations>? approvalConfigurations = new List<ApprovalConfigurations>();
+
+
 
 
 
     protected override async Task OnInitializedAsync()
     {
-        definitionValue = await http.GetFromJsonAsync<DefinitionValues>("api/APD_DefinitionValue/GetApprovalDefinitions?id=c3fd054f-095c-49fb-977c-66230908c0a4");
+
+        definitionValue = await http.GetFromJsonAsync<DefinitionValues>("api/APD_DefinitionValue/GetApprovalDefinitions?id=C3FD054F-095C-49FB-977C-66230908C0A4");
 
         foreach (var config in definitionValue.ApprovalConfigurations)
         {
             foreach (var document in config.ApprovalDocuments)
             {
+                List<ApprovalDestinations> approvalDestinations = new List<ApprovalDestinations>();
+
+                foreach(var des in config.ApprovalDestinations){
+                    approvalDestinations.Add(new ApprovalDestinations() { ApprovalDestinationId = Guid.NewGuid(), ApprovalUserNotification = des.ApprovalUserNotification, WorkFlowIndex = des.WorkFlowIndex, WorkFlowUsers = des.WorkFlowUsers });
+                }
+
                 approvalConfigurations.Add(new ApprovalConfigurations()
                     {
                         ApprovalConfigurationId = Guid.NewGuid(),
-                        ApprovalDestinations = config.ApprovalDestinations,
+                        ApprovalDestinations = approvalDestinations,
                         ApprovalDocuments = new List<ApprovalDocuments>() {
                         new ApprovalDocuments() { ApprovalDocumentId = document.ApprovalDocumentId, DocumentName = document.DocumentName
                         }
@@ -81,6 +186,52 @@
         }
         //await http.PostAsJsonAsync<List<ApprovalConfigurations>>("", approvalConfigurations);
     }
+
+    async Task SetNotification(ApprovalConfigurations conf, Guid? destinationId, WorkFlowUsers? username, bool isAdding){
+        approvalConfigurations.Remove(conf);
+
+        List<WorkFlowUsers>? notifiedWorkFlowUsers = new List<WorkFlowUsers>();
+
+        ApprovalDestinations? approvalDestination = conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault();
+        var destinations = conf.ApprovalDestinations.ToList();
+        destinations.Remove(approvalDestination);
+
+        ApprovalConfigurations? newConf = new ApprovalConfigurations();
+
+        if (approvalDestination.ApprovalUserNotification?.WorkFlowUsers is not null)
+        {
+            notifiedWorkFlowUsers = approvalDestination.ApprovalUserNotification.WorkFlowUsers.ToList();
+
+        }
+
+        if(isAdding){
+            notifiedWorkFlowUsers.Add(username);
+
+        }
+        else
+        {
+            notifiedWorkFlowUsers.Remove(notifiedWorkFlowUsers.Where(a => a.Username == username.Username).FirstOrDefault());
+        }
+        //notifiedWorkFlowUsers.Add(username);
+
+        approvalDestination.ApprovalUserNotification = new ApprovalUserNotification() { NotifyUserSetId = Guid.NewGuid(), WorkFlowUsers = notifiedWorkFlowUsers };
+        destinations.Add(approvalDestination);
+
+        newConf = new ApprovalConfigurations() { ApprovalConfigurationId = Guid.NewGuid(), ApprovalDestinations = destinations, ApprovalDocuments = conf.ApprovalDocuments  };
+        approvalConfigurations.Add(newConf);
+
+        await ResetPaths();
+        //await InvokeAsync(StateHasChanged);
+
+
+    }
+
+    async Task addNewConfig(ApprovalDocuments doc){
+        approvalConfigurations.Add(new ApprovalConfigurations() { ApprovalConfigurationId = Guid.NewGuid(), ApprovalDocuments = new List<ApprovalDocuments>() { new ApprovalDocuments() { ApprovalDocumentId = Guid.NewGuid(), DocumentName = doc.DocumentName } }, ApprovalDestinations = new List<ApprovalDestinations>() { }  });
+
+    }
+
+
     async Task clearText(string? val2)
     {
 
@@ -104,8 +255,9 @@
         }
     }
 
-    async Task AddUserToDestination(Guid? destinationId, ApprovalConfigurations? conf, Guid? Docid, string NewUser)
+    async Task AddUserToDestination(Guid? destinationId, ApprovalConfigurations? conf, Guid? Docid, string EnteredUser)
     {
+        string NewUser = EnteredUser.ToLower();
         if(NewUser is not null){
             List<WorkFlowUsers>? workFlowUsers = new List<WorkFlowUsers>();
 
@@ -118,7 +270,7 @@
             if (!conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().WorkFlowUsers.Select(a => a.Username).Contains(NewUser)){
                 workFlowUsers.Add(new WorkFlowUsers() { UserId = Guid.NewGuid(), Username = NewUser });
             }
-            
+
 
             //conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().WorkFlowUsers.Add(new WorkFlowUsers() { UserId = Guid.NewGuid(), Username = valBak });
 
@@ -127,6 +279,7 @@
                     ApprovalDestinationId = Guid.NewGuid(),
                     WorkFlowUsers = workFlowUsers,
                     WorkFlowIndex = conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().WorkFlowIndex,
+                    ApprovalUserNotification = conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == destinationId).FirstOrDefault().ApprovalUserNotification
 
                 };
 
@@ -147,10 +300,111 @@
             approvalConfigurations.Add(confSet);
 
             await InvokeAsync(StateHasChanged);
-            //await http.PostAsJsonAsync<List<ApprovalConfigurations>>("", approvalConfigurations);  014df261-e1fe-4f3b-8e00-72ef1700f278
+            //await http.PostAsJsonAsync<List<ApprovalConfigurations>>("", approvalConfigurations);  
         }
-       
+
+
+
+
+    }
+    async Task RemoveUser(Guid? DestinationId, ApprovalConfigurations? conf, string? user)
+    {
+        approvalConfigurations.Remove(conf);
+        List<WorkFlowUsers>? workFlowUsers = new List<WorkFlowUsers>();
+        List<ApprovalDestinations>? destinations = new List<ApprovalDestinations>();
+
+
+
+
+        workFlowUsers = conf.ApprovalDestinations.Where(a => a.ApprovalDestinationId == DestinationId).FirstOrDefault().WorkFlowUsers.ToList();
+        workFlowUsers.Remove(workFlowUsers.Where(a => a.Username == user).FirstOrDefault());
+
+        destinations = conf.ApprovalDestinations.ToList();
+        var destination = destinations.Where(a => a.ApprovalDestinationId == DestinationId).FirstOrDefault();
+        destinations.Remove(destination);
+
+        destinations.Add(new ApprovalDestinations() { ApprovalDestinationId = Guid.NewGuid(), WorkFlowIndex = destination.WorkFlowIndex, WorkFlowUsers = workFlowUsers, ApprovalUserNotification = destination.ApprovalUserNotification });
+
+        if (destination.ApprovalUserNotification?.WorkFlowUsers is not null){
+            destination.ApprovalUserNotification.WorkFlowUsers.Remove(destination.ApprovalUserNotification.WorkFlowUsers.Where(a => a.Username == user).FirstOrDefault());
+
+        }
+        conf.ApprovalDestinations = destinations;
+
+        approvalConfigurations.Add(new ApprovalConfigurations() { ApprovalDestinations = destinations, ApprovalDocuments = conf.ApprovalDocuments, ApprovalConfigurationId = Guid.NewGuid()});
+        await ResetPaths();
+
+
+    }
+
+    async Task ResetPaths(){
+        //List<ApprovalConfigurations>? newConf = new List<ApprovalConfigurations>();
+        foreach (var conf in approvalConfigurations)
+        {
+            foreach (var destination in conf.ApprovalDestinations)
+            {
+                if (destination.WorkFlowUsers.Count == 0)
+                {
+                    List<ApprovalDestinations> approvalDestinations = new List<ApprovalDestinations>();
+                    List<ApprovalDestinations> approvalDestinations1 = new List<ApprovalDestinations>();
+
+                    approvalDestinations = conf.ApprovalDestinations.ToList();
+                    approvalDestinations.Remove(destination);
+                    foreach(var d in approvalDestinations){
+                        approvalDestinations1.Add(new ApprovalDestinations() { ApprovalDestinationId = Guid.NewGuid(), WorkFlowIndex = d.WorkFlowIndex, WorkFlowUsers = d.WorkFlowUsers, ApprovalUserNotification = d.ApprovalUserNotification });
+                    }
+
+                    conf.ApprovalDestinations = approvalDestinations1;
+
+                }
+            }
+
+
+            int Index = 1;
+            foreach(var destination in conf.ApprovalDestinations.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex))
+            {
+                destination.WorkFlowIndex = new WorkFlowIndexes() { WorkFlowIndex = Index, WorkFlowIndexId = Guid.NewGuid()};
+                Index++;
+            }
+
+
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    async Task SendConf()
+    {
         
+
+        await ResetPaths();
+
+        var result = await http.PostAsJsonAsync<List<ApprovalConfigurations>>("api/APD_Configuration/testConf?defValId=C3FD054F-095C-49FB-977C-66230908C0A4", approvalConfigurations);
+        definitionValue = null;
+        approvalConfigurations.Clear();
+
+        await OnInitializedAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task createDestination(ApprovalConfigurations? conf)
+    {
+        List<ApprovalDestinations> approvalDestinations = new List<ApprovalDestinations>();
+        approvalDestinations = conf.ApprovalDestinations.ToList();
+
+        int? index = 1;
+        if (conf.ApprovalDestinations?.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex).LastOrDefault()?.WorkFlowIndex?.WorkFlowIndex is not null){
+            index = conf.ApprovalDestinations?.OrderBy(a => a.WorkFlowIndex.WorkFlowIndex).LastOrDefault()?.WorkFlowIndex?.WorkFlowIndex + 1;
+        }
+
+
+
+        approvalDestinations.Add(new ApprovalDestinations() { ApprovalDestinationId = Guid.NewGuid(), WorkFlowUsers = new List<WorkFlowUsers>() { }, WorkFlowIndex = new WorkFlowIndexes() { WorkFlowIndexId = Guid.NewGuid(), WorkFlowIndex = index }, ApprovalUserNotification = new ApprovalUserNotification() { NotifyUserSetId = Guid.NewGuid()} });
+        approvalConfigurations.Remove(conf);
+        conf.ApprovalDestinations = approvalDestinations;
+        approvalConfigurations.Add(conf);
+
+        await InvokeAsync(StateHasChanged);
     }
 
 }

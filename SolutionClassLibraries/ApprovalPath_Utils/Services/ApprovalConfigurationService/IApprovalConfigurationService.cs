@@ -12,6 +12,9 @@ namespace ApprovalPath_Utils.Services.ApprovalConfigurationService
         Task<List<ApprovalConfigurations>> GetApprovalConfigurationsAsync();
         Task<ApprovalConfigurations> CreateConfig(ApprovalConfigurations approvalConfigurations);
 
-       
+        Task<List<ApprovalConfigurations>> createConfFromList(List<ApprovalConfigurations> approvalConfigurations);
+
+
+
     }
 }

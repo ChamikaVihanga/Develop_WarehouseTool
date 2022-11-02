@@ -34,6 +34,18 @@ namespace ApprovalPath_Utils.Services.ApprovalConfigurationService
                 .Include(a => a.ApprovalDocuments)
                 .ToListAsync();
         }
+
+        public async Task<List<ApprovalConfigurations>> createConfFromList(List<ApprovalConfigurations> approvalConfigurations)
+        {
+            List<ApprovalConfigurations> results = new List<ApprovalConfigurations>();  
+            foreach(var conf in approvalConfigurations)
+            {
+                results.Add(await CreateConfig(conf));
+            }
+
+            return results;
+        }
+
         public async Task<ApprovalConfigurations> CreateConfig(ApprovalConfigurations approvalConfiguration)
         {
             //var approvalConfigurations = await _context.apd_approvalConfigurations.Include(a => a.ApprovalDestinations).ThenInclude(a => a.WorkFlowUsers).Include(a => a.ApprovalDocuments).ToListAsync();
