@@ -1,20 +1,37 @@
-﻿<MudNavMenu Dense=false>
+﻿
+
+
+<MudNavMenu Dense=true>
+
 
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
 
     <MudNavLink Href="/fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.DisplaySettings">Fetch Data</MudNavLink>
+    <MudNavLink Href="/Warehouse" Icon="@Icons.Filled.Home">Warehouse Efficency</MudNavLink>
+    <MudNavLink Href="#" Icon="@Icons.Filled.Home">Efficency Bonus</MudNavLink>
+    <MudNavLink Href="#" Icon="@Icons.Filled.SupervisedUserCircle">Shop Floor</MudNavLink>
 
-    <MudNavLink Href="SampleApp/ToolTemplate" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.DisplaySettings">Layout</MudNavLink>
+
+@*    <MudNavGroup Title="HR" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+        <MudNavLink Href="" >Efficency Bonus</MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Project Management" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+        <MudNavLink Href="" >Shop Floor</MudNavLink>
+    </MudNavGroup>
+
 
     <MudNavGroup Title="Warehouse" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
         <MudNavLink Href="/Warehouse" Icon="@Icons.Filled.Home">Efficency</MudNavLink>
     </MudNavGroup>
+*@
 
 
 
     <MudNavLink Href="https://auth.workspace.vsag.ch" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.PeopleAlt">Auth Settings</MudNavLink>
     <MudNavLink Href="/Profiles/employee" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.Settings">Employee Profile</MudNavLink>
 </MudNavMenu>
+
 
 
 @*

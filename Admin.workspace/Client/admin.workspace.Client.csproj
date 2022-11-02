@@ -30,11 +30,21 @@
     <Folder Include="Pages\ApprovalPath\Components\Partial\" />
     <Folder Include="Pages\ComponentLib\" />
     <Folder Include="Pages\Document\" />
+    <Folder Include="Pages\WorkspaceApp\ScheduleJobs\" />
     <Folder Include="Properties\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\ApprovalPathJS\ApprovalPath.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\bootstrap\bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

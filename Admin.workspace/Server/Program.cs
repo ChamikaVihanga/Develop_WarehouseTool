@@ -45,10 +45,12 @@ builder.Services.AddCors(options =>
 
 
 // Add services to the container.
-builder.Services.AddDbContext<WorkspaceDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+//builder.Services.AddDbContext<WorkspaceDbContext>(options =>
+//{
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+//});
+
+builder.Services.AddDbContext<WorkspaceDbContext>();
 
 
 //Swapped NewtonJson to System.Text.Json.Serialization namespace

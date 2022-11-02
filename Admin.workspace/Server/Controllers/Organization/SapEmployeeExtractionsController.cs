@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Newtonsoft.Json;
 using System.Text.Json.Nodes;
 
-namespace admin.workspace.Server.Controllers.ReadOnly
+namespace admin.workspace.Server.Controllers
 {
     [Route("api/[controller]/[Action]")]
     [ApiController]
@@ -28,7 +28,7 @@ namespace admin.workspace.Server.Controllers.ReadOnly
             return Ok(result);
 
         }
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<SapEmployee>> GetAllVsEmployees(int id)
 
@@ -84,7 +84,7 @@ namespace admin.workspace.Server.Controllers.ReadOnly
                     var controllerMethod = controller != null
                         ? $"{controller.ControllerTypeInfo.FullName}:{controller.MethodInfo.Name}"
                         : null;
-                    
+
                     return new
                     {
                         Method = e.Metadata.OfType<HttpMethodMetadata>().FirstOrDefault()?.HttpMethods?[0],
