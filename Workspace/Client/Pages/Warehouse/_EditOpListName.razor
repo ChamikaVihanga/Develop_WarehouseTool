@@ -31,7 +31,7 @@ else
     [CascadingParameter]
     MudDialogInstance? MudDialog { get; set; }
 
-    public OperationList? operationList { get; set; }
+    public Warehouse_OperationList? operationList { get; set; }
 
     bool IsButtonAvailable { get; set; } = false;
 
@@ -55,7 +55,7 @@ else
     {
         if (!string.IsNullOrWhiteSpace(operationList?.Name))
         {
-            var editOperationNameResponse = await Http.PutAsJsonAsync<OperationList?>($"api/OperationLists?id={id}", operationList);
+            var editOperationNameResponse = await Http.PutAsJsonAsync<Warehouse_OperationList?>($"api/Warehouse_OperationLists?id={id}", operationList);
             string nameEditResponse = editOperationNameResponse.Content.ReadAsStringAsync().Result;
             showBar(nameEditResponse);
             MudDialog?.Close(DialogResult.Ok(true));
@@ -68,7 +68,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        operationList = await Http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
+        operationList = await Http.GetFromJsonAsync<Warehouse_OperationList?>($"api/Warehouse_OperationLists/getOperationName?id={id}");
     }
 }
 

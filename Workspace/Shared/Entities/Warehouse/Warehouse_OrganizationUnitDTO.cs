@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Workspace.Shared.Entities.Warehouse
 {
-    public class OrganizationUnitDTO
+    public class Warehouse_OrganizationUnitDTO
     {
         public string OrganizationUnitID { get; set; }
         public string? Name { get; set; }

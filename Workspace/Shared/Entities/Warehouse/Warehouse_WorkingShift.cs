@@ -1,6 +1,6 @@
 ﻿namespace Workspace.Shared.Entities.Warehouse
 {
-    public class WorkingShifts
+    public class Warehouse_WorkingShift
     {
         public int Id { get; set; }
         public string? ShiftTitle { get; set; }

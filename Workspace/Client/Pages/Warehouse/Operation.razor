@@ -72,20 +72,20 @@
 
     [Inject] private IDialogService DialogService { get; set; }
 
-    OperationSummeryDTO summeryDTO = new OperationSummeryDTO();
+    Warehouse_OperationSummeryDTO summeryDTO = new Warehouse_OperationSummeryDTO();
 
-    public List<OrganizationUnitDTO>? oganizationUnits { get; set; }
+    public List<Warehouse_OrganizationUnitDTO>? oganizationUnits { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        oganizationUnits = await http.GetFromJsonAsync<List<OrganizationUnitDTO>?>("api/EmpTemp/333100/units");
+        oganizationUnits = await http.GetFromJsonAsync<List<Warehouse_OrganizationUnitDTO>?>("api/EmpTemp/333100/units");
     }    
     
     private async Task PostData()
     {
         summeryDTO.EffectiveDate = (DateTime)date;                 /* <---- If I want to convert to datetime ====> Convert.ToDateTime(date);              (DateTime)date  */
         summeryDTO.TimePeriod = "Minutes";
-        var response = await http.PostAsJsonAsync<OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
+        var response = await http.PostAsJsonAsync<Warehouse_OperationSummeryDTO>("api/OperationDetailsAPI", summeryDTO);
         string strResponse = response.Content.ReadAsStringAsync().Result;
         showBar(strResponse);
         summeryDTO.OrganizationUnit = null;

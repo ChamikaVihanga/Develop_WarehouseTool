@@ -43,11 +43,11 @@
                     <MudTd>@context.OperationList.Name</MudTd>
                     <MudTd>@context.StartTime.Date.ToString("d")</MudTd>
                     <MudTd>@context.Achivement</MudTd>
-                    <MudTd>@context.OperationList.OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()</MudTd>
-                    @*<MudTd>@context.OperationList.OperationDetails.Select(a => a.Target).FirstOrDefault()</MudTd>*@
+                    <MudTd>@context.OperationList.Warehouse_OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()</MudTd>
+                    @*<MudTd>@context.OperationList.Warehouse_OperationDetails.Select(a => a.Target).FirstOrDefault()</MudTd>*@
                     <MudTd>
-                        @(((float)@context.Achivement / (float)@context.OperationList.OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()) * 100) %
-                        @*@calEfficiancy(context.Achivement, context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%*@
+                        @(((float)@context.Achivement / (float)@context.OperationList.Warehouse_OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()) * 100) %
+                        @*@calEfficiancy(context.Achivement, context.OperationList.Warehouse_OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%*@
                     </MudTd>
                 </RowTemplate>
             </MudTable>
@@ -79,10 +79,10 @@
     public string EnteredSapNo { get; set; }
 
     public Vs_Employee? vS_employee { get; set; }
-    public OperationDetail? operationDetails { get; set; }
-    public List<OperationRecord?> manageRecord { get; set; }
+    public Warehouse_OperationDetail? operationDetails { get; set; }
+    public List<Warehouse_OperationRecord?> manageRecord { get; set; }
 
-    OperationDetail operationDetail = new OperationDetail();
+    Warehouse_OperationDetail operationDetail = new Warehouse_OperationDetail();
 
     bool ShowEmployeeDetails { get; set; } = false;  
     
@@ -94,7 +94,7 @@
             try
             {
                 vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
-                manageRecord = await httpClient.GetFromJsonAsync<List<OperationRecord?>>($"api/OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
+                manageRecord = await httpClient.GetFromJsonAsync<List<Warehouse_OperationRecord?>>($"api/Warehouse_OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
                 
                 ShowEmployeeDetails = true;
             }

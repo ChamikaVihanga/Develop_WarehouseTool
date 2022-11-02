@@ -218,17 +218,17 @@
 
     public int putId { get; set; } = 0;
 
-    private OperationList[]? operationList;
+    private Warehouse_OperationList[]? operationList;
     private string? value1;
     private bool resetValueOnEmptyText;
     private bool coerceText;
     private bool coerceValue;
-    private OperationRecord[]? manageRecord;
-    private List<OperationDetail>? dropDown;
+    private Warehouse_OperationRecord[]? manageRecord;
+    private List<Warehouse_OperationDetail>? dropDown;
 
     public Vs_Employee? vS_Employee { get; set; }
 
-    OperationRecord operationRecord = new OperationRecord();    
+    Warehouse_OperationRecord operationRecord = new Warehouse_OperationRecord();    
 
     void PickEndDate()
     {
@@ -257,8 +257,8 @@
 
     async Task GetOperationList()
     {
-        operationList = await httpClient.GetFromJsonAsync<OperationList[]>("api/OperationLists");
-        dropDown = await httpClient.GetFromJsonAsync<List<OperationDetail>?>("/api/OperationLists/Active");
+        operationList = await httpClient.GetFromJsonAsync<Warehouse_OperationList[]>("api/Warehouse_OperationLists");
+        dropDown = await httpClient.GetFromJsonAsync<List<Warehouse_OperationDetail>?>("/api/Warehouse_OperationLists/Active");
     }
 
     /// <summary>
@@ -296,7 +296,7 @@
             if (putId != 0)
             {
                 operationRecord.Id = putId;
-                var response = await httpClient.PutAsJsonAsync<OperationRecord>($"api/OperationRecords?id={putId}", operationRecord);
+                var response = await httpClient.PutAsJsonAsync<Warehouse_OperationRecord>($"api/Warehouse_OperationRecords?id={putId}", operationRecord);
                 _LogEfficiencyData get = new _LogEfficiencyData();
                 string Val = await response.Content.ReadAsStringAsync();
                 AddCloseAfterNavSnackbar(Val);
@@ -304,7 +304,7 @@
             else
             {
                 //Console.WriteLine(operationRecord.EndTime);
-                var response = await httpClient.PostAsJsonAsync<OperationRecord>("api/OperationRecords", operationRecord);
+                var response = await httpClient.PostAsJsonAsync<Warehouse_OperationRecord>("api/Warehouse_OperationRecords", operationRecord);
                 _LogEfficiencyData get = new _LogEfficiencyData();
                 string Val = await response.Content.ReadAsStringAsync();
                 AddCloseAfterNavSnackbar(Val);
@@ -374,7 +374,7 @@
 
             try
             {
-                manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
+                manageRecord = await httpClient.GetFromJsonAsync<Warehouse_OperationRecord[]?>($"api/Warehouse_OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
 
                 vS_Employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
             }
@@ -384,7 +384,7 @@
             }
             isLoading = false;
 
-            foreach (OperationRecord operationRecord in manageRecord)
+            foreach (Warehouse_OperationRecord operationRecord in manageRecord)
             {
                 if (operationRecord.Achivement is null || operationRecord.EndTime == null)
                 {

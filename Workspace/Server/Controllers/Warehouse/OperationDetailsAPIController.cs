@@ -23,20 +23,20 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // GET: api/OperationDetailsAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OperationDetail>>> GetOperationDetails()
+        public async Task<ActionResult<IEnumerable<Warehouse_OperationDetail>>> GetOperationDetails()
         {
-            if (_context.OperationDetails == null)
+            if (_context.Warehouse_OperationDetails == null)
             {
                 return NotFound();
             }
-            return await _context.OperationDetails.Include(x => x.OperationList).ToListAsync();            
+            return await _context.Warehouse_OperationDetails.Include(x => x.OperationList).ToListAsync();            
         }
 
         // GET: api/OperationDetailsAPI/ValidateOperationCreateDate
         [HttpGet("ValidateOperationCreateDate")]
-        public async Task<ActionResult<bool>> ValidateOperationCreateDate(int OperationListId , DateTime SelectedDate)             // in this didn't create a object call OperationDetail and didn't include 
+        public async Task<ActionResult<bool>> ValidateOperationCreateDate(int OperationListId , DateTime SelectedDate)             // in this didn't create a object call Warehouse_OperationDetail and didn't include 
         {                                                                                                                          //   a OperationList. Because get values from OperatonListId.
-            bool checkOperationEffectiveDate = _context.OperationDetails                                                           //   if we assign to a bool variable extession should be .Any(); 
+            bool checkOperationEffectiveDate = _context.Warehouse_OperationDetails                                                           //   if we assign to a bool variable extession should be .Any(); 
                 .Where(a => a.OperationListId == OperationListId &&  a.EffectiveDate.Month == SelectedDate.Month)
                 .Any();
 
@@ -52,13 +52,13 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // GET: api/OperationDetailsAPI/Active
         [HttpGet("Active")]
-        public async Task<ActionResult<IEnumerable<OperationDetail>>> GetActiveOperationDetails()
+        public async Task<ActionResult<IEnumerable<Warehouse_OperationDetail>>> GetActiveOperationDetails()
         {
-            if (_context.OperationDetails == null)
+            if (_context.Warehouse_OperationDetails == null)
             {
                 return NotFound();
             }
-            return await _context.OperationDetails.Include(x => x.OperationList)
+            return await _context.Warehouse_OperationDetails.Include(x => x.OperationList)
                 .Where( e => e.EffectiveDate < DateTime.Today)
                 .ToListAsync();
 
@@ -66,27 +66,27 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // GET: api/OperationDetailsAPI/Upcoming
         [HttpGet("Upcoming")]
-        public async Task<ActionResult<IEnumerable<OperationDetail>>> GetUpcomingOperationDetails()
+        public async Task<ActionResult<IEnumerable<Warehouse_OperationDetail>>> GetUpcomingOperationDetails()
         {
-            if (_context.OperationDetails == null)
+            if (_context.Warehouse_OperationDetails == null)
             {
                 return NotFound();
             }
 
-            return await _context.OperationDetails.Include(x => x.OperationList)
+            return await _context.Warehouse_OperationDetails.Include(x => x.OperationList)
                 .Where(e => e.EffectiveDate > DateTime.Today)
                 .ToListAsync();
         }
 
         [HttpGet("getOnlyOrgUnit")]
-        public async Task<ActionResult<OperationDetail>> GetOrganizationUnit(int id)
+        public async Task<ActionResult<Warehouse_OperationDetail>> GetOrganizationUnit(int id)
         {
-            if(_context.OperationDetails == null)
+            if(_context.Warehouse_OperationDetails == null)
             {
                 return NotFound();
             }
 
-            var getOrgUnit = await _context.OperationDetails.Where(a => a.OperationListId == id).FirstOrDefaultAsync();
+            var getOrgUnit = await _context.Warehouse_OperationDetails.Where(a => a.OperationListId == id).FirstOrDefaultAsync();
 
             if (getOrgUnit == null)
             {
@@ -97,14 +97,14 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // GET: api/OperationDetailsAPI/5
         [HttpGet("getEffectiveDate")]
-        public async Task<ActionResult<OperationDetail>> GetOperationDetail(int id)
+        public async Task<ActionResult<Warehouse_OperationDetail>> GetOperationDetail(int id)
         {
-            if (_context.OperationDetails == null)
+            if (_context.Warehouse_OperationDetails == null)
             {
                 return NotFound();
             }
             //Get data to _EditOperationTable.razor
-            var operationDetail = await _context.OperationDetails
+            var operationDetail = await _context.Warehouse_OperationDetails
                 .Include(a => a.OperationList)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
@@ -122,9 +122,9 @@ namespace Workspace.Server.Controllers.Warehouse
         /// <returns></returns>
         [Route("GetListofOpDetails")]
         [HttpGet]
-        public async Task<List<OperationDetail>> getOpList(int id)
+        public async Task<List<Warehouse_OperationDetail>> getOpList(int id)
         {
-            var detailsList = await _context.OperationDetails.Where(a => a.OperationListId == id).ToListAsync();
+            var detailsList = await _context.Warehouse_OperationDetails.Where(a => a.OperationListId == id).ToListAsync();
             return detailsList;
         }
 
@@ -135,11 +135,11 @@ namespace Workspace.Server.Controllers.Warehouse
         /// <returns></returns>
         //POST: api/OperationDetailsAPI/DetailsOnly
         [HttpPost, Route("DetailsOnly"), Authorize(Policy = "VSPolicy")]
-        public async Task<string> PostDetails(OperationDetail operationDetail)
+        public async Task<string> PostDetails(Warehouse_OperationDetail operationDetail)
         {
             try
             {
-                OperationDetail operationDetail1 = new OperationDetail();
+                Warehouse_OperationDetail operationDetail1 = new Warehouse_OperationDetail();
 
                 operationDetail1.TimePeriod = operationDetail.TimePeriod;
                 operationDetail1.CreateDate = DateTime.Now;
@@ -150,7 +150,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 operationDetail1.OperationListId = operationDetail.OperationListId;
                 operationDetail1.OrganizationUnit = operationDetail.OrganizationUnit;
 
-                _context.OperationDetails.Add(operationDetail1);
+                _context.Warehouse_OperationDetails.Add(operationDetail1);
                 await _context.SaveChangesAsync();
 
                 return "Successfully Updated";
@@ -162,9 +162,9 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
         [HttpGet, Route("getOperationList")]
-        public async Task<List<OperationList>> getOperationList()
+        public async Task<List<Warehouse_OperationList>> getOperationList()
         {
-            return _context.OperationLists.Include(a => a.OperationDetails).ToList();
+            return _context.Warehouse_OperationLists.Include(a => a.Warehouse_OperationDetails).ToList();
         }       
         
         /// <summary>
@@ -173,23 +173,23 @@ namespace Workspace.Server.Controllers.Warehouse
         /// <param name="operationSummeryDTO"></param>
         /// <returns></returns>
         [HttpPost, Authorize(Policy ="VSPolicy")]
-        public async Task<ActionResult<string>> PostOperationDetail(OperationSummeryDTO operationSummeryDTO)
+        public async Task<ActionResult<string>> PostOperationDetail(Warehouse_OperationSummeryDTO operationSummeryDTO)
         {           
-                if (_context.OperationDetails == null)
+                if (_context.Warehouse_OperationDetails == null)
                 {
-                    return Problem("Entity set 'WorkspaceDbContext.OperationDetails'  is null.");
+                    return Problem("Entity set 'WorkspaceDbContext.Warehouse_OperationDetails'  is null.");
                 }
 
-                OperationList opList = new OperationList();
+                Warehouse_OperationList opList = new Warehouse_OperationList();
                 opList.Name = operationSummeryDTO.OperationName;
                 opList.IsActive = true;
 
-                _context.OperationLists.Add(opList);
+                _context.Warehouse_OperationLists.Add(opList);
                 await _context.SaveChangesAsync();
 
-                var lastRecordID = _context.OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.Id).Last();
+                var lastRecordID = _context.Warehouse_OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.Id).Last();
 
-                OperationDetail operationDetail = new OperationDetail();
+                Warehouse_OperationDetail operationDetail = new Warehouse_OperationDetail();
                 operationDetail.EffectiveDate = operationSummeryDTO.EffectiveDate;
                 operationDetail.CreateDate = DateTime.Now;
                 operationDetail.CreatedBy = User.Identity.Name;
@@ -199,16 +199,16 @@ namespace Workspace.Server.Controllers.Warehouse
                 operationDetail.OperationListId = lastRecordID;
                 operationDetail.OrganizationUnit = operationSummeryDTO.OrganizationUnit;
 
-                _context.OperationDetails.Add(operationDetail);
+                _context.Warehouse_OperationDetails.Add(operationDetail);
                 await _context.SaveChangesAsync();
 
                 return Ok("Successfully Created");
         }
 
         [HttpPut, Authorize(Policy = "VSPolicy")]
-        public async Task<ActionResult<List<OperationDetail>>> EditOperationDetails(OperationDetail operationDetail, int id)
+        public async Task<ActionResult<List<Warehouse_OperationDetail>>> EditOperationDetails(Warehouse_OperationDetail operationDetail, int id)
         {
-            var operationDetail1 = await _context.OperationDetails
+            var operationDetail1 = await _context.Warehouse_OperationDetails
                 .Include(a => a.OperationList)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
@@ -233,17 +233,17 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOperationDetail(int id)
         {
-            if (_context.OperationDetails == null)
+            if (_context.Warehouse_OperationDetails == null)
             {
                 return NotFound();
             }
-            var operationDetail = await _context.OperationDetails.FindAsync(id);
+            var operationDetail = await _context.Warehouse_OperationDetails.FindAsync(id);
             if (operationDetail == null)
             {
                 return NotFound();
             }
 
-            _context.OperationDetails.Remove(operationDetail);
+            _context.Warehouse_OperationDetails.Remove(operationDetail);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -251,7 +251,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
         private bool OperationDetailExists(int id)
         {
-            return (_context.OperationDetails?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Warehouse_OperationDetails?.Any(e => e.Id == id)).GetValueOrDefault();
         }       
     }
 }

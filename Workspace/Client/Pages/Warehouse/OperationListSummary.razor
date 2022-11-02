@@ -63,8 +63,8 @@
     string? lable { get; set; } = "Toggle to view ongoing operations";
     string? operationMessage { get; set; } = "Active Operations";
     public string NewSearchString { get; set; }
-    public List<OperationDetail>? operationDetails;
-    public List<OperationDetail>? operationDetails2;
+    public List<Warehouse_OperationDetail>? operationDetails;
+    public List<Warehouse_OperationDetail>? operationDetails2;
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,13 +89,13 @@
 
     async Task GetActiveOperations()
     {
-        operationDetails = await http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Active");
+        operationDetails = await http.GetFromJsonAsync<List<Warehouse_OperationDetail>>("api/Warehouse_OperationLists/Active");
         operationDetails2 = operationDetails;
     }
 
     async Task GetUpcommingOperations()
     {
-        operationDetails = await http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Upcoming");
+        operationDetails = await http.GetFromJsonAsync<List<Warehouse_OperationDetail>>("api/Warehouse_OperationLists/Upcoming");
         operationDetails2 = operationDetails;
     }
 

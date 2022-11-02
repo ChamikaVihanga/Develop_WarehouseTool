@@ -1,12 +1,12 @@
 ﻿namespace Workspace.Shared.Entities.Warehouse
 {
-    public class OperationDetail
+    public class Warehouse_OperationDetail
     {
         public int Id { get; set; }
 
         //one to many relationship from OperationList 
         public int OperationListId { get; set; }
-        public OperationList? OperationList { get; set; }
+        public Warehouse_OperationList? OperationList { get; set; }
         public DateTime EffectiveDate { get; set; }
 
         //[Required]

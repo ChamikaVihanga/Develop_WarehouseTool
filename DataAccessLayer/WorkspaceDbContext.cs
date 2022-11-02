@@ -44,12 +44,12 @@ namespace DataAccessLayer
         public DbSet<SampleTodo> SampleTodos { get; set; }
 
 
-        // warehouse data entry - efficiency 
-        public DbSet<OperationRecord> OperationRecords { get; set; }
-        public DbSet<OperationList> OperationLists { get; set; }        
-        public DbSet<OperationDetail> OperationDetails { get; set; }       
-        public DbSet<WorkingShifts> WorkingShift { get; set; }
-
+        #region warehouse data entry - efficiency 
+        public DbSet<Warehouse_OperationRecord> Warehouse_OperationRecords { get; set; }
+        public DbSet<Warehouse_OperationList> Warehouse_OperationLists { get; set; }        
+        public DbSet<Warehouse_OperationDetail> Warehouse_OperationDetails { get; set; }       
+        public DbSet<Warehouse_WorkingShift> Warehouse_WorkingShifts { get; set; }
+        #endregion
 
 
         #region Approval path

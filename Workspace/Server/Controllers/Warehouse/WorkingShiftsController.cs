@@ -18,13 +18,13 @@ namespace Workspace.Server.Controllers.Warehouse
 
         // Get: api/WorkingShifts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WorkingShifts>>> GetWorkingShift()
+        public async Task<ActionResult<IEnumerable<Warehouse_WorkingShift>>> GetWorkingShift()
         {
-            if (_context.WorkingShift == null)          //<-----Call from db context (WorkingShift)                 IEnumerable = List
+            if (_context.Warehouse_WorkingShifts == null)          //<-----Call from db context (WorkingShift)                 IEnumerable = List
             {
                 return NotFound();
             }
-            return Ok(await _context.WorkingShift.ToListAsync());
+            return Ok(await _context.Warehouse_WorkingShifts.ToListAsync());
         }               
     }
 }
