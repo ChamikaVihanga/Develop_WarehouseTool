@@ -93,7 +93,7 @@
             isLoading = true;
             try
             {
-                vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
+                vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/Wareouse_Employees/GetEmp?SAP={debouncedText}");
                 manageRecord = await httpClient.GetFromJsonAsync<List<Warehouse_OperationRecord?>>($"api/Warehouse_OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
                 
                 ShowEmployeeDetails = true;

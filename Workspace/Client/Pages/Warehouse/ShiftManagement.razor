@@ -119,7 +119,7 @@
 
     private async Task AddEmployee()
     {
-        vs_Employee = await Http.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={SAPNumber}");
+        vs_Employee = await Http.GetFromJsonAsync<Vs_Employee?>($"api/Wareouse_Employees/GetEmp?SAP={SAPNumber}");
 
         SapList.Add(SAPNumber);        
         SAPNumber = null;

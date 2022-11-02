@@ -12,16 +12,16 @@ namespace Workspace.Server.Controllers.Warehouse
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OperationDetailsAPIController : ControllerBase
+    public class Warehouse_OperationDetailsController : ControllerBase
     {
         private readonly WorkspaceDbContext _context;
 
-        public OperationDetailsAPIController(WorkspaceDbContext context)
+        public Warehouse_OperationDetailsController(WorkspaceDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/OperationDetailsAPI
+        // GET: api/Warehouse_OperationDetails
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Warehouse_OperationDetail>>> GetOperationDetails()
         {
@@ -32,7 +32,7 @@ namespace Workspace.Server.Controllers.Warehouse
             return await _context.Warehouse_OperationDetails.Include(x => x.OperationList).ToListAsync();            
         }
 
-        // GET: api/OperationDetailsAPI/ValidateOperationCreateDate
+        // GET: api/Warehouse_OperationDetails/ValidateOperationCreateDate
         [HttpGet("ValidateOperationCreateDate")]
         public async Task<ActionResult<bool>> ValidateOperationCreateDate(int OperationListId , DateTime SelectedDate)             // in this didn't create a object call Warehouse_OperationDetail and didn't include 
         {                                                                                                                          //   a OperationList. Because get values from OperatonListId.
@@ -50,7 +50,7 @@ namespace Workspace.Server.Controllers.Warehouse
         }
 
 
-        // GET: api/OperationDetailsAPI/Active
+        // GET: api/Warehouse_OperationDetails/Active
         [HttpGet("Active")]
         public async Task<ActionResult<IEnumerable<Warehouse_OperationDetail>>> GetActiveOperationDetails()
         {
@@ -64,7 +64,7 @@ namespace Workspace.Server.Controllers.Warehouse
 
         }
 
-        // GET: api/OperationDetailsAPI/Upcoming
+        // GET: api/Warehouse_OperationDetails/Upcoming
         [HttpGet("Upcoming")]
         public async Task<ActionResult<IEnumerable<Warehouse_OperationDetail>>> GetUpcomingOperationDetails()
         {
@@ -95,7 +95,7 @@ namespace Workspace.Server.Controllers.Warehouse
             return getOrgUnit;
         }
 
-        // GET: api/OperationDetailsAPI/5
+        // GET: api/Warehouse_OperationDetails/5
         [HttpGet("getEffectiveDate")]
         public async Task<ActionResult<Warehouse_OperationDetail>> GetOperationDetail(int id)
         {
@@ -133,7 +133,7 @@ namespace Workspace.Server.Controllers.Warehouse
         /// </summary>
         /// <param name="operationDetail"></param>
         /// <returns></returns>
-        //POST: api/OperationDetailsAPI/DetailsOnly
+        //POST: api/Warehouse_OperationDetails/DetailsOnly
         [HttpPost, Route("DetailsOnly"), Authorize(Policy = "VSPolicy")]
         public async Task<string> PostDetails(Warehouse_OperationDetail operationDetail)
         {
@@ -229,7 +229,7 @@ namespace Workspace.Server.Controllers.Warehouse
             return Ok();
         }
 
-        // DELETE: api/OperationDetailsAPI/5
+        // DELETE: api/Warehouse_OperationDetails/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOperationDetail(int id)
         {

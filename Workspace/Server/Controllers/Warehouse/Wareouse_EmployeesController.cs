@@ -7,10 +7,10 @@ namespace Workspace.Server.Controllers.Warehouse
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmpTempController : ControllerBase
+    public class Wareouse_EmployeesController : ControllerBase
     {
         private readonly WorkspaceDbContext _context;
-        public EmpTempController(WorkspaceDbContext dbContext)
+        public Wareouse_EmployeesController(WorkspaceDbContext dbContext)
         {
             _context = dbContext;
         }

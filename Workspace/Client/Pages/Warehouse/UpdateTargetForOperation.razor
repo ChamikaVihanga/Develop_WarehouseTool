@@ -78,10 +78,10 @@
         operationList = await Http.GetFromJsonAsync<Warehouse_OperationList>($"api/Warehouse_OperationLists/getOperationName?id={id}");
         name = operationList?.Name;        
 
-        _getOrganizationUnit = await Http.GetFromJsonAsync<Warehouse_OperationDetail>($"api/OperationDetailsAPI/getOnlyOrgUnit?id={id}");
+        _getOrganizationUnit = await Http.GetFromJsonAsync<Warehouse_OperationDetail>($"api/Warehouse_OperationDetails/getOnlyOrgUnit?id={id}");
         organizationName = _getOrganizationUnit?.OrganizationUnit;        
 
-        updateRecords = await Http.GetFromJsonAsync<Warehouse_OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails?id={id}");
+        updateRecords = await Http.GetFromJsonAsync<Warehouse_OperationDetail[]>($"api/Warehouse_OperationDetails/GetListofOpDetails?id={id}");
     }
 
     private async Task OpenEditOpNameDialog()
