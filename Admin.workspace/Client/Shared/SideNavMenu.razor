@@ -1,0 +1,44 @@
+﻿
+
+
+<MudNavMenu Dense=true>
+
+
+
+    <MudNavLink Match="NavLinkMatch.Prefix" Href="/" Icon="@Icons.Filled.Home">Home</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.Prefix" Href="/UserManager" Icon="@Icons.Filled.Home">User Manager</MudNavLink>
+    <MudNavLink Href="/ApprovalPath" Icon="@Icons.Filled.Home">Approval paths</MudNavLink>
+    <MudNavLink Href="/ApprovalPathConf" Icon="@Icons.Filled.Home">Approval path configuration</MudNavLink>
+
+
+
+    @*    <MudNavGroup Title="HR" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+    <MudNavLink Href="" >Efficency Bonus</MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Project Management" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+    <MudNavLink Href="" >Shop Floor</MudNavLink>
+    </MudNavGroup>
+
+
+    <MudNavGroup Title="Warehouse" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+    <MudNavLink Href="/Warehouse" Icon="@Icons.Filled.Home">Efficency</MudNavLink>
+    </MudNavGroup>
+    *@
+
+
+
+    <MudNavLink Href="https://auth.workspace.vsag.ch" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.PeopleAlt">Auth Settings</MudNavLink>
+    <MudNavLink Href="/Profiles/employee" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.Settings">Employee Profile</MudNavLink>
+</MudNavMenu>
+
+
+
+@*
+    Impliment the side nav bar menu from database
+
+*@
+
+@code {
+
+    }

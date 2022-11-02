@@ -7,6 +7,7 @@ using Workspace.Shared.Entities.Readonly;
 using Workspace.Shared.Entities.ApprovalPath;
 using Workspace.Shared.Entities.ApprovalDynamicPaths;
 using Workspace.Shared.Entities.ApprovalDynamicPaths.ApprovalLogs;
+using Workspace.Shared.Entities;
 
 namespace DataAccessLayer
 {
@@ -47,6 +48,12 @@ namespace DataAccessLayer
 
         #endregion Authentication data access
 
+        #region Workspace Databases
+
+        public DbSet<Workspace_User> Workspace_Users { get; set; }
+        public DbSet<Workspace_OrganizationalUnit> Workspace_OrganizationalUnits { get; set; }
+
+        #endregion
 
         public DbSet<ReFaRequest> ReFaRequests { get; set; }
         public DbSet<SampleTodo> SampleTodos { get; set; }

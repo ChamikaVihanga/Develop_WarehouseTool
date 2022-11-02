@@ -36,6 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\SolutionClassLibraries\WorkspaceComponent\WorkspaceComponent.csproj" />
 		<ProjectReference Include="..\Shared\Workspace.Shared.csproj" />
 	</ItemGroup>
 
