@@ -1,5 +1,4 @@
-﻿
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 
 <ErrorBoundary @ref="errorBoundary">
@@ -9,10 +8,27 @@
         <MudSnackbarProvider />
 
         <MudLayout>
+
             <MudAppBar Color="Color.Transparent" Elevation="0" Dense="false" class="Glass">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
                 <MudText Typo="Typo.h5" Class="ml-3">VS Workspace</MudText>
-                <Workspace.Client.Pages.Authentication.Components.WelcomeNote></Workspace.Client.Pages.Authentication.Components.WelcomeNote>
+
+
+
+                <AuthorizeView>
+                    <Authorized>
+                        <MudSpacer />
+                        <WelcomeNote WelcomeFirstName=@context.User.FindFirst("DisplayName").Value.Split(" ").First()></WelcomeNote>
+                        <MudSpacer />
+                    </Authorized>
+
+                    <NotAuthorized>
+                        <MudSpacer />
+                        <WelcomeNote />
+                        <MudSpacer />
+                    </NotAuthorized>
+                </AuthorizeView>
+
 
                 <MudBadge Content="100" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
                     <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" />
@@ -22,18 +38,14 @@
                                      Icon="@Icons.Filled.NotificationsOff" Color="@Color.Inherit" Title="Off"
                                      ToggledIcon="@Icons.Filled.Notifications" ToggledColor="@Color.Success" ToggledTitle="On" />
 
-              @*  <MudToggleIconButton @bind-Toggled="@_isDarkMode"
-                                     Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
-                                     ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />*@
+                @*  <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
+                ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />*@
                 @*
                 Login Partial View in Right Top Conner > PartialLogin
                 *@
-              
-                
-                @* <PartialLogin />*@
-
-
-                 <Login_Logout_Toggle />
+                @*<PartialLogin />*@
+                <Login_Logout_Toggle></Login_Logout_Toggle>
             </MudAppBar>
 
             <MudDrawer @bind-Open="@open" Elevation="0" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" ClipMode="DrawerClipMode.Always" Color="Color.Transparent">
@@ -56,7 +68,7 @@
 
 
     <ErrorContent>
-        <Workspace.Client.Pages.ErrorPages.GlobalErrorPage Error="@context.Message" bakErrorContent="RecoverError"></Workspace.Client.Pages.ErrorPages.GlobalErrorPage>
+        <admin.workspace.Client.Pages.ErrorPages.GlobalErrorPage Error="@context.Message" bakErrorContent="RecoverError"></admin.workspace.Client.Pages.ErrorPages.GlobalErrorPage>
     </ErrorContent>
 
 </ErrorBoundary>
@@ -73,6 +85,8 @@
 
 
 @code {
+
+
 
     private ErrorBoundary? errorBoundary;
 
@@ -107,84 +121,3 @@
     //Alarm On OFF in Top Nav
     public bool AlarmOn { get; set; }
 }
-
-
-@*@inherits LayoutComponentBase
-
-
-<ErrorBoundary @ref="errorBoundary">
-    <ChildContent>
-       
-        
-        <MudLayout >
-
-            <MudPaper Elevation="0">
-            <MudToolBar  Dense="true">
-                <MudSpacer />
-                <Login_Logout_Toggle />
-            </MudToolBar>
-            </MudPaper>
-            <MudDrawer Elevation="0" Open="open">
-                <NavMenu />
-            </MudDrawer>
-           
-            <MudMainContent>
-                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-1 ph-10">
-                    @Body
-            </MudContainer>
-                        
-            </MudMainContent>
-
-        </MudLayout>
-
-
-
-        <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
-        <MudDialogProvider />
-        <MudSnackbarProvider />
-
-    </ChildContent>
-    <ErrorContent>
-        <ErrorComponentHostPage Error="@context.Message" bakErrorContent="RecoverError"></ErrorComponentHostPage>
-    </ErrorContent>
-</ErrorBoundary>
-
-
-
-
-
-
-
-
-
-
-
-
-
-@code {
-
-    private ErrorBoundary errorBoundary;
-
-    private MudTheme _theme = new();
-    private bool _isDarkMode;
-
-    void RecoverError()
-    {
-
-        errorBoundary.Recover();
-
-    }
-
-    protected override void OnInitialized()
-    {
-        errorBoundary = new ErrorBoundary();
-    }
-
-    bool open = true;
-    void ToggleDrawer()
-    {
-        open = !open;
-    }
-
-
-}*@

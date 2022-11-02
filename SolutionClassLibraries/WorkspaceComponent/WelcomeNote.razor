@@ -1,17 +1,14 @@
 ﻿
 
+Good @partOfDay @WelcomeFirstName, Welcome to the workspace.
 
-    <AuthorizeView>
-        <Authorized>
-            <MudSpacer />Good @partOfDay @context.User.FindFirst("DisplayName").Value.Split(" ").First(), Welcome to the workspace.<MudSpacer/>
-            
-        </Authorized>
-        <NotAuthorized>
-            <MudSpacer/>Good @partOfDay, Welcome to workspace. <MudSpacer/>
-        </NotAuthorized>
-    </AuthorizeView>
+
 
 @code {
+
+    [Parameter]
+    public string? WelcomeFirstName { get; set; }
+
     string partOfDay;
     protected override async Task OnInitializedAsync()
     {

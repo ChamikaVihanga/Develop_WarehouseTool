@@ -11,7 +11,20 @@
             <MudAppBar Color="Color.Transparent" Elevation="0" Dense="false" class="Glass">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
                 <MudText Typo="Typo.h5" Class="ml-3">VS Workspace</MudText>
-                <Workspace.Client.Pages.Authentication.Components.WelcomeNote></Workspace.Client.Pages.Authentication.Components.WelcomeNote>
+
+                 <AuthorizeView>
+                    <Authorized>
+                        <MudSpacer />
+                        <WelcomeNote WelcomeFirstName=@context.User.FindFirst("DisplayName").Value.Split(" ").First()></WelcomeNote>
+                        <MudSpacer />
+                    </Authorized>
+
+                    <NotAuthorized>
+                        <MudSpacer />
+                        <WelcomeNote />
+                        <MudSpacer />
+                    </NotAuthorized>
+                </AuthorizeView>
 
                 <MudBadge Content="100" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
                     <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" />

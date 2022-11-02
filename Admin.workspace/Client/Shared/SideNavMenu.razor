@@ -6,6 +6,7 @@
 
 
     <MudNavLink Match="NavLinkMatch.Prefix" Href="/" Icon="@Icons.Filled.Home">Home</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.Prefix" Href="/AuthHandler" Icon="@Icons.Filled.Home">Auth Handler</MudNavLink>
     <MudNavLink Match="NavLinkMatch.Prefix" Href="/UserManager" Icon="@Icons.Filled.Home">User Manager</MudNavLink>
     <MudNavLink Href="/ApprovalPath" Icon="@Icons.Filled.Home">Approval paths</MudNavLink>
     <MudNavLink Href="/ApprovalPathConf" Icon="@Icons.Filled.Home">Approval path configuration</MudNavLink>
@@ -16,12 +17,6 @@
     <MudNavLink Href="/apd_priorities" Icon="@Icons.Filled._360" Match="NavLinkMatch.Prefix">apd_priorities</MudNavLink>
 
 
-    <MudNavLink Href="/" Disabled="true">Instructions</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="true" Disabled="true">
-        <MudNavLink Href="/users">Users</MudNavLink>
-        <MudNavLink Href="/security">Security</MudNavLink>
-
-    </MudNavGroup>
 
 
     @*    <MudNavGroup Title="HR" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
@@ -40,8 +35,8 @@
 
 
 
-    <MudNavLink Href="https://auth.workspace.vsag.ch" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.PeopleAlt">Auth Settings</MudNavLink>
-    <MudNavLink Href="/Profiles/employee" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.Settings">Employee Profile</MudNavLink>
+    <MudNavLink Href="https://auth.workspace.vsag.ch" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.PeopleAlt">Auth Hosted</MudNavLink>
+
 </MudNavMenu>
 
 

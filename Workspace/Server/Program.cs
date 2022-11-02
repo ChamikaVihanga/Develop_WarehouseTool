@@ -89,11 +89,12 @@ builder.Services.AddScoped<IAuthorizationHandler, CustomPolicyHandler>();
 
 builder.Services.AddScoped<ICustomPolicyDataProvider, CustomPolicyDataProvider>();
 
-
-
 // Register the Swagger services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerDocument();
+
+//// Register the Swagger services
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
@@ -118,8 +119,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
+
+    // Register the Swagger generator and the Swagger UI middlewares
+    app.UseOpenApi();
+    app.UseSwaggerUi3();
 }
 else
 {

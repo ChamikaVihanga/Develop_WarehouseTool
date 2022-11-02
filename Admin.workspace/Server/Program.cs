@@ -1,33 +1,20 @@
-global using Microsoft.EntityFrameworkCore;
-global using ApprovalPath_Utils;
-
-global using DataAccessLayer;
-
-global using Workspace.Shared;
-global using Workspace.Shared.Entities.Readonly;
-global using Workspace.Shared.AuthData;
-
-
 global using admin.workspace.Server.Authorization;
-global using Microsoft.AspNetCore.Authorization;
-global using admin.workspace.Server.Authorization.Handlers;
 global using admin.workspace.Server.Authorization.DataProviderInterfaces;
 global using admin.workspace.Server.Authorization.DataProviders;
+global using admin.workspace.Server.Authorization.Handlers;
+global using DataAccessLayer;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.EntityFrameworkCore;
+global using Workspace.Shared.AuthData;
 global using Workspace.Shared.Entities;
-
-
+global using Workspace.Shared.Entities.Readonly;
+using admin.workspace.Server.Services.ReadOnly;
+using ApprovalPath_Utils.ApprovalPathService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using NSwag.Generation.Processors.Security;
+using NSwag;
 using System.Text;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
-using System.Security.Claims;
-
-using System.Text.Json;
-using admin.workspace.Server.Services.ReadOnly;
-using ApprovalPath_Utils.Services.ApprovalDocuementService;
-using ApprovalPath_Utils.Services.ApprovalJobManagerService;
-using ApprovalPath_Utils.ApprovalPathService;
 using System.Text.Json.Serialization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -61,17 +48,23 @@ builder.Services.AddControllersWithViews()
 
 );
 builder.Services.AddRazorPages();
-builder.Services.AddSwaggerGen(options => {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
+//builder.Services.AddSwaggerGen(options =>
+//{
+//    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+//    {
+//        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+//        In = ParameterLocation.Header,
+//        Name = "Authorization",
+//        Type = SecuritySchemeType.ApiKey
+//    });
 
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
+//    options.OperationFilter<SecurityRequirementsOperationFilter>();
+//});
+
+// Register the Swagger services
+builder.Services.AddSwaggerDocument();
+
+
 
 //Adding JWT authorization services to application
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -97,7 +90,7 @@ PoliciesList.Add("VSPolicy");
 //Register application policies for authorizaiton
 builder.Services.AddAuthorization(options =>
 {
-    
+
 
 
     foreach (string policy in PoliciesList)
@@ -142,9 +135,13 @@ if (app.Environment.IsDevelopment())
     app.MapGet("/debug/routes", (IEnumerable<EndpointDataSource> endpointSources) =>
        string.Join("\n", endpointSources.SelectMany(source => source.Endpoints)));
     app.UseWebAssemblyDebugging();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-  
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
+
+    // Register the Swagger generator and the Swagger UI middlewares
+    app.UseOpenApi();
+    app.UseSwaggerUi3();
+
 }
 else
 {
