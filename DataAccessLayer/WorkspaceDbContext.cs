@@ -77,6 +77,7 @@ namespace DataAccessLayer
         public DbSet<WorkFlowIndexes>  apd_workFlowIndexes { get; set; }
         public DbSet<WorkFlowUsers>  apd_workFlowUsers { get; set; }
         public DbSet<PriorityIndexes> apd_priorityIndexes { get; set; }
+        public DbSet<ApprovalUserNotification> apd_approvalUserNotification { get; set; }
 
         #region Approval Logs
 

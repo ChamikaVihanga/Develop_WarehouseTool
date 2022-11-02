@@ -1,0 +1,118 @@
+﻿@page "/apd_priorities"
+@inject HttpClient http
+<div class="row">
+    <div class="col-lg-5">
+        <h5>Select application to configure</h5>
+        <admin.workspace.Client.Pages.ApprovalPath.Components.PartialComponents.DocList approvalDocuments="approvalDocuments" clickEvent="DocSelection"></admin.workspace.Client.Pages.ApprovalPath.Components.PartialComponents.DocList>
+
+    </div>
+    @if(priorityIndexes is not null){
+        <div class="col-lg-7">
+            <table class="table table-responsive-lg ">
+                <thead>
+                    <tr>
+                        <th scope="col">Priority order index</th>
+                        <th scope="col">APD Definition</th>
+                        <th scope="col"></th>
+                   
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var index in priorityIndexes.OrderBy(a => a.PriorityIndex))
+                    {
+                        
+                        <tr>
+                            <th scope="row"><div>@index.PriorityIndex</div></th>
+                            <td><div>@index.ApprovalDefinition.ApprovalDefinition</div></td>
+                            <td>
+                                <div class="row">
+                                <div class="col-12">
+                                        <button type="button" class="navBtn" @onclick="() => MoveUp(index)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="10" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="col-12">
+                                        <button type="button" class="navBtn" @onclick="() => MoveDown(index)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="10" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                            </svg>
+                                    </button>
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    <tr scope="row">
+
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+    }
+    
+</div>
+
+@code {
+    List<PriorityIndexes>? priorityIndexes = new List<PriorityIndexes>();
+
+
+
+    private List<ApprovalDocuments>? approvalDocuments { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        approvalDocuments = await http.GetFromJsonAsync<List<ApprovalDocuments>>("api/APD_Document/Get-Docuement-types");
+        if(approvalDocuments is not null){
+            await DocSelection(approvalDocuments.FirstOrDefault());
+
+        }
+    }
+    async Task DocSelection(ApprovalDocuments doc){
+        priorityIndexes = await http.GetFromJsonAsync<List<PriorityIndexes>?>($"api/APD_PriorityIndexes/GetByDocId?guid={doc.ApprovalDocumentId}");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task MoveUp(PriorityIndexes priorityIndex){
+        var indexToChange = priorityIndexes.Where(a => a.PriorityIndex == ((int)priorityIndex.PriorityIndex - 1)).FirstOrDefault();
+
+        if(indexToChange is not null){
+            priorityIndexes.Remove(indexToChange);
+            priorityIndexes.Add(new PriorityIndexes() { PriorityIndex = indexToChange.PriorityIndex + 1, ApprovalDefinition = indexToChange.ApprovalDefinition, ApprovalDocument = indexToChange.ApprovalDocument, PriorityIndexId = Guid.NewGuid() });
+            priorityIndexes.Remove(priorityIndex);
+
+            priorityIndexes.Add(new PriorityIndexes() { PriorityIndex = priorityIndex.PriorityIndex - 1, ApprovalDefinition = priorityIndex.ApprovalDefinition, ApprovalDocument = priorityIndex.ApprovalDocument, PriorityIndexId = Guid.NewGuid() });
+        }
+
+
+
+
+        await InvokeAsync(StateHasChanged);
+
+    }
+
+    async Task MoveDown(PriorityIndexes priorityIndex)
+    {
+        var indexToChange = priorityIndexes.Where(a => a.PriorityIndex == ((int)priorityIndex.PriorityIndex + 1)).FirstOrDefault();
+
+        if (indexToChange is not null)
+        {
+            priorityIndexes.Remove(indexToChange);
+            priorityIndexes.Add(new PriorityIndexes() { PriorityIndex = indexToChange.PriorityIndex - 1, ApprovalDefinition = indexToChange.ApprovalDefinition, ApprovalDocument = indexToChange.ApprovalDocument, PriorityIndexId = Guid.NewGuid() });
+            priorityIndexes.Remove(priorityIndex);
+
+            priorityIndexes.Add(new PriorityIndexes() { PriorityIndex = priorityIndex.PriorityIndex + 1, ApprovalDefinition = priorityIndex.ApprovalDefinition, ApprovalDocument = priorityIndex.ApprovalDocument, PriorityIndexId = Guid.NewGuid() });
+        }
+
+
+
+
+        await InvokeAsync(StateHasChanged);
+
+    }
+
+
+}
