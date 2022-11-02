@@ -1,59 +1,34 @@
 ﻿@page "/warehouse/adminview"
+@using System.ComponentModel.DataAnnotations
 @inject HttpClient Http
 @inject HttpClient httpClient
 
 <_WarehouseNavBar />
-
 <PageTitle>Admin View</PageTitle>
-<MudGrid>
-    @*<MudItem xs="12">*@
-        <MudItem>
-            @*<MudIcon Color="Color.Dark" Icon="@Icons.Custom.Uncategorized.Radioactive" Size="Size.Large" />*@
-        <MudAvatar Color="Color.Info" Variant="Variant.Outlined">VS</MudAvatar>
-        </MudItem>
-        <MudItem xs="3">
-            <MudText Typo="Typo.h5" Class="mt-1" Color="Color.Info"><b>Warehouse Efficiency</b></MudText>
-        </MudItem>
-    @*</MudItem>*@
-</MudGrid>
 
-<MudGrid Class="mt-10">
-
-    <MudItem xs="4">
-        @*<MudDatePicker Label="Fix Month" @bind-Date="_month" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="@DateTime.Today.Day" DateFormat="MMM" />*@
-        @*<MudTextField T="string" Label="Month" InputType="InputType.Month" />*@
-        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Effective Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixYear="@DateTime.Today.Year" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
+<MudGrid Class="mt-5">
+    <MudItem xs="3">
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Selected Month" @bind-Date="SelectMonth" OpenTo="OpenTo.Month" FixDay="1" DateFormat="yyyy/MMMM"></MudDatePicker>
     </MudItem>
 
-    <MudItem xs="12">
+    <MudItem xs="3">
+        <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)"></MudTextField>
+    </MudItem>   
 
-        <MudGrid>
-            <MudItem xs="4">
-                <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Enter SAP Number" Adornment="Adornment.End" Variant="Variant.Text" For="@(()=>EnteredSapNo)"></MudTextField>
-            </MudItem>
-            <MudSpacer />
-            <MudItem xs="4" Class="d-flex justify-end">
-            @if(vS_employee is not null)
-            {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b>@vS_employee.EPFNo - @vS_employee.NickName</b></MudText>
-            }
-           @* else
-            {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b>Employee FullName</b></MudText>
-            }*@
-            </MudItem>
-           
-        </MudGrid>
-        <br />
+    <MudItem xs="6">
+        @if (ShowEmployeeDetails)
+        {
+            <MudText Typo="Typo.subtitle1" Align="Align.End" >
+                <span>EPFNo : <b>@vS_employee.EPFNo</b></span>
+                <span class="ps-5">   Name : <b>@vS_employee.NickName</b></span>
+            </MudText>
+        }
     </MudItem>
 </MudGrid>
 
-<MudItem xs="12">
-    @if (manageRecord == null)
-    {
-        @* <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />*@
-    }
-    else
+<MudItem xs="12" Class="mt-6">
+   
+    @if (manageRecord != null)
     {
         <MudPaper Elevation="1">
             <MudTable Items="manageRecord" Hover="true" SortLabel="Sort By" Elevation="0" Dense="false" Bordered="@border">
@@ -66,114 +41,73 @@
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd>@context.OperationList.Name</MudTd>
-                    <MudTd>@context.StartTime.Date.ToString("d")</MudTd>                   
+                    <MudTd>@context.StartTime.Date.ToString("d")</MudTd>
                     <MudTd>@context.Achivement</MudTd>
-                    <MudTd>@context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()</MudTd>
-                    <MudTh>                        
-                        @calEfficiancy(context.Achivement, context.OperationList.OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%
-                    </MudTh>
+                    <MudTd>@context.OperationList.Warehouse_OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()</MudTd>
+                    @*<MudTd>@context.OperationList.Warehouse_OperationDetails.Select(a => a.Target).FirstOrDefault()</MudTd>*@
+                    <MudTd>
+                        @(((float)@context.Achivement / (float)@context.OperationList.Warehouse_OperationDetails.Where(a => a.EffectiveDate.Month == context.CreateDate.Month).Select(a => a.Target).FirstOrDefault()) * 100) %
+                        @*@calEfficiancy(context.Achivement, context.OperationList.Warehouse_OperationDetails.Where(a =>a.EffectiveDate < context.CreateDate).Select(a => a.Target).FirstOrDefault()).ToString()%*@
+                    </MudTd>
                 </RowTemplate>
             </MudTable>
         </MudPaper>
     }
 </MudItem>
 
-<MudGrid>
-    <MudItem xs="12">
-        <MudGrid>
-            <MudItem xs="4">
-               
-            </MudItem>
-            <MudSpacer />
-            <MudItem xs="4" Class="d-flex justify-end" >
-                @if (vS_employee is not null)
-                {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b> </b></MudText>
-                }
-                else
-                {
-                    <MudText Typo="Typo.h6" Class="ml-3"><b>Mothly Efficiency</b></MudText>
-                }
-            </MudItem>
-
-        </MudGrid>
-        <br />
-    </MudItem>
-</MudGrid>
-
-
-
 @code {
 
-    float calEfficiancy(int? ach, int? target)
-    {
-        try{
-            Console.WriteLine(ach);
-            Console.WriteLine(target);
-            return ((float)ach / (float)target) * 100;
-
-        }
-        catch{
-            return 0;
-        }
-    }
-
-    //float mothlyEfficiancy(DateTime month, int? target)
+    //float calEfficiancy(int? ach, int? target)
     //{
-        
+    //    try
+    //    {
+    //        return ((float)ach / (float)target) * 100;
+    //    }
+    //    catch
+    //    {
+    //        return 0;
+    //    }
     //}
-
 
     private bool border = true;
     bool isLoading = false;
-
-    private MudDateRangePicker _picker;
-    // private DateRange CreateDate = new DateRange();
-
     DateTime? SelectMonth = DateTime.Now;
-    //DateTime? _month;
-    
+    DateTime? _month;
+
+    [Required]
+    [StringLength(5, ErrorMessage = "Number lenght can't be more than 5")]
     public string EnteredSapNo { get; set; }
 
-    //public string CreateDate { get; set; }
-
     public Vs_Employee? vS_employee { get; set; }
+    public Warehouse_OperationDetail? operationDetails { get; set; }
+    public List<Warehouse_OperationRecord?> manageRecord { get; set; }
 
-    public OperationDetail? operationDetails { get; set; }
+    Warehouse_OperationDetail operationDetail = new Warehouse_OperationDetail();
 
-    //OperationRecord operationRecord = new OperationRecord();
-    private List<OperationRecord?> manageRecord;
-    OperationDetail operationDetail = new OperationDetail();
-
-    //public Vs_Employee? vs_employee;
-
+    bool ShowEmployeeDetails { get; set; } = false;  
+    
     async Task HandleIntervalElapsed(string debouncedText)
     {
-
         if (debouncedText.Length > 4)
         {
             isLoading = true;
-
             try
-            {                
-                //manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&CreateDate={CreateDate.ToString()}");
-
-                vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
-
-                manageRecord = await httpClient.GetFromJsonAsync<List<OperationRecord?>>($"api/OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
-
+            {
+                vS_employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/Wareouse_Employees/GetEmp?SAP={debouncedText}");
+                manageRecord = await httpClient.GetFromJsonAsync<List<Warehouse_OperationRecord?>>($"api/Warehouse_OperationRecords/Efficiency?SapNo={debouncedText}&&SelectMonth={SelectMonth}");
+                
+                ShowEmployeeDetails = true;
             }
             catch
             {
                 isLoading = false;
-
             }
             isLoading = false;
         }
         else
         {
-            manageRecord = null;
+            ShowEmployeeDetails = false;
+            manageRecord = null;            
         }
-
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Workspace.Shared.Entities.Warehouse
+namespace Workspace.Shared.Entities
 {
-    public class OperationSummeryDTO
+    public class Warehouse_OperationSummeryDTO
     {
         [Required(ErrorMessage = "This field can't be empty")]
         public string? OperationName { get; set; }

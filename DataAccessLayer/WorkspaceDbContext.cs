@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Workspace.Shared.Entities.ResourceFacilities;
 using Workspace.Shared.AuthData;
-using Workspace.Shared.Entities.Warehouse;
-using Workspace.Shared.Entities.SampleApp;
-using Workspace.Shared.Entities.Readonly;
-using Workspace.Shared.Entities.ApprovalPath;
 using Workspace.Shared.Entities.ApprovalDynamicPaths;
 using Workspace.Shared.Entities.ApprovalDynamicPaths.ApprovalLogs;
+using Workspace.Shared.Entities.ApprovalPath;
+using Workspace.Shared.Entities.Readonly;
+using Workspace.Shared.Entities.ResourceFacilities;
+using Workspace.Shared.Entities.SampleApp;
+using Workspace.Shared.Entities;
+
 
 namespace DataAccessLayer
 {
@@ -44,14 +45,12 @@ namespace DataAccessLayer
         public DbSet<SampleTodo> SampleTodos { get; set; }
 
 
-        // warehouse data entry - efficiency 
-        public DbSet<OperationRecord> OperationRecords { get; set; }
-        public DbSet<OperationList> OperationLists { get; set; }
-        public DbSet<VS_Employees_1> VS_Employees_1 { get; set; }
-        public DbSet<OperationDetail> OperationDetails { get; set; }
-        public DbSet<ShiftGroup> ShiftGroups { get; set; }
-        public DbSet<WorkingShifts> WorkingShift { get; set; }
-
+        #region warehouse data entry - efficiency 
+        public DbSet<Warehouse_OperationRecord> Warehouse_OperationRecords { get; set; }
+        public DbSet<Warehouse_OperationList> Warehouse_OperationLists { get; set; }
+        public DbSet<Warehouse_OperationDetail> Warehouse_OperationDetails { get; set; }
+        public DbSet<Warehouse_WorkingShift> Warehouse_WorkingShifts { get; set; }
+        #endregion
 
 
         #region Approval path
@@ -69,13 +68,13 @@ namespace DataAccessLayer
 
         #region Approval path -Dynamic
 
-        public DbSet<ApprovalConfigurations>  apd_approvalConfigurations { get; set; }
-        public DbSet<ApprovalDefinitions>  apd_approvalDefinitions { get; set; }
-        public DbSet<DefinitionValues>  apd_definitionValues { get; set; }
-        public DbSet<ApprovalDestinations>  apd_approvalDestinations { get; set; }
-        public DbSet<ApprovalDocuments>  apd_approvalDocuments { get; set; }
-        public DbSet<WorkFlowIndexes>  apd_workFlowIndexes { get; set; }
-        public DbSet<WorkFlowUsers>  apd_workFlowUsers { get; set; }
+        public DbSet<ApprovalConfigurations> apd_approvalConfigurations { get; set; }
+        public DbSet<ApprovalDefinitions> apd_approvalDefinitions { get; set; }
+        public DbSet<DefinitionValues> apd_definitionValues { get; set; }
+        public DbSet<ApprovalDestinations> apd_approvalDestinations { get; set; }
+        public DbSet<ApprovalDocuments> apd_approvalDocuments { get; set; }
+        public DbSet<WorkFlowIndexes> apd_workFlowIndexes { get; set; }
+        public DbSet<WorkFlowUsers> apd_workFlowUsers { get; set; }
         public DbSet<PriorityIndexes> apd_priorityIndexes { get; set; }
         public DbSet<ApprovalUserNotification> apd_approvalUserNotification { get; set; }
 

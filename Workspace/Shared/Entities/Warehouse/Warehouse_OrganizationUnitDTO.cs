@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Workspace.Shared.Entities.Warehouse
+namespace Workspace.Shared.Entities
 {
-    public class OrganizationUnitDTO
+    public class Warehouse_OrganizationUnitDTO
     {
         public string OrganizationUnitID { get; set; }
         public string? Name { get; set; }

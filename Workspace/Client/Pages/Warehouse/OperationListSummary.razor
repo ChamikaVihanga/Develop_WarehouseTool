@@ -32,24 +32,18 @@
         <MudItem xs="12">
             <MudPaper Elevation="1">
                 <MudTable Items="operationDetails" Hover="true" SortLabel="Sort By" Elevation="0" Dense="true" Bordered="true" FixedHeader="true" Height="60vh">
-                    <HeaderContent>
-                        @*<MudTh><b>Organization Unit</b></MudTh>*@
+                    <HeaderContent>                        
                         <MudTh><b>Operation Name</b></MudTh>
                         <MudTh><b>Target</b></MudTh>
                         <MudTh><b>Allocated Time</b></MudTh>
-                        <MudTh><b>Effective Date</b></MudTh>
-                        @*<MudTh><b>Activation</b></MudTh>*@
+                        <MudTh><b>Effective Month</b></MudTh>                        
                         <MudTh></MudTh>
                     </HeaderContent>
-                    <RowTemplate>
-                        @*<MudTd>@context.OrganizationUnit</MudTd>*@
+                    <RowTemplate>                        
                         <MudTd>@context.OperationList?.Name</MudTd>
                         <MudTd>@context.Target</MudTd>
                         <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
-                        <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
-                        @* <MudTh>
-                    <input type="checkbox" class="form-check-input" value=@context.OperationList.IsActive />
-                    </MudTh>*@
+                        <MudTd>@context.EffectiveDate.ToString("yyyy/MMMM")</MudTd>                        
                         <MudTh>
                             <MudTooltip Text="More Info" Placement="Placement.Right">
                                 <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">
@@ -69,8 +63,8 @@
     string? lable { get; set; } = "Toggle to view ongoing operations";
     string? operationMessage { get; set; } = "Active Operations";
     public string NewSearchString { get; set; }
-    public List<OperationDetail>? operationDetails;
-    public List<OperationDetail>? operationDetails2;
+    public List<Warehouse_OperationDetail>? operationDetails;
+    public List<Warehouse_OperationDetail>? operationDetails2;
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,13 +89,13 @@
 
     async Task GetActiveOperations()
     {
-        operationDetails = await http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Active");
+        operationDetails = await http.GetFromJsonAsync<List<Warehouse_OperationDetail>>("api/Warehouse_OperationLists/Active");
         operationDetails2 = operationDetails;
     }
 
     async Task GetUpcommingOperations()
     {
-        operationDetails = await http.GetFromJsonAsync<List<OperationDetail>>("api/OperationLists/Upcoming");
+        operationDetails = await http.GetFromJsonAsync<List<Warehouse_OperationDetail>>("api/Warehouse_OperationLists/Upcoming");
         operationDetails2 = operationDetails;
     }
 

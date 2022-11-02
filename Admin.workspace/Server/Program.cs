@@ -13,6 +13,7 @@ global using Microsoft.AspNetCore.Authorization;
 global using admin.workspace.Server.Authorization.Handlers;
 global using admin.workspace.Server.Authorization.DataProviderInterfaces;
 global using admin.workspace.Server.Authorization.DataProviders;
+global using Workspace.Shared.Entities;
 
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;

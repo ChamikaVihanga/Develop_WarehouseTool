@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Workspace.Shared.Entities.Warehouse
+namespace Workspace.Shared.Entities
 {
-    public class OperationRecord
+    public class Warehouse_OperationRecord
     {
         public int Id { get; set; }
 
         //One to many
 
         public int? OperationListId { get; set; }
-        public OperationList? OperationList { get; set; }
+        public Warehouse_OperationList? OperationList { get; set; }
 
 
 

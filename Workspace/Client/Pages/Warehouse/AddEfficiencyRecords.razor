@@ -1,6 +1,6 @@
 ﻿@page "/Warehouse"
 @using System.ComponentModel.DataAnnotations
-@using Workspace.Shared.Entities.Warehouse
+
 @using System.Text.Json
 @using static System.Net.WebRequestMethods
 @inject ISnackbar Snackbar
@@ -19,11 +19,10 @@
                 {
                     <MudItem xs="12">
                         <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
-                            <div style="position:absolute; top:30vh; width:100%; text-align:center">
-                                <h3>Please wait</h3>
+                            <div style="position:absolute; top:30vh; width:100%; text-align:center">                                
                                 <div style="display:flex; gap:10px; justify-content:center; align-items:center">
                                     <div class="spinner-border" role="status"></div>
-                                    The application is loading...
+                                     Loading...
                                 </div>
                             </div>
                         </MudPaper>
@@ -68,8 +67,7 @@
                                                     <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>
-                                            @*<MudTextField @bind-Value="@StartTime" Label="Start Time" InputType="InputType.Time" Variant="Variant.Outlined" />*@
+                                            </MudTimePicker>                                            
                                         </MudItem>
                                         <MudItem xs="6">
                                             <MudTimePicker @ref="_pickerE" PickerVariant="PickerVariant.Dialog" Label="End Time" @bind-Time="@EndTime" Variant="Variant.Outlined">
@@ -78,8 +76,7 @@
                                                     <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>
-                                            @*<MudTextField @bind-Value="@EndTime" Label="End Time" InputType="InputType.Time" Variant="Variant.Outlined"/>*@
+                                            </MudTimePicker>                                            
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -114,10 +111,10 @@
                                 <MudContainer>
                                     <MudGrid>
                                         <MudItem xs="6">
-                                            <MudAutocomplete Label="Operation Name" @bind-Value="value1" SearchFunc="@Search1" ResetValueOnEmptyText="@resetValueOnEmptyText" CoerceText="@coerceText" CoerceValue="@coerceValue" Dense Variant="Variant.Outlined" />
+                                            <MudAutocomplete Label="Operation Name" @bind-Value="value1" SearchFunc="@Search1" ResetValueOnEmptyText="@resetValueOnEmptyText" CoerceText="@coerceText" CoerceValue="@coerceValue" Dense Variant="Variant.Outlined" CloseIcon="@Icons.Material.Filled.Search" />
                                         </MudItem>
                                         <MudItem xs="6">
-                                            <MudTextField Label="Acivement" @bind-Value="operationRecord.Achivement" Variant="Variant.Outlined" />
+                                            <MudTextField Label="Achivement" @bind-Value="operationRecord.Achivement" Variant="Variant.Outlined" />
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -130,7 +127,7 @@
                             @if (EnteredSapNo == null || StartTime == null || value1 == null)
                             {
                                 <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true">Submit</MudButton>
-                                <MudAlert Severity="Severity.Info" Class="ml-auto">You must enter sap number, Start Time & Operation Name</MudAlert>
+                                <MudAlert Severity="Severity.Info" Class="ml-auto">You must enter Sap number, Start Time & Operation Name</MudAlert>
                             }
                             else
                             {
@@ -166,8 +163,7 @@
                     <MudContainer>
                         <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full py-8">
                             <MudCard>
-
-                                <MudImage Src="https://media.istockphoto.com/vectors/user-icon-flat-isolated-on-white-background-user-symbol-vector-vector-id1300845620?k=20&m=1300845620&s=612x612&w=0&h=f4XTZDAv7NPuZbG0habSpU0sNgECM0X7nbKzTUta3n8=" Width="200" Height="200" Class="rounded-lg ma-4" />
+                                <MudImage Src="/images/Employee/EmptyVetor.jpg" Width="200" Height="200" Class="rounded-lg ma-4" />
                                 <MudCardContent>
                                     <MudText Class="d-flex align-center justify-center mud-width-full"> <b>Name</b> </MudText>
                                     <MudText Class="d-flex align-center justify-center mud-width-full">Position</MudText>
@@ -177,10 +173,6 @@
                     </MudContainer>
                 </MudItem>
             }
-
-
-
-
             <MudItem xs="12">
                 <h3>Efficiency Summary</h3>
                 <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
@@ -188,10 +180,8 @@
             </MudItem>
         </MudGrid>
 
-
         @*Data view table*@
-        <_LogEfficiencyData manageRecord="@manageRecord" />
-        @*<AdminView manageRecords="@manageRecord" />*@
+        <_LogEfficiencyData manageRecord="@manageRecord" />        
     </MudPaper>
 </MudItem>
 
@@ -209,11 +199,10 @@
     /// <summary>
     /// Form Date Picker
     /// </summary>
-    MudDatePicker _picker;
-
+    MudDatePicker? _picker;
 
     //Time Picker
-    MudTimePicker _pickerS;
+    MudTimePicker? _pickerS;
     MudTimePicker? _pickerE;
     DateTime? SelectedDate = DateTime.Now;
     DateTime? EndDate = DateTime.Now;
@@ -227,28 +216,19 @@
 
     //public DateTime Date { get; set; }
 
-
-
     public int putId { get; set; } = 0;
 
-
-
-    private OperationList[]? operationList;
+    private Warehouse_OperationList[]? operationList;
     private string? value1;
     private bool resetValueOnEmptyText;
     private bool coerceText;
     private bool coerceValue;
-    private OperationRecord[]? manageRecord;
-    private List<OperationDetail>? dropDown;
+    private Warehouse_OperationRecord[]? manageRecord;
+    private List<Warehouse_OperationDetail>? dropDown;
 
     public Vs_Employee? vS_Employee { get; set; }
 
-
-
-
-    OperationRecord operationRecord = new OperationRecord();
-    private VS_Employees_1[]? vsEmployees;
-
+    Warehouse_OperationRecord operationRecord = new Warehouse_OperationRecord();    
 
     void PickEndDate()
     {
@@ -268,24 +248,18 @@
                 InvokeAsync(StateHasChanged);
             }
         }
-
     }
 
     protected override async Task OnInitializedAsync()
     {
-        //operationList = await httpClient.GetFromJsonAsync<OperationList[]>("api/OperationLists");
         GetOperationList();
     }
 
-
-
     async Task GetOperationList()
     {
-        operationList = await httpClient.GetFromJsonAsync<OperationList[]>("api/OperationLists");
-        dropDown = await httpClient.GetFromJsonAsync<List<OperationDetail>?>("/api/OperationLists/Active");
+        operationList = await httpClient.GetFromJsonAsync<Warehouse_OperationList[]>("api/Warehouse_OperationLists");
+        dropDown = await httpClient.GetFromJsonAsync<List<Warehouse_OperationDetail>?>("/api/Warehouse_OperationLists/Active");
     }
-
-
 
     /// <summary>
     /// Date and time convert to String add database
@@ -295,15 +269,11 @@
 
     protected async Task PostData()
     {
-
-
         operationRecord.CreateDate = Convert.ToDateTime(SelectedDate);
         operationRecord.EndDate = Convert.ToDateTime(EndDate);
 
         if (EndTime > StartTime  || EndTime is null)
-        {
-
-            //operationRecord.StartTime = Convert.ToDateTime(StartTime);
+        {            
             if (StartTime is not null && SelectedDate is not null)
             {
                 operationRecord.StartTime = SelectedDate.Value.Date + (TimeSpan)StartTime;
@@ -313,31 +283,28 @@
                 if (EndDate is not null)
                 {
                     operationRecord.EndTime = EndDate.Value.Date + EndTime;
-
                 }
                 else
                 {
                     operationRecord.EndTime = DateTime.Today + EndTime;
                 }
-
             }
             int id = operationList.Where(a => a.Name == value1).Select(b => b.Id).Last();
             operationRecord.OperationListId = id;
             operationRecord.SAPNo = EnteredSapNo;
-            Console.WriteLine(putId);
+            //Console.WriteLine(putId);
             if (putId != 0)
             {
                 operationRecord.Id = putId;
-                var response = await httpClient.PutAsJsonAsync<OperationRecord>($"api/OperationRecords?id={putId}", operationRecord);
+                var response = await httpClient.PutAsJsonAsync<Warehouse_OperationRecord>($"api/Warehouse_OperationRecords?id={putId}", operationRecord);
                 _LogEfficiencyData get = new _LogEfficiencyData();
                 string Val = await response.Content.ReadAsStringAsync();
                 AddCloseAfterNavSnackbar(Val);
-
             }
             else
             {
-                Console.WriteLine(operationRecord.EndTime);
-                var response = await httpClient.PostAsJsonAsync<OperationRecord>("api/OperationRecords", operationRecord);
+                //Console.WriteLine(operationRecord.EndTime);
+                var response = await httpClient.PostAsJsonAsync<Warehouse_OperationRecord>("api/Warehouse_OperationRecords", operationRecord);
                 _LogEfficiencyData get = new _LogEfficiencyData();
                 string Val = await response.Content.ReadAsStringAsync();
                 AddCloseAfterNavSnackbar(Val);
@@ -354,19 +321,11 @@
             isEndDateRequired = false;
             StartTime = null;
             InvokeAsync(StateHasChanged);
-
-
         }
-
-
         else
         {
             AddDateAfterNavSnackbar("You can't enter End Time like this");
         }
-
-
-
-
     }
 
     public void AddDateAfterNavSnackbar(string VAl)
@@ -377,7 +336,6 @@
         });
     }
 
-
     public void AddCloseAfterNavSnackbar(string Val)
     {
         Snackbar.Add($"{Val}", Severity.Success, (options) =>
@@ -385,7 +343,6 @@
             options.CloseAfterNavigation = true;
         });
     }
-
 
     private async Task<IEnumerable<string>> Search1(string value)
     {
@@ -397,7 +354,6 @@
             return dropDown.Select(x => x.OperationList.Name);
         return dropDown.Select(y => y.OperationList.Name.ToString()).Where(a => a.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
-
 
     async Task HandleIntervalElapsed(string debouncedText)
     {
@@ -418,20 +374,17 @@
 
             try
             {
-                manageRecord = await httpClient.GetFromJsonAsync<OperationRecord[]?>($"api/OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
+                manageRecord = await httpClient.GetFromJsonAsync<Warehouse_OperationRecord[]?>($"api/Warehouse_OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
 
-                vS_Employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={debouncedText}");
-
+                vS_Employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/Wareouse_Employees/GetEmp?SAP={debouncedText}");
             }
             catch
             {
                 isLoading = false;
-
             }
             isLoading = false;
 
-
-            foreach (OperationRecord operationRecord in manageRecord)
+            foreach (Warehouse_OperationRecord operationRecord in manageRecord)
             {
                 if (operationRecord.Achivement is null || operationRecord.EndTime == null)
                 {
@@ -440,8 +393,6 @@
                     StartDateTime = operationRecord.StartTime;
                     value1 = operationRecord.OperationList.Name;
                     putId = operationRecord.Id;
-
-
                     manageRecord = manageRecord.Where(x => x.Id != operationRecord.Id).ToArray();
                 }
             }
@@ -450,6 +401,5 @@
         {
             manageRecord = null;
         }
-
     }
 }
