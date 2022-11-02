@@ -76,7 +76,6 @@ namespace Workspace.Server.Controllers.Warehouse
             return await _context.OperationDetails.Include(x => x.OperationList)
                 .Where(e => e.EffectiveDate > DateTime.Today)
                 .ToListAsync();
-
         }
 
         [HttpGet("getOnlyOrgUnit")]
@@ -87,7 +86,6 @@ namespace Workspace.Server.Controllers.Warehouse
                 return NotFound();
             }
 
-            //var getOrgUnit = await _context.OperationDetails.Include(a=>a.OperationList).FirstOrDefaultAsync(b=>b.Id == id);
             var getOrgUnit = await _context.OperationDetails.Where(a => a.OperationListId == id).FirstOrDefaultAsync();
 
             if (getOrgUnit == null)
@@ -95,16 +93,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 return NotFound();
             }
             return getOrgUnit;
-
-
-            //var getOrgName = await _context.OperationDetails.FindAsync(id);            
-
-            //if (getOrgName == null)
-            //    return BadRequest("Name not found");
-
-            //return getOrgName;
         }
-
 
         // GET: api/OperationDetailsAPI/5
         [HttpGet("getEffectiveDate")]
@@ -176,49 +165,8 @@ namespace Workspace.Server.Controllers.Warehouse
         public async Task<List<OperationList>> getOperationList()
         {
             return _context.OperationLists.Include(a => a.OperationDetails).ToList();
-        }
-
-
-        // PUT: api/OperationDetailsAPI/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutOperationDetail(int id, OperationSummeryDTO operationSummeryDTO)
-        //{
-        //    if (id != operationSummeryDTO.DTOid)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    OperationList opListSe = new OperationList();
-        //    opListSe.ID = id;
-        //    opListSe.Name = operationSummeryDTO.OperationName;
-        //    opListSe.IsActive = true;
-
-        //    _context.Entry(opListSe).State = EntityState.Modified;
-        //    await _context.SaveChangesAsync();            
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!OperationDetailExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return Ok("hello");
-        //}
-       
-        // POST: api/OperationDetailsAPI
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
-
+        }       
+        
         /// <summary>
         /// get inputs from (Operation.razor) and save data two seperate tables
         /// </summary>
@@ -255,7 +203,6 @@ namespace Workspace.Server.Controllers.Warehouse
                 await _context.SaveChangesAsync();
 
                 return Ok("Successfully Created");
-                //return CreatedAtAction("GetOperationDetail", new { id = operationDetail.Id }, operationDetail);           
         }
 
         [HttpPut, Authorize(Policy = "VSPolicy")]
@@ -281,7 +228,6 @@ namespace Workspace.Server.Controllers.Warehouse
 
             return Ok();
         }
-
 
         // DELETE: api/OperationDetailsAPI/5
         [HttpDelete("{id}")]

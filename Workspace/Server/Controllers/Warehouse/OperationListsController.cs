@@ -39,12 +39,8 @@ namespace Workspace.Server.Controllers.Warehouse
             if (_context.OperationLists == null)
             {
                 return NotFound();
-            }
-            //return await _context.OperationLists
-            //    .Include(x => x.OperationDetails)
-            //    .ToListAsync();
-
-    
+            }           
+                
             var opDetail = await _context.OperationDetails.Include(a => a.OperationList).ToListAsync();
             List<OperationDetail> getActiveOperations = new List<OperationDetail>();
 
@@ -53,7 +49,6 @@ namespace Workspace.Server.Controllers.Warehouse
 
             List<OperationDetail> ActiveRecords = new List<OperationDetail>();
             ActiveRecords = opDetail.Where(b => b.EffectiveDate < DateTime.Now).ToList();
-
 
             foreach (int a in listIds)
             {
@@ -67,7 +62,6 @@ namespace Workspace.Server.Controllers.Warehouse
             return getActiveOperations;
         }
 
-
         // GET: api/OperationLists/Upcoming
         //[HttpGet("Upcoming"), Authorize(Policy = "VSPolicy")]
         [HttpGet("Upcoming")]
@@ -77,11 +71,7 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return NotFound();
             }
-
-            //return await _context.OperationLists
-            //    .Include(x => x.OperationDetails)
-            //    .ToListAsync();
-           
+                       
             var opDetail = await _context.OperationDetails.Include(b =>b.OperationList).ToListAsync();
             List<OperationDetail> getUpcommingOperations = new List<OperationDetail>();
 
@@ -103,7 +93,6 @@ namespace Workspace.Server.Controllers.Warehouse
             return getUpcommingOperations;
         }
 
-
         //.Include(x => x.OperationDetails)
         // GET: api/OperationLists/getOperationName/5
         [HttpGet, Route("getOperationName")]
@@ -123,7 +112,6 @@ namespace Workspace.Server.Controllers.Warehouse
 
             return operationList;
         }        
-
 
         // PUT: api/OperationLists/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -168,7 +156,6 @@ namespace Workspace.Server.Controllers.Warehouse
             await _context.SaveChangesAsync();
 
             return Ok("Successfully Activated");
-            //return CreatedAtAction("GetOperationList", new { id = operationList.Id }, operationList);
         }
 
         // DELETE: api/OperationLists/5

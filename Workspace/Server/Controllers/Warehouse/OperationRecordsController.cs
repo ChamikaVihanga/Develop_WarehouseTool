@@ -32,8 +32,6 @@ namespace Workspace.Server.Controllers.Warehouse
             return await _context.OperationRecords.Include(x => x.OperationList).ToListAsync();
         }
 
-
-
         // GET: api/OperationRecords/getbyid?id=5
         [HttpGet("{id}")]
         public async Task<ActionResult<List<OperationRecord>>> GetOperationRecord(int id)
@@ -80,34 +78,9 @@ namespace Workspace.Server.Controllers.Warehouse
                .Where(a => a.CreateDate.Month == SelectMonth.Month)
                .ToListAsync();
 
-
             return
                 efficiencyRecord;
         } 
-
-
-
-        ///Test GET API    <summary>
-        /// Test GET API   
-        /// </summary>
-        /// <returns></returns>
-
-        //Get: api/OperationRecords/GetTarget
-        /*[HttpGet("GetTarget")]
-        public async Task<ActionResult<List<OperationDetail>>> GetDetailTargrt(int id, int target)
-        {
-            var GetTarget = await _context.OperationRecords
-                .Where(a=>a.SAPNo==id.ToString())
-                .Include(b=>b.OperationList)
-                .ThenInclude(a=>a.OperationDetails)
-                
-
-                .ToListAsync();
-
-            return GetTarget;
-
-        }*/
-
 
         // PUT: api/OperationRecords/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -136,28 +109,18 @@ namespace Workspace.Server.Controllers.Warehouse
                     throw;
                 }
             }
-
             return NoContent();
         }
 
         // POST: api/OperationRecords
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<string> PostOperationRecord(OperationRecord operationRecord)
-        /*public async Task<String> PostOperationRecord(OperationRecord operationRecord)*/
-        {
-            /*if (_context.OperationRecords == null)
-            {
-                return Problem("Entity set 'WorkspaceDbContext.OperationRecords'  is null.");
-            }*/
-            //operationRecord.EndTime = null;
+        public async Task<string> PostOperationRecord(OperationRecord operationRecord)        
+        {            
             _context.OperationRecords.Add(operationRecord);
-            await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetOperationRecord", new { id = operationRecord.Id }, operationRecord);
+            await _context.SaveChangesAsync();            
 
             return "Susscessful..";
-
         }
 
         // DELETE: api/OperationRecords/5
