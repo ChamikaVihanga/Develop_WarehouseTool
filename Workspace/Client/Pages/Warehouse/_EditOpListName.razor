@@ -27,7 +27,6 @@ else
     <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
 }
 
-
 @code {
     [CascadingParameter]
     MudDialogInstance? MudDialog { get; set; }
@@ -35,10 +34,6 @@ else
     public OperationList? operationList { get; set; }
 
     bool IsButtonAvailable { get; set; } = false;
-
-    //OperationList _operationList = new OperationList();
-
-    //public string? opName { get; set; }
 
     [Parameter]
     public int id { get; set; }
