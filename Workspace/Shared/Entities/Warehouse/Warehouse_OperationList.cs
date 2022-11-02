@@ -1,4 +1,4 @@
-﻿namespace Workspace.Shared.Entities.Warehouse
+﻿namespace Workspace.Shared.Entities
 {
     public class Warehouse_OperationList
     {

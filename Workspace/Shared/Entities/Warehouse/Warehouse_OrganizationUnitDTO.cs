@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Workspace.Shared.Entities.Warehouse
+namespace Workspace.Shared.Entities
 {
     public class Warehouse_OrganizationUnitDTO
     {

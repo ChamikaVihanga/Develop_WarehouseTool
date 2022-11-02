@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Workspace.Shared.Entities.Warehouse;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Workspace.Server.Controllers.Warehouse
 {
@@ -14,7 +11,7 @@ namespace Workspace.Server.Controllers.Warehouse
         public WorkingShiftsController(WorkspaceDbContext context)
         {
             _context = context;
-        }               
+        }
 
         // Get: api/WorkingShifts
         [HttpGet]
@@ -25,6 +22,6 @@ namespace Workspace.Server.Controllers.Warehouse
                 return NotFound();
             }
             return Ok(await _context.Warehouse_WorkingShifts.ToListAsync());
-        }               
+        }
     }
 }

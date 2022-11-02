@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Workspace.Shared.Entities.Warehouse
+namespace Workspace.Shared.Entities
 {
     public class Warehouse_OperationRecord
     {

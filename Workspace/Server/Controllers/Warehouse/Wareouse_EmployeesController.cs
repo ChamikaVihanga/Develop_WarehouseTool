@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Workspace.Shared.Entities.Readonly;
-using Workspace.Shared.Entities.Warehouse;
 
 namespace Workspace.Server.Controllers.Warehouse
 {

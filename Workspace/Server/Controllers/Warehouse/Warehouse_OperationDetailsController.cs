@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Workspace.Shared.Entities.Warehouse;
 
 namespace Workspace.Server.Controllers.Warehouse
 {
@@ -29,15 +22,15 @@ namespace Workspace.Server.Controllers.Warehouse
             {
                 return NotFound();
             }
-            return await _context.Warehouse_OperationDetails.Include(x => x.OperationList).ToListAsync();            
+            return await _context.Warehouse_OperationDetails.Include(x => x.OperationList).ToListAsync();
         }
 
         // GET: api/Warehouse_OperationDetails/ValidateOperationCreateDate
         [HttpGet("ValidateOperationCreateDate")]
-        public async Task<ActionResult<bool>> ValidateOperationCreateDate(int OperationListId , DateTime SelectedDate)             // in this didn't create a object call Warehouse_OperationDetail and didn't include 
+        public async Task<ActionResult<bool>> ValidateOperationCreateDate(int OperationListId, DateTime SelectedDate)             // in this didn't create a object call Warehouse_OperationDetail and didn't include 
         {                                                                                                                          //   a OperationList. Because get values from OperatonListId.
             bool checkOperationEffectiveDate = _context.Warehouse_OperationDetails                                                           //   if we assign to a bool variable extession should be .Any(); 
-                .Where(a => a.OperationListId == OperationListId &&  a.EffectiveDate.Month == SelectedDate.Month)
+                .Where(a => a.OperationListId == OperationListId && a.EffectiveDate.Month == SelectedDate.Month)
                 .Any();
 
 
@@ -59,7 +52,7 @@ namespace Workspace.Server.Controllers.Warehouse
                 return NotFound();
             }
             return await _context.Warehouse_OperationDetails.Include(x => x.OperationList)
-                .Where( e => e.EffectiveDate < DateTime.Today)
+                .Where(e => e.EffectiveDate < DateTime.Today)
                 .ToListAsync();
 
         }
@@ -81,7 +74,7 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpGet("getOnlyOrgUnit")]
         public async Task<ActionResult<Warehouse_OperationDetail>> GetOrganizationUnit(int id)
         {
-            if(_context.Warehouse_OperationDetails == null)
+            if (_context.Warehouse_OperationDetails == null)
             {
                 return NotFound();
             }
@@ -158,51 +151,51 @@ namespace Workspace.Server.Controllers.Warehouse
             catch (Exception e)
             {
                 return e.Message.ToString();
-            }                       
+            }
         }
 
         [HttpGet, Route("getOperationList")]
         public async Task<List<Warehouse_OperationList>> getOperationList()
         {
             return _context.Warehouse_OperationLists.Include(a => a.Warehouse_OperationDetails).ToList();
-        }       
-        
+        }
+
         /// <summary>
         /// get inputs from (Operation.razor) and save data two seperate tables
         /// </summary>
         /// <param name="operationSummeryDTO"></param>
         /// <returns></returns>
-        [HttpPost, Authorize(Policy ="VSPolicy")]
+        [HttpPost, Authorize(Policy = "VSPolicy")]
         public async Task<ActionResult<string>> PostOperationDetail(Warehouse_OperationSummeryDTO operationSummeryDTO)
-        {           
-                if (_context.Warehouse_OperationDetails == null)
-                {
-                    return Problem("Entity set 'WorkspaceDbContext.Warehouse_OperationDetails'  is null.");
-                }
+        {
+            if (_context.Warehouse_OperationDetails == null)
+            {
+                return Problem("Entity set 'WorkspaceDbContext.Warehouse_OperationDetails'  is null.");
+            }
 
-                Warehouse_OperationList opList = new Warehouse_OperationList();
-                opList.Name = operationSummeryDTO.OperationName;
-                opList.IsActive = true;
+            Warehouse_OperationList opList = new Warehouse_OperationList();
+            opList.Name = operationSummeryDTO.OperationName;
+            opList.IsActive = true;
 
-                _context.Warehouse_OperationLists.Add(opList);
-                await _context.SaveChangesAsync();
+            _context.Warehouse_OperationLists.Add(opList);
+            await _context.SaveChangesAsync();
 
-                var lastRecordID = _context.Warehouse_OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.Id).Last();
+            var lastRecordID = _context.Warehouse_OperationLists.Where(a => a.Name == operationSummeryDTO.OperationName).ToList().Select(b => b.Id).Last();
 
-                Warehouse_OperationDetail operationDetail = new Warehouse_OperationDetail();
-                operationDetail.EffectiveDate = operationSummeryDTO.EffectiveDate;
-                operationDetail.CreateDate = DateTime.Now;
-                operationDetail.CreatedBy = User.Identity.Name;
-                operationDetail.Target = (int)operationSummeryDTO.Target;
-                operationDetail.TimeSpan = (int)operationSummeryDTO.AllocatedTime;
-                operationDetail.TimePeriod = operationSummeryDTO.TimePeriod;
-                operationDetail.OperationListId = lastRecordID;
-                operationDetail.OrganizationUnit = operationSummeryDTO.OrganizationUnit;
+            Warehouse_OperationDetail operationDetail = new Warehouse_OperationDetail();
+            operationDetail.EffectiveDate = operationSummeryDTO.EffectiveDate;
+            operationDetail.CreateDate = DateTime.Now;
+            operationDetail.CreatedBy = User.Identity.Name;
+            operationDetail.Target = (int)operationSummeryDTO.Target;
+            operationDetail.TimeSpan = (int)operationSummeryDTO.AllocatedTime;
+            operationDetail.TimePeriod = operationSummeryDTO.TimePeriod;
+            operationDetail.OperationListId = lastRecordID;
+            operationDetail.OrganizationUnit = operationSummeryDTO.OrganizationUnit;
 
-                _context.Warehouse_OperationDetails.Add(operationDetail);
-                await _context.SaveChangesAsync();
+            _context.Warehouse_OperationDetails.Add(operationDetail);
+            await _context.SaveChangesAsync();
 
-                return Ok("Successfully Created");
+            return Ok("Successfully Created");
         }
 
         [HttpPut, Authorize(Policy = "VSPolicy")]
@@ -252,6 +245,6 @@ namespace Workspace.Server.Controllers.Warehouse
         private bool OperationDetailExists(int id)
         {
             return (_context.Warehouse_OperationDetails?.Any(e => e.Id == id)).GetValueOrDefault();
-        }       
+        }
     }
 }
