@@ -36,18 +36,14 @@
                         <MudTh><b>Operation Name</b></MudTh>
                         <MudTh><b>Target</b></MudTh>
                         <MudTh><b>Allocated Time</b></MudTh>
-                        <MudTh><b>Effective Month</b></MudTh>
-                        @*<MudTh><b>Activation</b></MudTh>*@
+                        <MudTh><b>Effective Month</b></MudTh>                        
                         <MudTh></MudTh>
                     </HeaderContent>
                     <RowTemplate>                        
                         <MudTd>@context.OperationList?.Name</MudTd>
                         <MudTd>@context.Target</MudTd>
                         <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
-                        <MudTd>@context.EffectiveDate.ToString("yyyy/MMMM")</MudTd>
-                        @* <MudTh>
-                    <input type="checkbox" class="form-check-input" value=@context.OperationList.IsActive />
-                    </MudTh>*@
+                        <MudTd>@context.EffectiveDate.ToString("yyyy/MMMM")</MudTd>                        
                         <MudTh>
                             <MudTooltip Text="More Info" Placement="Placement.Right">
                                 <a href="/Warehouse/UpdateTargetForOperation/@context.OperationListId">

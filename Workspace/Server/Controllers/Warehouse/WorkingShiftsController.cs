@@ -14,8 +14,7 @@ namespace Workspace.Server.Controllers.Warehouse
         public WorkingShiftsController(WorkspaceDbContext context)
         {
             _context = context;
-        }
-               
+        }               
 
         // Get: api/WorkingShifts
         [HttpGet]
