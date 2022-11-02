@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Workspace.Shared.Entities.Readonly
+namespace Workspace.Shared.Entities
 {
     /// <summary>
     /// Do not change anything in this class... Thank you...

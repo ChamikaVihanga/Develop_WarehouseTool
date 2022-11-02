@@ -1,6 +1,5 @@
 ﻿@inject HttpClient Http
 @inject ISnackbar Snackbar
-@using Workspace.Shared.Entities.Warehouse
 
 @if (operationList?.Name is not null)
 {
@@ -27,18 +26,13 @@ else
     <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
 }
 
-
 @code {
     [CascadingParameter]
     MudDialogInstance? MudDialog { get; set; }
 
-    public OperationList? operationList { get; set; }
+    public Warehouse_OperationList? operationList { get; set; }
 
     bool IsButtonAvailable { get; set; } = false;
-
-    //OperationList _operationList = new OperationList();
-
-    //public string? opName { get; set; }
 
     [Parameter]
     public int id { get; set; }
@@ -60,7 +54,7 @@ else
     {
         if (!string.IsNullOrWhiteSpace(operationList?.Name))
         {
-            var editOperationNameResponse = await Http.PutAsJsonAsync<OperationList?>($"api/OperationLists?id={id}", operationList);
+            var editOperationNameResponse = await Http.PutAsJsonAsync<Warehouse_OperationList?>($"api/Warehouse_OperationLists?id={id}", operationList);
             string nameEditResponse = editOperationNameResponse.Content.ReadAsStringAsync().Result;
             showBar(nameEditResponse);
             MudDialog?.Close(DialogResult.Ok(true));
@@ -73,7 +67,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        operationList = await Http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
+        operationList = await Http.GetFromJsonAsync<Warehouse_OperationList?>($"api/Warehouse_OperationLists/getOperationName?id={id}");
     }
 }
 

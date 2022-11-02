@@ -101,12 +101,12 @@
 
     bool IsSapNoAvailable { get; set; } = false;
     
-    WorkingShifts _workingShifts = new WorkingShifts();
-    public List<WorkingShifts>? getWorkingShifts { get; set; }
+    Warehouse_WorkingShift _workingShifts = new Warehouse_WorkingShift();
+    public List<Warehouse_WorkingShift>? getWorkingShifts { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        getWorkingShifts = await Http.GetFromJsonAsync<List<WorkingShifts>?>("api/WorkingShifts");
+        getWorkingShifts = await Http.GetFromJsonAsync<List<Warehouse_WorkingShift>?>("api/WorkingShifts");
     }
 
     async Task triggerEnterButon(KeyboardEventArgs e)
@@ -119,7 +119,7 @@
 
     private async Task AddEmployee()
     {
-        vs_Employee = await Http.GetFromJsonAsync<Vs_Employee?>($"api/EmpTemp/GetEmp?SAP={SAPNumber}");
+        vs_Employee = await Http.GetFromJsonAsync<Vs_Employee?>($"api/Wareouse_Employees/GetEmp?SAP={SAPNumber}");
 
         SapList.Add(SAPNumber);        
         SAPNumber = null;

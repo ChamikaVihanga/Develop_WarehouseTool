@@ -34,7 +34,7 @@
                     <MudTh><b>Create Date</b></MudTh>
                     <MudTh><b>Target</b></MudTh>
                     <MudTh><b>Allocated Time</b></MudTh>
-                    <MudTh><b>Effective Date</b></MudTh>
+                    <MudTh><b>Effective Month</b></MudTh>
                     <MudTh><b>Created By</b></MudTh>
                     <MudTh></MudTh>
                 </HeaderContent>
@@ -42,7 +42,7 @@
                     <MudTd>@context.CreateDate.ToString("d")</MudTd>
                     <MudTd>@context.Target</MudTd>
                     <MudTd>@context.TimeSpan @context.TimePeriod</MudTd>
-                    <MudTd>@context.EffectiveDate.ToString("d")</MudTd>
+                    <MudTd>@context.EffectiveDate.ToString("yyyy/MMMM")</MudTd>
                     <MudTd>@context.CreatedBy</MudTd>
                     <MudTd>
                         <MudTooltip Text="Edit Target" Placement="Placement.Right">
@@ -66,22 +66,22 @@
     [Parameter]  
     public string? organizationName { get; set; }    //  <------- Display OrgUnit name
 
-    private OperationDetail[]? updateRecords { get; set; }
-    private OperationList? operationList { get; set; }
-    private OperationDetail? _getOrganizationUnit { get; set; }
+    private Warehouse_OperationDetail[]? updateRecords { get; set; }
+    private Warehouse_OperationList? operationList { get; set; }
+    private Warehouse_OperationDetail? _getOrganizationUnit { get; set; }
 
     DialogOptions noHeaderWithScreen = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true, NoHeader = true };
     DialogOptions maxWidthScreen = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, CloseButton = true };
 
     protected override async Task OnInitializedAsync()
     {
-        operationList = await Http.GetFromJsonAsync<OperationList>($"api/OperationLists/getOperationName?id={id}");
+        operationList = await Http.GetFromJsonAsync<Warehouse_OperationList>($"api/Warehouse_OperationLists/getOperationName?id={id}");
         name = operationList?.Name;        
 
-        _getOrganizationUnit = await Http.GetFromJsonAsync<OperationDetail>($"api/OperationDetailsAPI/getOnlyOrgUnit?id={id}");
+        _getOrganizationUnit = await Http.GetFromJsonAsync<Warehouse_OperationDetail>($"api/Warehouse_OperationDetails/getOnlyOrgUnit?id={id}");
         organizationName = _getOrganizationUnit?.OrganizationUnit;        
 
-        updateRecords = await Http.GetFromJsonAsync<OperationDetail[]>($"api/OperationDetailsAPI/GetListofOpDetails?id={id}");
+        updateRecords = await Http.GetFromJsonAsync<Warehouse_OperationDetail[]>($"api/Warehouse_OperationDetails/GetListofOpDetails?id={id}");
     }
 
     private async Task OpenEditOpNameDialog()

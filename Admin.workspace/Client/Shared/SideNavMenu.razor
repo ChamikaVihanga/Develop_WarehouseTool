@@ -1,0 +1,56 @@
+﻿
+
+
+<MudNavMenu Dense=true>
+
+
+
+    <MudNavLink Match="NavLinkMatch.Prefix" Href="/" Icon="@Icons.Filled.Home">Home</MudNavLink>
+    <MudNavLink Match="NavLinkMatch.Prefix" Href="/UserManager" Icon="@Icons.Filled.Home">User Manager</MudNavLink>
+    <MudNavLink Href="/ApprovalPath" Icon="@Icons.Filled.Home">Approval paths</MudNavLink>
+    <MudNavLink Href="/ApprovalPathConf" Icon="@Icons.Filled.Home">Approval path configuration</MudNavLink>
+
+    <MudNavLink Href="/UserManager" Icon="@Icons.Filled.AccountTree" Match="NavLinkMatch.Prefix">User Manager</MudNavLink>
+    <MudNavLink Href="/ApprovalPath" Icon="@Icons.Filled._360" Match="NavLinkMatch.Prefix">Approval paths</MudNavLink>
+    <MudNavLink Href="/ApprovalPathConf" Icon="@Icons.Filled._360" Match="NavLinkMatch.Prefix">Approval path configuration</MudNavLink>
+    <MudNavLink Href="/apd_priorities" Icon="@Icons.Filled._360" Match="NavLinkMatch.Prefix">apd_priorities</MudNavLink>
+
+
+    <MudNavLink Href="/" Disabled="true">Instructions</MudNavLink>
+    <MudNavGroup Title="Settings" Expanded="true" Disabled="true">
+        <MudNavLink Href="/users">Users</MudNavLink>
+        <MudNavLink Href="/security">Security</MudNavLink>
+
+    </MudNavGroup>
+
+
+    @*    <MudNavGroup Title="HR" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+    <MudNavLink Href="" >Efficency Bonus</MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Project Management" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+    <MudNavLink Href="" >Shop Floor</MudNavLink>
+    </MudNavGroup>
+
+
+    <MudNavGroup Title="Warehouse" Icon="@Icons.Outlined.DashboardCustomize" Expanded="false">
+    <MudNavLink Href="/Warehouse" Icon="@Icons.Filled.Home">Efficency</MudNavLink>
+    </MudNavGroup>
+    *@
+
+
+
+    <MudNavLink Href="https://auth.workspace.vsag.ch" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.PeopleAlt">Auth Settings</MudNavLink>
+    <MudNavLink Href="/Profiles/employee" Match="NavLinkMatch.Prefix" Icon="@Icons.Outlined.Settings">Employee Profile</MudNavLink>
+</MudNavMenu>
+
+
+
+@*
+    Impliment the side nav bar menu from database
+
+*@
+
+@code {
+
+    }

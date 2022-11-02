@@ -1,6 +1,5 @@
 ﻿@inject HttpClient http
 @inject ISnackbar snackmassagebar
-@using Workspace.Shared.Entities.Warehouse
 
 
 @if (operationList?.Name is not null)
@@ -114,10 +113,10 @@ else
 
     void Cancel() => MudDialog?.Cancel();
 
-    OperationDetail? operationEdit = new OperationDetail();
+    Warehouse_OperationDetail? operationEdit = new Warehouse_OperationDetail();
 
-    public OperationList? operationList { get; set; }
-    public OperationDetail? operationDetail { get; set; }
+    public Warehouse_OperationList? operationList { get; set; }
+    public Warehouse_OperationDetail? operationDetail { get; set; }
     private bool isMonthAvailable { get; set; } = true;
 
     public string warningMessage { get; set; }
@@ -127,7 +126,7 @@ else
     {
         _picker.Close();
 
-        isMonthAvailable = await http.GetFromJsonAsync<bool>($"api/OperationDetailsAPI/ValidateOperationCreateDate?OperationListId={id}&SelectedDate={newdate}");
+        isMonthAvailable = await http.GetFromJsonAsync<bool>($"api/Warehouse_OperationDetails/ValidateOperationCreateDate?OperationListId={id}&SelectedDate={newdate}");
 
         if (isMonthAvailable)
         {
@@ -150,7 +149,7 @@ else
             operationEdit.EffectiveDate = (DateTime)newdate;
             operationEdit.TimePeriod = "Minutes";
             operationEdit.CreatedBy = "Unknowen User";            
-            var newUpdateResponse = await http.PostAsJsonAsync<OperationDetail>("api/OperationDetailsAPI/DetailsOnly", operationEdit);
+            var newUpdateResponse = await http.PostAsJsonAsync<Warehouse_OperationDetail>("api/Warehouse_OperationDetails/DetailsOnly", operationEdit);
             MudDialog?.Close(DialogResult.Ok(true));
             string streditResponse = newUpdateResponse.Content.ReadAsStringAsync().Result;
             showBar(streditResponse);
@@ -162,7 +161,7 @@ else
             operationEdit.EffectiveDate = operationDetail.EffectiveDate;
             operationEdit.TimePeriod = "Minutes";
             operationEdit.CreatedBy = "User";
-            var editResponse = await http.PutAsJsonAsync<OperationDetail>($"api/OperationDetailsAPI?id={DetailId}", operationEdit);
+            var editResponse = await http.PutAsJsonAsync<Warehouse_OperationDetail>($"api/Warehouse_OperationDetails?id={DetailId}", operationEdit);
             MudDialog?.Close(DialogResult.Ok(true));
             showBar("Operation target edited successfully");
         }
@@ -177,12 +176,12 @@ else
     {
         if (selectedDate)
         {
-            operationList = await http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
-            operationDetail = await http.GetFromJsonAsync<OperationDetail?>($"api/OperationDetailsAPI/getEffectiveDate?id={DetailId}");
+            operationList = await http.GetFromJsonAsync<Warehouse_OperationList?>($"api/Warehouse_OperationLists/getOperationName?id={id}");
+            operationDetail = await http.GetFromJsonAsync<Warehouse_OperationDetail?>($"api/Warehouse_OperationDetails/getEffectiveDate?id={DetailId}");
         }
         else
         {
-            operationList = await http.GetFromJsonAsync<OperationList?>($"api/OperationLists/getOperationName?id={id}");
+            operationList = await http.GetFromJsonAsync<Warehouse_OperationList?>($"api/Warehouse_OperationLists/getOperationName?id={id}");
         }
 
         if (warnnigMessage)

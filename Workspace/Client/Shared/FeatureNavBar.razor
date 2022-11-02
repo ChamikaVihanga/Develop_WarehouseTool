@@ -1,25 +1,53 @@
 ﻿
 
-<MudPaper Elevation="0" Class="pt-5 pl-5">
-    <MudToolBar Dense=true >
+@*FeatureTopNavBar*@
 
-        @*<MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Class="mr-5" />*@
-
-
-        <MudButton Variant="Variant.Text" Color="Color.Primary" Link="/Warehouse">Home</MudButton>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" Link="/Warehouse/Listsummary">Operation</MudButton>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" Disabled="true" Link="/Warehouse/Adminview">Daily Process Admin View</MudButton>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" Disabled="true" Link="/Warehouse/ShiftManage">Employee Shift Management</MudButton>
-@*        <MudButton Variant="Variant.Text">Approval</MudButton>
-        <MudButton Variant="Variant.Text">Report</MudButton>
-        <MudButton Variant="Variant.Text" Disabled="true">Admin</MudButton>*@
+<nav class="navbar navbar-expand-lg bg-opacity-100 pt-5 pl-5 mx-5">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">@FeatureName</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#FeatureTopNavBar" aria-controls="FeatureTopNavBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
 
-        <MudSpacer />
-        <MudButton StartIcon="@Icons.Filled.HelpOutline" Variant="Variant.Text">About</MudButton>
-    </MudToolBar>
-</MudPaper>
+        <div class="collapse navbar-collapse" id="FeatureTopNavBar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Approval</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Report</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Disabled</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0 d-flex mr-5 pr-5">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">Help</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</nav>
+
+
+
+
+
+
 
 @code {
-
+    public string FeatureName { get; set; } = "Feature Name";
 }

@@ -1,0 +1,78 @@
+﻿@inject HttpClient http
+
+@if(approvalDocuments is not null){
+    <button class="btn btn-success " @onclick="() => Open()">+ Configure new document</button>
+
+
+
+    <div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select an document to configure approval path</h5>
+                    <button type="button" class="close" @onclick="() => Close(null)" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <admin.workspace.Client.Pages.ApprovalPath.Components.PartialComponents.DocList approvalDocuments="approvalDocuments" clickEvent="Close"></admin.workspace.Client.Pages.ApprovalPath.Components.PartialComponents.DocList>
+                    </p>
+                </div>
+                <div class="modal-footer">
+ 
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close(null)">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+
+
+
+@if (ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code {
+
+    [Parameter]
+    public EventCallback<ApprovalDocuments> NewConfEvent { get; set; }
+
+    private List<ApprovalDocuments>? approvalDocuments { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        approvalDocuments = await http.GetFromJsonAsync<List<ApprovalDocuments>>("api/APD_Document/Get-Docuement-types");
+    }
+
+    public Guid Guid = Guid.NewGuid();
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = false;
+
+    public void Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        StateHasChanged();
+    }
+
+    public async Task Close(ApprovalDocuments? doc)
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        if(doc is not null){
+            await NewConfEvent.InvokeAsync(doc);
+        }
+
+        StateHasChanged();
+    }
+}

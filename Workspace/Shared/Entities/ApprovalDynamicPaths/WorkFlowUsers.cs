@@ -19,5 +19,6 @@ namespace Workspace.Shared.Entities.ApprovalDynamicPaths
         [JsonIgnore]
         public ICollection<ApprovalDestinations>? ApprovalDestinations { get; set; }
         public ICollection<RequestDestinations>? RequestDestinations { get; set; }
+        public ICollection<ApprovalUserNotification>? ApprovalUserNotifications { get; set; }
     }
 }
