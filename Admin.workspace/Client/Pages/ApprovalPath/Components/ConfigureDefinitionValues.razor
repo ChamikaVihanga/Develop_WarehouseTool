@@ -1,14 +1,18 @@
 ﻿@page "/ApprovalPathConf"
+
 @inject IJSRuntime JS
 @inject HttpClient http
 
 
 
-
+<div class="m-5">
 @if (definitionValue is not null && approvalConfigurations is not null)
 {
     <div class="row">
-        <div class="col-lg-10 col-sm-10 mt-2"></div>
+        <div class="col-lg-10 col-sm-10 mt-2">
+                <admin.workspace.Client.Pages.ApprovalPath.Components.Modals.AddDocumentModal NewConfEvent="addNewConfig"></admin.workspace.Client.Pages.ApprovalPath.Components.Modals.AddDocumentModal>
+
+        </div>
         <div class="col-lg-2 col-sm-2 mt-2">
             <button type="button" @onclick="() => SendConf()" class=" btn btn-success m-1">Save Changes</button>
 
@@ -140,6 +144,8 @@
     }
 }
 
+</div>
+
 @code {
     string? val;
     string? valBak;
@@ -147,7 +153,6 @@
     public DefinitionValues? definitionValue { get; set; }
 
     List<ApprovalConfigurations>? approvalConfigurations = new List<ApprovalConfigurations>();
-
 
 
 
@@ -221,7 +226,10 @@
 
     }
 
+    async Task addNewConfig(ApprovalDocuments doc){
+        approvalConfigurations.Add(new ApprovalConfigurations() { ApprovalConfigurationId = Guid.NewGuid(), ApprovalDocuments = new List<ApprovalDocuments>() { new ApprovalDocuments() { ApprovalDocumentId = Guid.NewGuid(), DocumentName = doc.DocumentName } }, ApprovalDestinations = new List<ApprovalDestinations>() { }  });
 
+    }
 
 
     async Task clearText(string? val2)

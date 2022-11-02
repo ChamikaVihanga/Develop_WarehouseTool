@@ -5,6 +5,7 @@ using ApprovalPath_Utils.Services.ApprovalDestinationPathsService;
 using ApprovalPath_Utils.Services.ApprovalDocuementService;
 using ApprovalPath_Utils.Services.ApprovalJobManagerService;
 using ApprovalPath_Utils.Services.ApprovalNotificationService;
+using ApprovalPath_Utils.Services.ApprovalPriorityIndexService;
 using ApprovalPath_Utils.Services.ApprovalUserService;
 using ApprovalPath_Utils.Services.DefinitionValueService;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,7 @@ namespace ApprovalPath_Utils.ApprovalPathService
             services.AddScoped<IApprovalConfigurationManagerService, ApprovalConfigurationManagerService>();
             services.AddScoped<IApprovalNotificationService, ApprovalNotificationService>();
             services.AddScoped<IApprovalUserService, ApprovalUserService>();
+            services.AddScoped<IApprovalPriorityIndexService, ApprovalPriorityIndexService>();
         }
     }
 }
