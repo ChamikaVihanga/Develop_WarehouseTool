@@ -23,7 +23,7 @@ namespace Workspace.Server.Controllers.Warehouse
         [HttpGet, Route("333100/units")]
         public async Task<List<Warehouse_OrganizationUnitDTO>> GetOrganization()
         {
-            List<Vs_Employee>  vs_Employees = await _context.Vs_Employees.Where(a => a.CostCenterID == "333100").ToListAsync();
+            List<Vs_Employee>  vs_Employees = await _context.Vs_Employees.Where(a => a.CostCenterID == "333100").OrderBy(a=>a.OrganizationalUnitID).ToListAsync();
             List<string> OgIds = vs_Employees.Select(a => a.OrganizationalUnitID).Distinct().ToList();
             List<Warehouse_OrganizationUnitDTO> OrgUnitDTOs = new List<Warehouse_OrganizationUnitDTO>();    
             foreach(string OGid in OgIds)

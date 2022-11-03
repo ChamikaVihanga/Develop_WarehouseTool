@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MudBlazor;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Workspace.Server.Controllers.Warehouse
 {
@@ -68,7 +61,7 @@ namespace Workspace.Server.Controllers.Warehouse
         //Get: api/Warehouse_OperationRecords/Efficiency
         [HttpGet("Efficiency")]
         public async Task<ActionResult<List<Warehouse_OperationRecord>>> GetEfficiencyDetil(string SapNo, DateTime SelectMonth)
-        {           
+        {
 
             var efficiencyRecord = await _context.Warehouse_OperationRecords
                .Include(a => a.OperationList)
@@ -114,10 +107,10 @@ namespace Workspace.Server.Controllers.Warehouse
         // POST: api/Warehouse_OperationRecords
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<string> PostOperationRecord(Warehouse_OperationRecord operationRecord)        
-        {            
+        public async Task<string> PostOperationRecord(Warehouse_OperationRecord operationRecord)
+        {
             _context.Warehouse_OperationRecords.Add(operationRecord);
-            await _context.SaveChangesAsync();            
+            await _context.SaveChangesAsync();
 
             return "Susscessful..";
         }
