@@ -3,48 +3,82 @@
 
 <ErrorBoundary @ref="errorBoundary">
     <ChildContent>
-       
-        
-        <MudLayout >
-
-            <MudPaper Elevation="0">
-            <MudToolBar  Dense="true">
-                <MudSpacer />
-                <Login_Logout_Toggle />
-            </MudToolBar>
-            </MudPaper>
-            <MudDrawer Elevation="0" Open="open">
-                <NavMenu />
-            </MudDrawer>
-           
-            <MudMainContent>
-                <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-1 ph-10">
-                    @Body
-            </MudContainer>
-                        
-            </MudMainContent>
-
-        </MudLayout>
-
-
-
         <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
         <MudDialogProvider />
         <MudSnackbarProvider />
 
+        <MudLayout>
+
+            <MudAppBar Color="Color.Transparent" Elevation="0" Dense="false" class="Glass">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+                <MudText Typo="Typo.h5" Class="ml-3">VS Workspace</MudText>
+
+
+
+                <AuthorizeView>
+                    <Authorized>
+                        <MudSpacer />
+                        <WelcomeNote WelcomeFirstName=@context.User.FindFirst("DisplayName").Value.Split(" ").First()></WelcomeNote>
+                        <MudSpacer />
+                    </Authorized>
+
+                    <NotAuthorized>
+                        <MudSpacer />
+                        <WelcomeNote />
+                        <MudSpacer />
+                    </NotAuthorized>
+                </AuthorizeView>
+
+
+                <MudBadge Content="100" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" />
+                </MudBadge>
+
+                <MudToggleIconButton @bind-Toggled="@AlarmOn"
+                                     Icon="@Icons.Filled.NotificationsOff" Color="@Color.Inherit" Title="Off"
+                                     ToggledIcon="@Icons.Filled.Notifications" ToggledColor="@Color.Success" ToggledTitle="On" />
+
+                @*  <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                Icon="@Icons.Filled.LightMode" Color="@Color.Inherit" Title="Light"
+                ToggledIcon="@Icons.Filled.DarkMode" ToggledColor="@Color.Inherit" ToggledTitle="Dark" />*@
+                @*
+                Login Partial View in Right Top Conner > PartialLogin
+                *@
+                @*<PartialLogin />*@
+                <Login_Logout_Toggle></Login_Logout_Toggle>
+            </MudAppBar>
+
+            <MudDrawer @bind-Open="@open" Elevation="0" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" ClipMode="DrawerClipMode.Always" Color="Color.Transparent">
+                <MudDrawerHeader>
+                    @*<MudText Typo="Typo.h6">WorkspaceWeb</MudText>*@
+                </MudDrawerHeader>
+                <SideNavMenu />
+            </MudDrawer>
+
+            <MudMainContent>
+                <div class="bg-white rounded-5 shadow-sm mx-3" style="min-height:95vh">
+                    <FeatureNavBar />
+                    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 ph-10">
+                        @Body
+                    </MudContainer>
+                </div>
+            </MudMainContent>
+        </MudLayout>
     </ChildContent>
+
+
     <ErrorContent>
-        <ErrorComponentHostPage Error="@context.Message" bakErrorContent="RecoverError"></ErrorComponentHostPage>
+        <admin.workspace.Client.Pages.ErrorPages.GlobalErrorPage Error="@context.Message" bakErrorContent="RecoverError"></admin.workspace.Client.Pages.ErrorPages.GlobalErrorPage>
     </ErrorContent>
+
 </ErrorBoundary>
 
-
-
-
-
-
-
-
+<style>
+    .Glass {
+        backdrop-filter: blur( 4px );
+        -webkit-backdrop-filter: blur( 4px );
+    }
+</style>
 
 
 
@@ -52,28 +86,38 @@
 
 @code {
 
-    private ErrorBoundary errorBoundary;
 
-    private MudTheme _theme = new();
-    private bool _isDarkMode;
 
-    void RecoverError()
-    {
-
-        errorBoundary.Recover();
-
-    }
+    private ErrorBoundary? errorBoundary;
 
     protected override void OnInitialized()
     {
         errorBoundary = new ErrorBoundary();
     }
+    //Side Nav Toggle button
+    bool _drawerOpen = true;
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
 
+    //Side Nav Toggle button - Mini
     bool open = true;
     void ToggleDrawer()
     {
         open = !open;
     }
+    void RecoverError(bool err)
+    {
+        errorBoundary.Recover();
+    }
 
 
+    //Theme Toggle
+    private MudTheme _theme = new();
+    private bool _isDarkMode;
+
+
+    //Alarm On OFF in Top Nav
+    public bool AlarmOn { get; set; }
 }

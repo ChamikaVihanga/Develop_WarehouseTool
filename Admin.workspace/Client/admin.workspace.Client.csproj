@@ -9,16 +9,17 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.5" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="MudBlazor" Version="6.0.11" />
-    <PackageReference Include="Toolbelt.Blazor.HttpClientInterceptor" Version="10.1.0" />
+    <PackageReference Include="MudBlazor" Version="6.0.17" />
+    <PackageReference Include="Toolbelt.Blazor.HttpClientInterceptor" Version="10.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\DataAccessLayer\DataAccessLayer.csproj" />
+    <ProjectReference Include="..\..\SolutionClassLibraries\WorkspaceComponent\WorkspaceComponent.csproj" />
     <ProjectReference Include="..\..\Workspace\Shared\Workspace.Shared.csproj" />
   </ItemGroup>
 
@@ -30,11 +31,27 @@
     <Folder Include="Pages\ApprovalPath\Components\Partial\" />
     <Folder Include="Pages\ComponentLib\" />
     <Folder Include="Pages\Document\" />
+    <Folder Include="Pages\WorkspaceApp\ScheduleJobs\" />
     <Folder Include="Properties\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\ApprovalPathJS\ApprovalPath.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="App.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Shared\MainLayout.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="wwwroot\index.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

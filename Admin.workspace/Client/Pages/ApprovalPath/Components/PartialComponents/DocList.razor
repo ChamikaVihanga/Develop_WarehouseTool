@@ -1,0 +1,24 @@
+﻿@if (approvalDocuments is not null)
+{
+    @foreach (var doc in approvalDocuments)
+    {
+        <div class="list-group">
+
+            <a class="list-group-item list-group-item-action" @onclick="() => Click(doc)">@doc.DocumentName</a>
+
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public List<ApprovalDocuments>? approvalDocuments { get; set; }
+
+    [Parameter]
+    public EventCallback<ApprovalDocuments> clickEvent { get; set; }
+
+    async Task Click(ApprovalDocuments doc)
+    {
+        await clickEvent.InvokeAsync(doc);
+    }
+}

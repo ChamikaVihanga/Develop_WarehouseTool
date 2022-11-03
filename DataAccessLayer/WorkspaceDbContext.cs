@@ -8,13 +8,20 @@ using Workspace.Shared.Entities.ResourceFacilities;
 using Workspace.Shared.Entities.SampleApp;
 using Workspace.Shared.Entities;
 
-
 namespace DataAccessLayer
 {
     public class WorkspaceDbContext : DbContext
     {
         public WorkspaceDbContext(DbContextOptions<WorkspaceDbContext> options) : base(options)
         {
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder
+                .UseSqlServer("Server=WSLK-IT01.VSAG.CH;Database=Workspace-Dev-Name;User Id=sa;password=password;Trusted_Connection=False;MultipleActiveResultSets=true");
         }
 
 
@@ -40,6 +47,12 @@ namespace DataAccessLayer
 
         #endregion Authentication data access
 
+        #region Workspace Databases
+
+        public DbSet<Workspace_User> Workspace_Users { get; set; }
+        public DbSet<Workspace_OrganizationalUnit> Workspace_OrganizationalUnits { get; set; }
+
+        #endregion
 
         public DbSet<ReFaRequest> ReFaRequests { get; set; }
         public DbSet<SampleTodo> SampleTodos { get; set; }
@@ -76,6 +89,7 @@ namespace DataAccessLayer
         public DbSet<WorkFlowIndexes> apd_workFlowIndexes { get; set; }
         public DbSet<WorkFlowUsers> apd_workFlowUsers { get; set; }
         public DbSet<PriorityIndexes> apd_priorityIndexes { get; set; }
+        public DbSet<ApprovalUserNotification> apd_approvalUserNotification { get; set; }
 
         #region Approval Logs
 

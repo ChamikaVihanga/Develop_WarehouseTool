@@ -1,0 +1,30 @@
+﻿
+
+Good @partOfDay @WelcomeFirstName, Welcome to the workspace.
+
+
+
+@code {
+
+    [Parameter]
+    public string? WelcomeFirstName { get; set; }
+
+    string partOfDay;
+    protected override async Task OnInitializedAsync()
+    {
+        var hours = DateTime.Now.Hour;
+        if (hours > 16)
+        {
+            partOfDay = "evening";
+        }
+        else if (hours > 11)
+        {
+            partOfDay = "afternoon";
+        }
+        else
+        {
+            partOfDay = "morning";
+        }
+    }
+
+}

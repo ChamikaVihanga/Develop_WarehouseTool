@@ -1,5 +1,7 @@
-﻿using ApprovalPath_Utils.Services.ApprovalConfigurationService;
+﻿using ApprovalPath_Utils.Services.ApprovalConfigurationManagerService;
+using ApprovalPath_Utils.Services.ApprovalConfigurationService;
 using ApprovalPath_Utils.Services.ApprovalJobManagerService;
+using ApprovalPath_Utils.Services.DefinitionValueService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -13,9 +15,13 @@ namespace admin.workspace.Server.Controllers.ApprovalPath_Dynamic
     public class APD_ConfigurationController : ControllerBase
     {
         private readonly IApprovalConfigurationService _approvalConfigurationService;
-        public APD_ConfigurationController(IApprovalConfigurationService approvalConfigurationService)
+        private readonly IApprovalConfigurationManagerService _approvalConfigurationManagerService;
+        private readonly IDefinitionValueService _definitionValueService;
+        public APD_ConfigurationController(IApprovalConfigurationService approvalConfigurationService, IApprovalConfigurationManagerService approvalConfigurationManagerService, IDefinitionValueService definitionValueService)
         {
             _approvalConfigurationService = approvalConfigurationService;
+            _approvalConfigurationManagerService = approvalConfigurationManagerService; 
+            _definitionValueService = definitionValueService;
         }
 
         [HttpGet]
@@ -40,7 +46,14 @@ namespace admin.workspace.Server.Controllers.ApprovalPath_Dynamic
             }
         }
 
-        
+        [HttpPost]
+        public async Task<DefinitionValues> testConf(Guid? defValId, List<ApprovalConfigurations> approvalConfigurations)
+        {
+            return await _definitionValueService.SetConfiguration(defValId, approvalConfigurations);
+
+        }
+
+
 
 
     }
