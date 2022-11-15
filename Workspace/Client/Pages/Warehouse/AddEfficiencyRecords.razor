@@ -19,10 +19,10 @@
                 {
                     <MudItem xs="12">
                         <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
-                            <div style="position:absolute; top:30vh; width:100%; text-align:center">                                
+                            <div style="position:absolute; top:30vh; width:100%; text-align:center">
                                 <div style="display:flex; gap:10px; justify-content:center; align-items:center">
                                     <div class="spinner-border" role="status"></div>
-                                     Loading...
+                                    Loading...
                                 </div>
                             </div>
                         </MudPaper>
@@ -67,7 +67,7 @@
                                                     <MudButton OnClick="@(() => _pickerS.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerS.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>                                            
+                                            </MudTimePicker>
                                         </MudItem>
                                         <MudItem xs="6">
                                             <MudTimePicker @ref="_pickerE" PickerVariant="PickerVariant.Dialog" Label="End Time" @bind-Time="@EndTime" Variant="Variant.Outlined">
@@ -76,7 +76,7 @@
                                                     <MudButton OnClick="@(() => _pickerE.Close(false))">Cancel</MudButton>
                                                     <MudButton Color="Color.Primary" OnClick="@(() => _pickerE.Close())">Ok</MudButton>
                                                 </PickerActions>
-                                            </MudTimePicker>                                            
+                                            </MudTimePicker>
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -127,7 +127,7 @@
                             @if (EnteredSapNo == null || StartTime == null || value1 == null)
                             {
                                 <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true">Submit</MudButton>
-                                <MudAlert Severity="Severity.Info" Class="ml-auto">You must enter Sap number, Start Time & Operation Name</MudAlert>
+                                <MudAlert Severity="Severity.Info" Class="ml-auto">You must enter Sap Number, Start Time & Operation Name</MudAlert>
                             }
                             else
                             {
@@ -181,13 +181,32 @@
         </MudGrid>
 
         @*Data view table*@
-        <_LogEfficiencyData manageRecord="@manageRecord" />        
+        @*<_LogEfficiencyData manageRecord="@manageRecord" />*@
+        @if (manageRecord != null)
+        {
+            <MudPaper Elevation="1">
+                <MudTable Items="manageRecord" Bordered="@bordered" Elevation="0" Hover="true">
+                    <HeaderContent>
+                        <MudTh><b>Date</b></MudTh>
+                        <MudTh><b>Operation</b></MudTh>
+                        <MudTh><b>TimeSpan</b></MudTh>
+                        <MudTh><b>Achivement</b></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.CreateDate.ToString("d")</MudTd>
+                        <MudTd>@context.OperationList.Name</MudTd>
+                        <MudTd>@context.StartTime.ToString("T")  -  @context.EndTime.Value.ToLongTimeString()</MudTd>
+                        <MudTd>@context.Achivement</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        }
     </MudPaper>
 </MudItem>
 
 @code {
     bool isLoading = false;
-
+    private bool bordered = false;
     /// <summary>
     /// Form Time Picker
     /// </summary>
@@ -223,12 +242,13 @@
     private bool resetValueOnEmptyText;
     private bool coerceText;
     private bool coerceValue;
-    private Warehouse_OperationRecord[]? manageRecord;
+    //private Warehouse_OperationRecord[]? manageRecord;
+    public Warehouse_OperationRecord[]? manageRecord { get; set; }
     private List<Warehouse_OperationDetail>? dropDown;
 
     public Vs_Employee? vS_Employee { get; set; }
 
-    Warehouse_OperationRecord operationRecord = new Warehouse_OperationRecord();    
+    Warehouse_OperationRecord operationRecord = new Warehouse_OperationRecord();
 
     void PickEndDate()
     {
@@ -272,8 +292,8 @@
         operationRecord.CreateDate = Convert.ToDateTime(SelectedDate);
         operationRecord.EndDate = Convert.ToDateTime(EndDate);
 
-        if (EndTime > StartTime  || EndTime is null)
-        {            
+        if (EndTime > StartTime || EndTime is null)
+        {
             if (StartTime is not null && SelectedDate is not null)
             {
                 operationRecord.StartTime = SelectedDate.Value.Date + (TimeSpan)StartTime;
@@ -292,43 +312,56 @@
             int id = operationList.Where(a => a.Name == value1).Select(b => b.Id).Last();
             operationRecord.OperationListId = id;
             operationRecord.SAPNo = EnteredSapNo;
-            //Console.WriteLine(putId);
+            
             if (putId != 0)
             {
-                operationRecord.Id = putId;
-                var response = await httpClient.PutAsJsonAsync<Warehouse_OperationRecord>($"api/Warehouse_OperationRecords?id={putId}", operationRecord);
-                _LogEfficiencyData get = new _LogEfficiencyData();
-                string Val = await response.Content.ReadAsStringAsync();
-                AddCloseAfterNavSnackbar(Val);
+                if (operationRecord.Achivement != null && EndTime != null)
+                {
+                    operationRecord.Id = putId;
+                    var response = await httpClient.PutAsJsonAsync<Warehouse_OperationRecord>($"api/Warehouse_OperationRecords?id={putId}", operationRecord);
+                    _LogEfficiencyData get = new _LogEfficiencyData();
+                    string Val = await response.Content.ReadAsStringAsync();
+                    CleanForm();
+                    ShowSuccessfullMessage(Val);
+                }
+                else
+                {
+                    ShowErrorMessage("The End Time field or Achivement field required");
+                }
             }
             else
             {
-                //Console.WriteLine(operationRecord.EndTime);
+                operationRecord.Id = 0;
                 var response = await httpClient.PostAsJsonAsync<Warehouse_OperationRecord>("api/Warehouse_OperationRecords", operationRecord);
                 _LogEfficiencyData get = new _LogEfficiencyData();
                 string Val = await response.Content.ReadAsStringAsync();
-                AddCloseAfterNavSnackbar(Val);
+                CleanForm();
+                ShowSuccessfullMessage(Val);
             }
-            vS_Employee = null;
-            SelectedDate = DateTime.Today;
-            EnteredSapNo = null;
-            StartTime = DateTime.Now.TimeOfDay;
-            value1 = null;
-            operationRecord.Achivement = null;
-            manageRecord = null;
-            EndTime = null;
-            EndDate = null;
-            isEndDateRequired = false;
-            StartTime = null;
-            InvokeAsync(StateHasChanged);
         }
         else
         {
-            AddDateAfterNavSnackbar("You can't enter End Time like this");
+            ShowErrorMessage("You can't enter End Time like this");
         }
     }
 
-    public void AddDateAfterNavSnackbar(string VAl)
+    private void CleanForm()
+    {
+        vS_Employee = null;
+        SelectedDate = DateTime.Today;
+        EnteredSapNo = null;
+        StartTime = DateTime.Now.TimeOfDay;
+        value1 = null;
+        operationRecord.Achivement = null;
+        manageRecord = null;
+        EndTime = null;
+        EndDate = null;
+        isEndDateRequired = false;
+        StartTime = null;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void ShowErrorMessage(string VAl)
     {
         Snackbar.Add($"{VAl}", Severity.Error, (check) =>
         {
@@ -336,7 +369,7 @@
         });
     }
 
-    public void AddCloseAfterNavSnackbar(string Val)
+    public void ShowSuccessfullMessage(string Val)
     {
         Snackbar.Add($"{Val}", Severity.Success, (options) =>
         {

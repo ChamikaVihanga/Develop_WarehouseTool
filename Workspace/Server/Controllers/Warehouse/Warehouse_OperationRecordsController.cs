@@ -101,7 +101,7 @@ namespace Workspace.Server.Controllers.Warehouse
                     throw;
                 }
             }
-            return NoContent();
+            return Ok("Your submission successfully recorded");
         }
 
         // POST: api/Warehouse_OperationRecords
