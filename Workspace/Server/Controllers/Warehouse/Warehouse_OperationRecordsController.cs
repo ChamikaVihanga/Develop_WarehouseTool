@@ -112,7 +112,7 @@ namespace Workspace.Server.Controllers.Warehouse
             _context.Warehouse_OperationRecords.Add(operationRecord);
             await _context.SaveChangesAsync();
 
-            return "Susscessful..";
+            return "Susscessfully Submit";
         }
 
         // DELETE: api/Warehouse_OperationRecords/5

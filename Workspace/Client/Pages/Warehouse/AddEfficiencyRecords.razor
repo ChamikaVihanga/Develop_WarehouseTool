@@ -114,7 +114,7 @@
                                             <MudAutocomplete Label="Operation Name" @bind-Value="value1" SearchFunc="@Search1" ResetValueOnEmptyText="@resetValueOnEmptyText" CoerceText="@coerceText" CoerceValue="@coerceValue" Dense Variant="Variant.Outlined" CloseIcon="@Icons.Material.Filled.Search" />
                                         </MudItem>
                                         <MudItem xs="6">
-                                            <MudTextField Label="Achivement" @bind-Value="operationRecord.Achivement" Variant="Variant.Outlined" />
+                                            <MudTextField Label="Achivement" @bind-Value="operationRecord.Achivement" Variant="Variant.Outlined" Mask="@(new PatternMask("0000000"))" />
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
@@ -131,7 +131,7 @@
                             }
                             else
                             {
-                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData">Submit</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData">Submit</MudButton>                                
                             }
                         </MudItem>
 
@@ -180,8 +180,8 @@
             </MudItem>
         </MudGrid>
 
-        @*Data view table*@
-        @*<_LogEfficiencyData manageRecord="@manageRecord" />*@
+        @*Data view table
+        <_LogEfficiencyData manageRecord="@manageRecord" />*@
         @if (manageRecord != null)
         {
             <MudPaper Elevation="1">
@@ -312,14 +312,13 @@
             int id = operationList.Where(a => a.Name == value1).Select(b => b.Id).Last();
             operationRecord.OperationListId = id;
             operationRecord.SAPNo = EnteredSapNo;
-            
+
             if (putId != 0)
             {
                 if (operationRecord.Achivement != null && EndTime != null)
                 {
                     operationRecord.Id = putId;
                     var response = await httpClient.PutAsJsonAsync<Warehouse_OperationRecord>($"api/Warehouse_OperationRecords?id={putId}", operationRecord);
-                    _LogEfficiencyData get = new _LogEfficiencyData();
                     string Val = await response.Content.ReadAsStringAsync();
                     CleanForm();
                     ShowSuccessfullMessage(Val);
@@ -331,18 +330,43 @@
             }
             else
             {
-                operationRecord.Id = 0;
-                var response = await httpClient.PostAsJsonAsync<Warehouse_OperationRecord>("api/Warehouse_OperationRecords", operationRecord);
-                _LogEfficiencyData get = new _LogEfficiencyData();
-                string Val = await response.Content.ReadAsStringAsync();
-                CleanForm();
-                ShowSuccessfullMessage(Val);
+                if (operationRecord.Achivement != null && EndTime != null)
+                {                    
+                    MethodFor_PostAPI();
+                }
+                else
+                {
+                    if (SelectedDate != null && EnteredSapNo != null && StartTime != null && value1 != null && operationRecord.Achivement == null && EndTime == null)
+                    {                       
+                        MethodFor_PostAPI();
+                    }
+                    else
+                    {
+                        if (SelectedDate != null && EnteredSapNo != null && StartTime != null && value1 != null && operationRecord.Achivement != null && EndTime != null)
+                        {                           
+                            MethodFor_PostAPI();
+                        }
+                        else
+                        {
+                            ShowErrorMessage("Please confirm the fields and submit it again");
+                        }
+                    }
+                }
             }
         }
         else
         {
-            ShowErrorMessage("You can't enter End Time like this");
+            ShowErrorMessage("The End Time must be greater than the Start Time");
         }
+    }
+
+    private async Task MethodFor_PostAPI()
+    {
+        operationRecord.Id = 0;
+        var response = await httpClient.PostAsJsonAsync<Warehouse_OperationRecord>("api/Warehouse_OperationRecords", operationRecord);
+        string message = await response.Content.ReadAsStringAsync();
+        CleanForm();
+        ShowSuccessfullMessage(message);
     }
 
     private void CleanForm()

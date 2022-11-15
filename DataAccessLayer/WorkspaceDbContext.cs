@@ -21,7 +21,7 @@ namespace DataAccessLayer
         {
             base.OnConfiguring(optionsBuilder);
             optionsBuilder
-                .UseSqlServer("Server=WSLK-IT01.VSAG.CH;Database=Workspace-Dev-Ashen;User Id=sa;password=12QWaszx;Trusted_Connection=False;MultipleActiveResultSets=true");
+                .UseSqlServer("Server=WSLK-IT01.VSAG.CH;Database=Workspace-Dev-Ashen;User Id=sa;password=password;Trusted_Connection=False;MultipleActiveResultSets=true");
         }
 
 
