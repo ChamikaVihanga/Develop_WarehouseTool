@@ -46,17 +46,15 @@
                                         </MudItem>
                                         <MudItem xs="6">
                                             <MudTextField DebounceInterval="500" OnDebounceIntervalElapsed="HandleIntervalElapsed" @bind-Value="@EnteredSapNo" Label="Sap Number" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" Mask="@(new PatternMask("00000"))" For="@(()=>EnteredSapNo)" />
+                                            <MudText Class="mt-3" Color="Color.Error">@warningmessageForSAP</MudText>
                                         </MudItem>
                                     </MudGrid>
                                 </MudContainer>
                             </MudPaper>
                         </MudItem>
 
-                        <br />
-                        <br />
-
                         @*Start time and end time picker*@
-                        <MudItem xs="12">
+                        <MudItem xs="12" Class="mt-7">
                             <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                                 <MudContainer>
                                     <MudGrid>
@@ -102,11 +100,9 @@
                                 </MudItem>
                             </MudPaper>
                         </MudItem>
-                        <br />
-                        <br />
+                        
                         @*Operation List add location*@
-
-                        <MudItem xs="12">
+                        <MudItem xs="12" Class="mt-10">
                             <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
                                 <MudContainer>
                                     <MudGrid>
@@ -122,16 +118,15 @@
                         </MudItem>
 
                         @*Buttuion hide and show*@
-                        <br />
-                        <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full">
-                            @if (EnteredSapNo == null || StartTime == null || value1 == null)
+                        <MudItem xs="12" Class="d-flex align-center justify-center mud-width-full mt-5">
+                            @if (EnteredSapNo == null || StartTime == null || value1 == null || isSAPAvailable == false)
                             {
                                 <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData" Disabled="true">Submit</MudButton>
                                 <MudAlert Severity="Severity.Info" Class="ml-auto">You must enter Sap Number, Start Time & Operation Name</MudAlert>
                             }
                             else
                             {
-                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData">Submit</MudButton>                                
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="PostData">Submit</MudButton>
                             }
                         </MudItem>
 
@@ -195,7 +190,7 @@
                     <RowTemplate>
                         <MudTd>@context.CreateDate.ToString("d")</MudTd>
                         <MudTd>@context.OperationList.Name</MudTd>
-                        <MudTd>@context.StartTime.ToString("T")  -  @context.EndTime.Value.ToLongTimeString()</MudTd>
+                        <MudTd>@context.StartTime.ToString("hh:mm tt")  -  @context.EndTime.Value.ToString("hh:mm tt")</MudTd>
                         <MudTd>@context.Achivement</MudTd>
                     </RowTemplate>
                 </MudTable>
@@ -207,6 +202,7 @@
 @code {
     bool isLoading = false;
     private bool bordered = false;
+
     /// <summary>
     /// Form Time Picker
     /// </summary>
@@ -214,6 +210,7 @@
     TimeSpan? EndTime = null;
     DateTime? StartDateTime = null;
     bool isEndDateRequired = false;
+    bool resetButton = false;
 
     /// <summary>
     /// Form Date Picker
@@ -233,6 +230,9 @@
     [StringLength(5, ErrorMessage = "Name length can't be more than 5.")]
     public string EnteredSapNo { get; set; }
 
+    private bool isSAPAvailable { get; set; } = true;
+    public string warningmessageForSAP { get; set; }
+        
     //public DateTime Date { get; set; }
 
     public int putId { get; set; } = 0;
@@ -331,19 +331,19 @@
             else
             {
                 if (operationRecord.Achivement != null && EndTime != null)
-                {                    
+                {
                     MethodFor_PostAPI();
                 }
                 else
                 {
                     if (SelectedDate != null && EnteredSapNo != null && StartTime != null && value1 != null && operationRecord.Achivement == null && EndTime == null)
-                    {                       
+                    {
                         MethodFor_PostAPI();
                     }
                     else
                     {
                         if (SelectedDate != null && EnteredSapNo != null && StartTime != null && value1 != null && operationRecord.Achivement != null && EndTime != null)
-                        {                           
+                        {
                             MethodFor_PostAPI();
                         }
                         else
@@ -429,29 +429,40 @@
         {
             isLoading = true;
 
-            try
-            {
-                manageRecord = await httpClient.GetFromJsonAsync<Warehouse_OperationRecord[]?>($"api/Warehouse_OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
+            isSAPAvailable = await httpClient.GetFromJsonAsync<bool>($"api/Wareouse_Employees/ValidateSapNumber?EnteredSAP={EnteredSapNo}");
 
-                vS_Employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/Wareouse_Employees/GetEmp?SAP={debouncedText}");
+            if (isSAPAvailable)
+            {
+                warningmessageForSAP = string.Empty;
+                try
+                {
+                    manageRecord = await httpClient.GetFromJsonAsync<Warehouse_OperationRecord[]?>($"api/Warehouse_OperationRecords/Filter?id={debouncedText}&&SelectedDate={SelectedDate.Value.ToString("yyyy-MM-dd")}");
+
+                    vS_Employee = await httpClient.GetFromJsonAsync<Vs_Employee?>($"api/Wareouse_Employees/GetEmp?SAP={debouncedText}");
+                }
+                catch
+                {
+                    isLoading = false;
+                }
+                isLoading = false;
+
+                foreach (Warehouse_OperationRecord operationRecord in manageRecord)
+                {
+                    if (operationRecord.Achivement is null || operationRecord.EndTime == null)
+                    {
+                        SelectedDate = operationRecord.CreateDate;
+                        StartTime = operationRecord.StartTime.TimeOfDay;
+                        StartDateTime = operationRecord.StartTime;
+                        value1 = operationRecord.OperationList.Name;
+                        putId = operationRecord.Id;
+                        manageRecord = manageRecord.Where(x => x.Id != operationRecord.Id).ToArray();
+                    }
+                }
             }
-            catch
+            else
             {
                 isLoading = false;
-            }
-            isLoading = false;
-
-            foreach (Warehouse_OperationRecord operationRecord in manageRecord)
-            {
-                if (operationRecord.Achivement is null || operationRecord.EndTime == null)
-                {
-                    SelectedDate = operationRecord.CreateDate;
-                    StartTime = operationRecord.StartTime.TimeOfDay;
-                    StartDateTime = operationRecord.StartTime;
-                    value1 = operationRecord.OperationList.Name;
-                    putId = operationRecord.Id;
-                    manageRecord = manageRecord.Where(x => x.Id != operationRecord.Id).ToArray();
-                }
+                warningmessageForSAP = "Please check your SAP Number";
             }
         }
         else

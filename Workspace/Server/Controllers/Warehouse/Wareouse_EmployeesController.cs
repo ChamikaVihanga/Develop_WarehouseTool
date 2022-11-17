@@ -40,5 +40,13 @@ namespace Workspace.Server.Controllers.Warehouse
         {
             return await _context.Vs_Employees.Where(a => a.SAPNo == SAP).FirstOrDefaultAsync();
         }
+
+        [HttpGet("ValidateSapNumber")]
+        public async Task<ActionResult<bool>> ValidateSap(string EnteredSAP)
+        {
+            bool checkSAPExists = _context.Vs_Employees.Where(a => a.SAPNo == EnteredSAP).Any();
+
+            return checkSAPExists;
+        }
     }
 }
