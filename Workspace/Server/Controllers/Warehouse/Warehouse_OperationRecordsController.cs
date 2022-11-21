@@ -13,6 +13,13 @@ namespace Workspace.Server.Controllers.Warehouse
             _context = context;
         }
 
+        [HttpGet("ValidateTimeSpan")]
+        public async Task<ActionResult<bool>> ValidateTime(int id, DateTime EnterdStartTime, DateTime EnterdEndTime)
+        {                                 
+            bool checkTimeSpan = _context.Warehouse_OperationRecords.Where(a=>a.Id == id && a.StartTime == EnterdStartTime && a.EndDate == EnterdEndTime).Any();        
+            return checkTimeSpan;
+        }
+
         // GET: api/Warehouse_OperationRecords
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Warehouse_OperationRecord>>> GetOperationRecords()

@@ -1,6 +1,5 @@
 ﻿@page "/Warehouse"
 @using System.ComponentModel.DataAnnotations
-
 @using System.Text.Json
 @using static System.Net.WebRequestMethods
 @inject ISnackbar Snackbar
@@ -100,7 +99,7 @@
                                 </MudItem>
                             </MudPaper>
                         </MudItem>
-                        
+
                         @*Operation List add location*@
                         <MudItem xs="12" Class="mt-10">
                             <MudPaper Elevation="0" Class="d-flex align-center justify-center mud-width-full">
@@ -200,6 +199,7 @@
 </MudItem>
 
 @code {
+
     bool isLoading = false;
     private bool bordered = false;
 
@@ -231,8 +231,8 @@
     public string EnteredSapNo { get; set; }
 
     private bool isSAPAvailable { get; set; } = true;
-    public string warningmessageForSAP { get; set; }
-        
+    public string? warningmessageForSAP { get; set; }
+
     //public DateTime Date { get; set; }
 
     public int putId { get; set; } = 0;
@@ -344,7 +344,7 @@
                     {
                         if (SelectedDate != null && EnteredSapNo != null && StartTime != null && value1 != null && operationRecord.Achivement != null && EndTime != null)
                         {
-                            MethodFor_PostAPI();
+                            MethodFor_PostAPI();                            
                         }
                         else
                         {
@@ -366,7 +366,7 @@
         var response = await httpClient.PostAsJsonAsync<Warehouse_OperationRecord>("api/Warehouse_OperationRecords", operationRecord);
         string message = await response.Content.ReadAsStringAsync();
         CleanForm();
-        ShowSuccessfullMessage(message);
+        ShowSuccessfullMessage(message);        
     }
 
     private void CleanForm()
@@ -456,6 +456,10 @@
                         value1 = operationRecord.OperationList.Name;
                         putId = operationRecord.Id;
                         manageRecord = manageRecord.Where(x => x.Id != operationRecord.Id).ToArray();
+                    }
+                    else
+                    {
+                        StartTime = operationRecord.EndTime.Value.TimeOfDay;                                              
                     }
                 }
             }
